@@ -1,7 +1,6 @@
 "use client";
-import ArabicNavBar from "./arabicNavBar";
 
-export default function ArabicLayout({
+export default function ArabicFormLayout({
   children,
   style,
   className,
@@ -20,8 +19,6 @@ export default function ArabicLayout({
         />
       </head>
       <body dir="rtl" style={style} className={className}>
-        <ArabicNavBar />
-        <div className="mt-20"></div>
         {children}
       </body>
     </html>

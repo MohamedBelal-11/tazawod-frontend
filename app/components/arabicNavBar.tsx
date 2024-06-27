@@ -69,7 +69,7 @@ export default function ArabicNavBar() {
   return (
     <header className={`bg-white fixed w-full border-b-2 border-gray-300 border-solid top-0`} style={{ zIndex: "3" }}>
       <nav
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
@@ -157,7 +157,7 @@ export default function ArabicNavBar() {
           <Link href="#" className={classes[0]}>
             تسجيل دخول <span aria-hidden="true">&larr;</span>
           </Link>
-          <Link href="#" className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}>
+          <Link href="/auth/register" className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}>
             تسجيل حساب 
           </Link>
         </div>
@@ -240,7 +240,7 @@ export default function ArabicNavBar() {
                   تسجيل الدخول
                 </Link>
                 <Link
-                  href="#"
+                  href="/auth/register"
                   className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
                 >
                   تسجيل حساب

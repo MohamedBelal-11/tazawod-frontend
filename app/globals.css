@@ -1,12 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import url("./Rubik/rubkImport.css");
 * {
   position: relative;
+  font-family: "Rubik";
 }
-
-
 
 body {
   background-image: url("/static/imgs/pattern.jpg");
@@ -22,4 +21,8 @@ section {
 img {
   -webkit-user-drag: none;
   user-select: none;
+}
+
+.rounded-4xl {
+  border-radius: 40px;
 }
