@@ -472,10 +472,7 @@ export default function Content() {
     }
 
     if (alive) {
-      setMessage(() => {
-        return ["البينات صحيحة لكن لن يحدث شيء"];
-      });
-      handleSubmit();
+      setMessage(["البينات صحيحة لكن لن يحدث شيء"]);
     }
   };
 
