@@ -494,6 +494,7 @@ export default function Content() {
               onChange={setPhoneNumber}
               placeholder="الرقم"
               country={"+20"}
+              countryCodeEditable={false}
             />
           </div>
           <input
