@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import ArabicFormLayout from "@/app/components/arabicFormLayout";
-import PhoneInputComponent from "@/app/components/phoneInput";
+import PhoneInput from "react-phone-input-2";
 import { arDay } from "@/app/utils/arabic";
 import useAuth from "next-auth";
 import {
@@ -489,11 +489,10 @@ export default function Content() {
             required
           />
           <div className="max-w-96" dir="ltr">
-            <PhoneInputComponent
+            <PhoneInput
               value={phoneNumber}
               onChange={setPhoneNumber}
               placeholder="الرقم"
-              enableSearch
               country={"+20"}
             />
           </div>
