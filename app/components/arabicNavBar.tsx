@@ -35,7 +35,8 @@ const products = [
   },
   {
     name: "تجويد",
-    description: "دروسًا متخصصة في قواعد التجويد لتعليم النطق الصحيح للقرآن الكريم، مع التركيز على تحسين مهارات التلاوة لدى الطلاب.",
+    description:
+      "دروسًا متخصصة في قواعد التجويد لتعليم النطق الصحيح للقرآن الكريم، مع التركيز على تحسين مهارات التلاوة لدى الطلاب.",
     href: "#",
   },
   {
@@ -45,12 +46,14 @@ const products = [
   },
   {
     name: "السنة النبوية",
-    description: "شرح الأحاديث النبوية، مع التركيز على صحيح البخاري ومسلم، بالإضافة إلى كتب السنة الأخرى.",
+    description:
+      "شرح الأحاديث النبوية، مع التركيز على صحيح البخاري ومسلم، بالإضافة إلى كتب السنة الأخرى.",
     href: "#",
   },
   {
     name: "السيرة النبوية",
-    description: "تغطي حياة الرسول محمد صلى الله عليه وسلم، بدءًا من ميلاده وحتى وفاته",
+    description:
+      "تغطي حياة الرسول محمد صلى الله عليه وسلم، بدءًا من ميلاده وحتى وفاته",
     href: "#",
   },
 ];
@@ -63,11 +66,18 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ArabicNavBar() {
+export default function ArabicNavBar({
+  username,
+}: {
+  username?: string | null;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className={`bg-white fixed w-full border-b-2 border-gray-300 border-solid top-0`} style={{ zIndex: "3" }}>
+    <header
+      className={`bg-white fixed w-full border-b-2 border-gray-300 border-solid top-0`}
+      style={{ zIndex: "3" }}
+    >
       <nav
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
         aria-label="Global"
@@ -154,12 +164,21 @@ export default function ArabicNavBar() {
           </Link>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-4 items-center">
-          <Link href="#" className={classes[0]}>
-            تسجيل دخول <span aria-hidden="true">&larr;</span>
-          </Link>
-          <Link href="/auth/register" className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}>
-            تسجيل حساب 
-          </Link>
+          {username ? (
+            <p className="font-bold">{username}</p>
+          ) : (
+            <>
+              <Link href="#" className={classes[0]}>
+                تسجيل دخول <span aria-hidden="true">&larr;</span>
+              </Link>
+              <Link
+                href="/auth/register"
+                className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}
+              >
+                تسجيل حساب
+              </Link>
+            </>
+          )}
         </div>
       </nav>
       <Dialog
@@ -187,7 +206,9 @@ export default function ArabicNavBar() {
                 <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
-                      <DisclosureButton className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base ${classes[1]} transition-all`}>
+                      <DisclosureButton
+                        className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base ${classes[1]} transition-all`}
+                      >
                         الدروس
                         <ChevronDownIcon
                           className={classNames(
@@ -233,18 +254,24 @@ export default function ArabicNavBar() {
                 </Link>
               </div>
               <div className="py-6">
-                <Link
-                  href="#"
-                  className={`-mx-3 block rounded-lg px-3 py-2.5 text-base ${classes[1]}`}
-                >
-                  تسجيل الدخول
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
-                >
-                  تسجيل حساب
-                </Link>
+                {username ? (
+                  <p className="font-bold">{username}</p>
+                ) : (
+                  <>
+                    <Link
+                      href="#"
+                      className={`-mx-3 block rounded-lg px-3 py-2.5 text-base ${classes[1]}`}
+                    >
+                      تسجيل الدخول
+                    </Link>
+                    <Link
+                      href="/auth/register"
+                      className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
+                    >
+                      تسجيل حساب
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

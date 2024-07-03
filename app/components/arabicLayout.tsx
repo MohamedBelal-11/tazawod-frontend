@@ -5,10 +5,12 @@ export default function ArabicLayout({
   children,
   style,
   className,
+  username,
 }: {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
+  username?: string | null;
 }) {
   return (
     <html lang="ar">
@@ -20,7 +22,7 @@ export default function ArabicLayout({
         />
       </head>
       <body dir="rtl" style={style} className={className}>
-        <ArabicNavBar />
+        <ArabicNavBar username={username} />
         <div className="mt-20"></div>
         {children}
       </body>

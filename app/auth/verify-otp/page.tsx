@@ -1,11 +1,11 @@
 import { Metadata } from "next";
 import Content from "./content";
-import "./page.css"
 
 export const metadata: Metadata = {
-  title: "تسجيل حساب - أكاديمية تزود"
+  title: "التحقق من الهاتف"
 }
-
-export default function Page() {
+const Page = () =>{
   return <Content />
 }
+
+export default Page;
