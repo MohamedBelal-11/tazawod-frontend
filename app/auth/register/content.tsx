@@ -3,8 +3,8 @@
 "use client";
 import ArabicFormLayout from "@/app/components/arabicFormLayout";
 import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import { arDay } from "@/app/utils/arabic";
-import useAuth from "next-auth";
 import {
   almightyTrim,
   arCharsList,
@@ -493,7 +493,7 @@ export default function Content() {
               value={phoneNumber}
               onChange={setPhoneNumber}
               placeholder="الرقم"
-              country={"+20"}
+              
               countryCodeEditable={false}
             />
           </div>
