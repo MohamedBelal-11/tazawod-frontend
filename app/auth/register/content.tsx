@@ -274,7 +274,7 @@ export default function Content() {
         quraan_days: quraan_days, // Replace with actual IDs
       };
       const response = await axios.post(
-        "http://127.0.0.1:8000/users/student/register/",
+        "https://mohamed11belal.pythonanywhere.com/users/student/register/",
         data
       );
       if (response.status === 201) {

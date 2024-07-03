@@ -9,6 +9,7 @@ import { date, weekday } from "./utils/students";
 import { hrNumber, numHours } from "./utils/time";
 import { arDay } from "./utils/arabic";
 import axios from "axios";
+import LoadingDiv from "./components/loadingDiv";
 
 const secondsToHrs = (seconds: number) => {
   return (seconds / 60) / 60
@@ -39,8 +40,10 @@ const classes = {
 
 export default function Content() {
   const [response, setResponse] = useState<responset>();
+  const [lodaded, setLoaded] = useState(false);
 
   useEffect(() => {
+    setLoaded(true);
     // Define an asynchronous function named fetchData.
     // This function will make an HTTP GET request to the server to retrieve data.
     // The request includes an Authorization header with a token.
@@ -53,7 +56,7 @@ export default function Content() {
         // Make an HTTP GET request to the server.
         // The URL is "http://localhost:8000/home/".
         // The request includes an Authorization header with the token.
-        const respons = await axios.get("http://localhost:8000/api/home/", {
+        const respons = await axios.get("https://mohamed11belal.pythonanywhere.com/api/home/", {
           headers: {
             // Set the Authorization header to include the token.
             Authorization: `Token ${token}`,
@@ -148,15 +151,13 @@ export default function Content() {
   }
   return (
     <ArabicLayout>
+      <LoadingDiv loading={!lodaded} />
       <header className={classes.header}>
         <img src="/static/imgs/logo-green.png" className="max-w-lg w-3/5" />
         <img src="/static/imgs/quran.gif" className="max-w-48 w-1/6" />
       </header>
       <main className={globalClasses.main}>
         <section>
-          <h2>
-            <span className={globalClasses.sectionHeader}>الدروس المتاحة</span>
-          </h2>
         </section>
         <section className="flex justify-center">
           <div className="bg-white p-8 rounded-3xl">
