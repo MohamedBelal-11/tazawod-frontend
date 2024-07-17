@@ -12,6 +12,8 @@
     "@headlessui/react": "^2.0.4",
     "@heroicons/react": "^2.1.4",
     "axios": "^1.7.2",
+    "framer-motion": "^11.2.13",
+    "luxon": "^3.4.4",
     "next": "14.2.4",
     "next-auth": "^4.24.7",
     "react": "^18",
@@ -19,6 +21,7 @@
     "react-phone-input-2": "^2.15.1"
   },
   "devDependencies": {
+    "@types/luxon": "^3.4.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

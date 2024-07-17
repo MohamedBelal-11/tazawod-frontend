@@ -2,8 +2,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import ArabicFormLayout from "@/app/components/arabicFormLayout";
-import PhoneInput from "react-phone-input-2";
-import "react-phone-input-2/lib/style.css";
 import { arDay } from "@/app/utils/arabic";
 import {
   almightyTrim,
@@ -15,6 +13,11 @@ import {
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { backendUrl } from "@/app/utils/auth";
+import PasswordInput from "@/app/components/passwordInput";
+import { convertLocalTimeToEgyptTime } from "@/app/utils/time";
+import MyPhoneInput from "@/app/components/phoneInput";
+import { AnimatePresence, motion } from "framer-motion";
 
 type metaInfo = { day: string; starts: string; delay: string };
 
@@ -29,13 +32,16 @@ const days = [
 ];
 
 const classes = {
-  inp: "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl",
+  inp:
+    "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
+    "rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl",
   genderCard:
-    "flex flex-col items-center gap-3 p-6 rounded-xl border-4 border-solid cursor-pointer ",
+    "flex flex-col items-center gap-3 md:p-6 p-2 rounded-xl border-4 border-solid cursor-pointer ",
   genderImg: "w-48",
   genderP: "text-xl",
   lesson:
-    "flex flex-col items-start *:bg-sky-500 *:p-2 *:border-b-solid *:border-white *:border-2 *:rounded-md *:flex *:items-center",
+    "flex flex-col items-start *:bg-sky-500 *:p-2 *:border-b-solid " +
+    "*:border-white *:border-2 *:rounded-md *:flex *:items-center",
   createDateCard:
     "flex flex-col items-center gap-3 border-solid border-2 border-gray-400 p-4 rounded-xl",
   craateDateInp:
@@ -53,7 +59,7 @@ function CreateDate(props: {
   const [red, setRed] = useState(false);
 
   if (props.method === undefined || props.value === undefined) {
-    return <></>;
+    return;
   }
 
   let num = 0;
@@ -93,11 +99,25 @@ function CreateDate(props: {
   };
 
   return (
-    <div
+    <motion.div
       className="w-full h-screen fixed flex justify-center items-center top-0"
-      style={{ backgroundColor: "#1113", zIndex: 2 }}
+      style={{ zIndex: 2 }}
+      initial={{ backgroundColor: "transparent" }}
+      animate={{ backgroundColor: "#1113", transition: { duration: 0.5 } }}
+      exit={{
+        backgroundColor: "transparent",
+        transition: { delay: 0.5, duration: 0.5 },
+      }}
     >
-      <div className="p-6 rounded-2xl bg-white flex flex-col gap-4 max-h-screen overflow-y-scroll">
+      <motion.div
+        className="p-6 rounded-2xl bg-white flex flex-col gap-4 max-h-screen overflow-y-scroll"
+        initial={{ height: 0 }}
+        animate={{
+          height: "auto",
+          transition: { duration: 0.5 },
+        }}
+        exit={{ height: 0, transition: { duration: 0.5 } }}
+      >
         <h1 className="text-3xl">إضافة موعد</h1>
         <div className="flex gap-4 flex-wrap justify-center *:flex-grow">
           <div className={classes.createDateCard}>
@@ -137,16 +157,7 @@ function CreateDate(props: {
             ) : undefined}
           </div>
           <div className={classes.createDateCard}>
-            <p className="text-2xl">
-              الساعة بتوقيت{" "}
-              <a
-                href="https://www.google.com/search?q=%D9%83%D9%85+%D8%A7%D9%84%D8%B3%D8%A7%D8%B9%D8%A9+%D8%A7%D9%84%D8%A7%D9%86+%D9%81%D9%8A+%D9%85%D8%B5%D8%B1"
-                className="no-underline hover:underline text-sky-600"
-                target="_blank"
-              >
-                مصر
-              </a>
-            </p>
+            <p className="text-2xl">يبدأ الساعة</p>
             <input
               type="time"
               className={classes.craateDateInp}
@@ -193,7 +204,9 @@ function CreateDate(props: {
                   <p>{delay.slice(0, -6)}</p>
                   <div className="flex flex-col">
                     <div
-                      className={classes.craateDateInp + " text-sm"}
+                      className={
+                        classes.craateDateInp + " text-sm cursor-pointer"
+                      }
                       onClick={() => {
                         if (!(Number(delay.slice(0, -6)) > 2)) {
                           setDelay(
@@ -204,11 +217,18 @@ function CreateDate(props: {
                           );
                         }
                       }}
+                      style={{
+                        userSelect: "none",
+                        msUserSelect: "none",
+                        MozUserSelect: "none",
+                      }}
                     >
                       ▲
                     </div>
                     <div
-                      className={classes.craateDateInp + " text-sm"}
+                      className={
+                        classes.craateDateInp + " text-sm cursor-pointer"
+                      }
                       onClick={() => {
                         if (!(Number(delay.slice(0, -6)) < 1)) {
                           setDelay(
@@ -218,6 +238,11 @@ function CreateDate(props: {
                                   delay.slice(-6)
                           );
                         }
+                      }}
+                      style={{
+                        userSelect: "none",
+                        msUserSelect: "none",
+                        MozUserSelect: "none",
                       }}
                     >
                       ▼
@@ -242,15 +267,15 @@ function CreateDate(props: {
             إضافة
           </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export default function Content() {
   const router = useRouter();
   const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("+20");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [gender, setGender] = useState<"male" | "female">();
@@ -263,18 +288,26 @@ export default function Content() {
     | undefined
   >();
   const [message, setMessage] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const data = {
         name: almightyTrim(name),
         phone_number: phoneNumber.trim(),
         gender: gender,
         password: password,
-        quraan_days: quraan_days, // Replace with actual IDs
+        quraan_days: quraan_days.map((date) => {
+          return {
+            ...date,
+            starts:
+              convertLocalTimeToEgyptTime(date.starts.slice(0, -3)) + ":00",
+          };
+        }),
       };
       const response = await axios.post(
-        "https://mohamed11belal.pythonanywhere.com/users/student/register/",
+        backendUrl + "/users/student/register/",
         data
       );
       if (response.status === 201) {
@@ -286,6 +319,7 @@ export default function Content() {
         setMessage((m) => {
           return [...m, "تم تسجيل الدخول"];
         }); //                               here will be deleted later
+        setLoading(false);
         router.push("/");
         // Store the password temporarily (e.g., in state or context) until OTP verification
         // sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, phone: phoneNumber}));
@@ -295,8 +329,8 @@ export default function Content() {
     } catch (error) {
       console.error("Error registering student", error);
       setMessage(["حدث خطأ أثناء تسجيل الطالب: " + error]);
+      setLoading(false);
     }
-    setMessage;
   };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -340,7 +374,8 @@ export default function Content() {
         setMessage((m) => {
           return [
             ...m,
-            "يجب أن تحتوي كلمة المرور على حروف إنجليزية وبعض هذه الرموز !@#$%^&*_- و أرقام فقط (لا مسافات)",
+            "يجب أن تحتوي كلمة المرور على حروف" +
+              " إنجليزية وبعض هذه الرموز !@#$%^?&*_- و أرقام فقط (لا مسافات)",
           ];
         });
         break;
@@ -487,35 +522,55 @@ export default function Content() {
             className={classes.inp}
             maxLength={30}
             required
+            autoComplete="name"
           />
-          <div className="max-w-96" dir="ltr">
-            <PhoneInput
-              value={phoneNumber}
-              onChange={setPhoneNumber}
-              placeholder="الرقم"
-              
-              countryCodeEditable={false}
-            />
-          </div>
-          <input
-            type="password"
+          <MyPhoneInput value={phoneNumber} onChange={setPhoneNumber} />
+          {phoneNumber.startsWith("970") && (
+            <motion.p
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+              }}
+              initial="hidden"
+              animate="visible"
+            >
+              {"دائمًا في القلب ❤".split("").map((c, i) => (
+                <motion.span
+                  key={i}
+                  variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
+                >
+                  {c} 
+                </motion.span>
+              ))}
+            </motion.p>
+          )}
+          <PasswordInput
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
             }}
-            className={classes.inp}
+            className={
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full " +
+              "rounded-xl border-solid outline-0 shadow-3xl"
+            }
             placeholder="كلمة المرور"
+            divclassname="max-w-96 w-full"
             required
+            autoComplete="new-password"
           />
-          <input
-            type="password"
+          <PasswordInput
             value={password2}
             onChange={(e) => {
               setPassword2(e.target.value);
             }}
-            className={classes.inp}
+            className={
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
+              "w-full rounded-xl border-solid outline-0 shadow-3xl"
+            }
             placeholder="تأكيد كلمة المرور"
+            divclassname="max-w-96 w-full"
             required
+            autoComplete="new-password"
           />
           <h2 className="text-xl">حدد جنسك</h2>
           <div className="flex justify-evenly">
@@ -563,7 +618,10 @@ export default function Content() {
                         quraan_days.slice(0, i).concat(quraan_days.slice(i + 1))
                       );
                     }}
-                    className="bg-red-500 py-1 px-2 rounded-md mr-2 inline-block text-center cursor-pointer"
+                    className={
+                      "bg-red-500 py-1 px-2 rounded-md mr-2 inline-block " +
+                      "text-center cursor-pointer"
+                    }
                   >
                     X
                   </div>
@@ -593,19 +651,33 @@ export default function Content() {
           ) : (
             <></>
           )}
-          <input
-            className="p-3 rounded-xl text-white bg-green-500 w-24 cursor-pointer hover:bg-green-700"
-            style={{ alignSelf: "end" }}
-            type="submit"
-          />
+          {loading ? (
+            <div className="p-4 border-solid border-2 border-green-500 rounded-xl bg-green-500 flex justify-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                className="w-6 h-6 border-gray-300 border-solid border-4 border-t-sky-500 rounded-full"
+                transition={{ duration: 2, repeat: Infinity }}
+              ></motion.div>
+            </div>
+          ) : (
+            <input
+              type="submit"
+              className={
+                "p-4 bg-green-200 border-solid border-2 border-green-500 rounded-xl " +
+                "hover:bg-green-500 hover:text-white transition-all cursor-pointer"
+              }
+            />
+          )}
         </form>
       </div>
-      {CreateDate({
-        ...createDate,
-        closeMethod: () => {
-          setCreateDate(undefined);
-        },
-      })}
+      <AnimatePresence>
+        {CreateDate({
+          ...createDate,
+          closeMethod: () => {
+            setCreateDate(undefined);
+          },
+        })}
+      </AnimatePresence>
     </ArabicFormLayout>
   );
 }

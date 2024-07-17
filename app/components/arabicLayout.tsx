@@ -1,16 +1,17 @@
 "use client";
+import arabicFooter from "./arabicFooter";
 import ArabicNavBar from "./arabicNavBar";
 
 export default function ArabicLayout({
   children,
   style,
   className,
-  username,
+  head
 }: {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
-  username?: string | null;
+  head?: React.ReactNode;
 }) {
   return (
     <html lang="ar">
@@ -20,11 +21,13 @@ export default function ArabicLayout({
           href="/static/imgs/quran.png"
           type="image/PNG"
         />
+        {head}
       </head>
       <body dir="rtl" style={style} className={className}>
-        <ArabicNavBar username={username} />
+        <ArabicNavBar />
         <div className="mt-20"></div>
         {children}
+        {arabicFooter}
       </body>
     </html>
   );

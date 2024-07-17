@@ -1,30 +1,112 @@
-declare module 'react-phone-input-2' {
-  import * as React from 'react';
+declare module "react-phone-input-2" {
+  import React from "react";
 
-  interface PhoneInputProps {
-    value?: string;
-    country?: string;
-    onlyCountries?: string[];
-    preferredCountries?: string[];
-    excludeCountries?: string[];
-    placeholder?: string;
-    inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
-    onChange?: (value: string, data: object, event: React.ChangeEvent<HTMLInputElement>, formattedValue: string) => void;
-    isValid?: (inputNumber: string, country: object, formattedValue: string) => boolean | string;
+  export interface CountryData {
+    name: string;
+    dialCode: string;
+    countryCode: string;
+    format: string;
+  }
+
+  interface Style {
     containerClass?: string;
     inputClass?: string;
     buttonClass?: string;
     dropdownClass?: string;
-    autoFormat?: boolean;
-    disabled?: boolean;
-    disableDropdown?: boolean;
-    disableCountryCode?: boolean;
-    enableLongNumbers?: boolean;
-    countryCodeEditable?: boolean;
-    regions?: string | string[];
+    searchClass?: string;
+
+    containerStyle?: React.CSSProperties;
+    inputStyle?: React.CSSProperties;
+    buttonStyle?: React.CSSProperties;
+    dropdownStyle?: React.CSSProperties;
+    searchStyle?: React.CSSProperties;
   }
 
-  const PhoneInput: React.FC<PhoneInputProps>;
+  interface PhoneInputEventsProps {
+    onChange?(
+      value: string,
+      data: CountryData | {},
+      event: React.ChangeEvent<HTMLInputElement>,
+      formattedValue: string
+    ): void;
+    onFocus?(
+      event: React.FocusEvent<HTMLInputElement>,
+      data: CountryData | {}
+    ): void;
+    onBlur?(
+      event: React.FocusEvent<HTMLInputElement>,
+      data: CountryData | {}
+    ): void;
+    onClick?(
+      event: React.MouseEvent<HTMLInputElement>,
+      data: CountryData | {}
+    ): void;
+    onKeyDown?(event: React.KeyboardEvent<HTMLInputElement>): void;
+    onEnterKeyPress?(event: React.KeyboardEvent<HTMLInputElement>): void;
+    isValid?: ((
+      value: string,
+      country: object,
+      countries: object[],
+      hiddenAreaCodes: object[],
+    ) => boolean | string) | boolean;
+    onMount?(
+      value: string,
+      data: CountryData | {},
+      formattedValue: string
+    ): void;
+  }
 
+  export interface PhoneInputProps extends PhoneInputEventsProps, Style {
+    country?: string | number;
+    value?: string | null;
+
+    onlyCountries?: string[];
+    preferredCountries?: string[];
+    excludeCountries?: string[];
+
+    placeholder?: string;
+    searchPlaceholder?: string;
+    searchNotFound?: string;
+    disabled?: boolean;
+
+    autoFormat?: boolean;
+    enableAreaCodes?: boolean;
+    enableTerritories?: boolean;
+
+    disableCountryCode?: boolean;
+    disableDropdown?: boolean;
+    enableLongNumbers?: boolean | number;
+    countryCodeEditable?: boolean;
+    enableSearch?: boolean;
+    disableSearchIcon?: boolean;
+
+    regions?: string | string[];
+
+    inputProps?: object;
+    localization?: object;
+    masks?: object;
+    areaCodes?: object;
+
+    preserveOrder?: string[];
+
+    defaultMask?: string;
+
+    alwaysDefaultMask?: boolean;
+    prefix?: string;
+    copyNumbersOnly?: boolean;
+    renderStringAsFlag?: string;
+    autocompleteSearch?: boolean;
+    jumpCursorToEnd?: boolean;
+    priority?: object;
+    enableAreaCodeStretch?: boolean;
+    enableClickOutside?: boolean;
+    showDropdown?: boolean;
+
+    defaultErrorMessage?: string;
+    specialLabel?: string;
+    disableInitialCountryGuess?: boolean;
+    disableCountryGuess?: boolean;
+  }
+  const PhoneInput: React.FC<PhoneInputProps>;
   export default PhoneInput;
 }

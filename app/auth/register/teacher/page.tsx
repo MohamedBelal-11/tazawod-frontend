@@ -2,9 +2,9 @@ import { Metadata } from "next";
 import Content from "./content";
 
 export const metadata: Metadata = {
-  title: "الصفحة الرئيسية - أكاديمية تزود",
-};
+  title: "تسجيل حساب معلم - أكاديمية تزود",
+}
 
-export default function Home() {
+export default function Page() {
   return <Content />
 }
