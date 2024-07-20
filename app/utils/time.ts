@@ -10,6 +10,7 @@ export const hrNumber = (number: number) => {
 };
 
 import { DateTime } from "luxon";
+import { Weekday } from "./students";
 
 // Convert local time to Egypt time
 function convertLocalTimeToEgyptTime(localTimeString: string): string {
@@ -26,5 +27,16 @@ function convertEgyptTimeToLocalTime(egyptTimeString: string): string {
   const localTime = egyptTime.setZone(DateTime.local().zoneName);
   return localTime.toFormat("HH:mm");
 }
+
+export const days: Weekday[] = [
+  "sunday",
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thurusday",
+  "friday",
+  "saturday",
+];
+
 
 export { convertEgyptTimeToLocalTime, convertLocalTimeToEgyptTime };

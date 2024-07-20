@@ -251,10 +251,10 @@ export default function ArabicNavBar() {
             </Link>
           ) : null}
         </div>
-        <div className="flex lg:hidden">
+        <div className="flex lg:hidden sm:gap-4 gap-2">
           {response ? (
             <div>
-              <p>{response.username}</p>
+              <p className="text-center">{response.username}</p>
             </div>
           ) : null}
           <button

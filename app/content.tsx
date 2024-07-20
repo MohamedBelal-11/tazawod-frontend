@@ -5,7 +5,7 @@ import ArabicLayout from "./components/arabicLayout";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import globalClasses from "./utils/globalClasses";
-import { date, weekday } from "./utils/students";
+import { Date, Weekday } from "./utils/students";
 import { convertEgyptTimeToLocalTime, hrNumber, numHours } from "./utils/time";
 import { arDay } from "./utils/arabic";
 import axios from "axios";
@@ -248,25 +248,25 @@ type responset =
   | {
       userType: "student";
       subscribed: true;
-      quraan_days: date[];
+      quraan_days: Date[];
       currentMeet: { url: string | null; teacher: string } | null;
       notes: {
         teacher: string;
         rate: number;
         discription: string;
-        day: weekday;
+        day: Weekday;
         date: string;
       }[];
     }
   | {
       userType: "student";
       subscribed: false;
-      quraan_days: date[];
+      quraan_days: Date[];
       notes: {
         teacher: string;
         rate: number;
         discription: string;
-        day: weekday;
+        day: Weekday;
         date: string;
       }[];
     }
@@ -285,7 +285,7 @@ type responset =
         student: string;
         rate: number;
         discription: string;
-        day: weekday;
+        day: Weekday;
         date: string;
       }[];
     }
