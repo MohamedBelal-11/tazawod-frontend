@@ -1,7 +1,7 @@
 "use client";
-import { Dispatch, Key, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import ArabicLayout from "../components/arabicLayout";
-import { AnimatePresence, motion, Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { numList } from "../utils/string";
 import {
   ChevronDoubleLeftIcon,
@@ -13,6 +13,7 @@ import { backendUrl } from "../utils/auth";
 import axios from "axios";
 import LoadingDiv from "../components/loadingDiv";
 import Link from "next/link";
+import { get } from "../utils/docQuery";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -21,20 +22,8 @@ const classes: { [key: string]: string } = {
     "border-gray-300 focus:border-sky-500 w-full my-2",
 };
 
-// creating student variants
-const studentVariants: Variants = {
-  hidden: {
-    opacity: 0,
-    y: 30,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-  },
-};
-
 // typing the response
-type responseType =
+type Response =
   | {
       succes: true;
       userType: "admin" | "superadmin";
@@ -51,7 +40,7 @@ type responseType =
 
 const fetchData = async (
   query: string,
-  setter: Dispatch<SetStateAction<responseType | undefined>>
+  setter: Dispatch<SetStateAction<Response | undefined>>
 ) => {
   // Retrieve the token from the local storage.
   const token = localStorage.getItem("token");
@@ -72,11 +61,11 @@ const fetchData = async (
   }
 };
 
-const acceptedValues = ["both", "true", "false"];
+const boolValues = ["both", "true", "false"];
 
 const Content = () => {
   // create response state
-  const [response, setResponse] = useState<responseType>();
+  const [response, setResponse] = useState<Response>();
   // create a state for filters div
   const [filtersDivOpened, setFiltersDivOpened] = useState(true);
   const [loaded, setLoaded] = useState(false);
@@ -91,7 +80,7 @@ const Content = () => {
   }>({
     name: searchParams.get("name") || "",
     phone: searchParams.get("phone") || "",
-    subscribed: acceptedValues.includes(searchParams.get("subscribed") || "")
+    subscribed: boolValues.includes(searchParams.get("subscribed") || "")
       ? (searchParams.get("subscribed") as "both" | "false" | "true")
       : "both",
   });
@@ -101,7 +90,7 @@ const Content = () => {
     setFilters({
       name: searchParams.get("name") || "",
       phone: searchParams.get("phone") || "",
-      subscribed: acceptedValues.includes(searchParams.get("subscribed") || "")
+      subscribed: boolValues.includes(searchParams.get("subscribed") || "")
         ? (searchParams.get("subscribed") as "both" | "false" | "true")
         : "both",
     });
@@ -113,6 +102,14 @@ const Content = () => {
     router.replace(`?${query.toString()}`);
     // fetchData(query.toString(), setResponse);
   }, [filters, router]);
+
+  useEffect(() => {
+    if (openedStudent !== undefined) {
+      get<HTMLBodyElement>("body")[0].classList.add("overflow-y-hidden");
+    } else {
+      get<HTMLBodyElement>("body")[0].classList.remove("overflow-y-hidden");
+    }
+  }, [openedStudent]);
 
   // create useEffect function
   useEffect(() => {

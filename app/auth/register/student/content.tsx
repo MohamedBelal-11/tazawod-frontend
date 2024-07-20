@@ -12,24 +12,17 @@ import {
 // import { numHours } from "@/app/utils/time";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react";
 import { backendUrl } from "@/app/utils/auth";
 import PasswordInput from "@/app/components/passwordInput";
-import { convertLocalTimeToEgyptTime } from "@/app/utils/time";
+import { convertLocalTimeToEgyptTime, days } from "@/app/utils/time";
 import MyPhoneInput from "@/app/components/phoneInput";
 import { AnimatePresence, motion } from "framer-motion";
+import { Weekday } from "@/app/utils/students";
+import { get } from "@/app/utils/docQuery";
+import "./page.css"
 
-type metaInfo = { day: string; starts: string; delay: string };
-
-const days = [
-  "sunday",
-  "monday",
-  "tuesday",
-  "wednesday",
-  "thurusday",
-  "friday",
-  "saturday",
-];
+export type MetaInfo = { day: Weekday; starts: string; delay: string };
 
 const classes = {
   inp:
@@ -49,13 +42,13 @@ const classes = {
 };
 
 function CreateDate(props: {
-  method?: Dispatch<SetStateAction<metaInfo[]>>;
-  value?: metaInfo[];
+  method?: Dispatch<SetStateAction<MetaInfo[]>>;
+  value?: MetaInfo[];
   closeMethod: () => void;
 }) {
   const [start, setStart] = useState("15:00:00");
   const [delay, setDelay] = useState("2:00:00");
-  const [addDays, setAddDays] = useState<string[]>([]);
+  const [addDays, setAddDays] = useState<Weekday[]>([]);
   const [red, setRed] = useState(false);
 
   if (props.method === undefined || props.value === undefined) {
@@ -279,16 +272,21 @@ export default function Content() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [gender, setGender] = useState<"male" | "female">();
-  const [quraan_days, setQuraan_days] = useState<metaInfo[]>([]);
-  const [createDate, setCreateDate] = useState<
-    | {
-        method: Dispatch<SetStateAction<metaInfo[]>>;
-        value: metaInfo[];
-      }
-    | undefined
-  >();
+  const [quraan_days, setQuraan_days] = useState<MetaInfo[]>([]);
+  const [createDate, setCreateDate] = useState<{
+    method: Dispatch<SetStateAction<MetaInfo[]>>;
+    value: MetaInfo[];
+  }>();
   const [message, setMessage] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (createDate) {
+      get<HTMLBodyElement>("html")[0].classList.add("overflow-y-hidden");
+    } else {
+      get<HTMLBodyElement>("html")[0].classList.remove("overflow-y-hidden");
+    }
+  }, [createDate])
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -539,7 +537,7 @@ export default function Content() {
                   key={i}
                   variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
                 >
-                  {c} 
+                  {c}
                 </motion.span>
               ))}
             </motion.p>
