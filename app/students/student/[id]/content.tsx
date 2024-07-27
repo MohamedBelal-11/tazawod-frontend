@@ -10,14 +10,14 @@ import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
 import { Date, Weekday } from "@/app/utils/students";
 import { convertEgyptTimeToLocalTime, hrNumber } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import EditDates from "./editDates";
 import MyPhoneInput from "@/app/components/phoneInput";
-import Button from "@/app/components/button";
+import Button, { getClass } from "@/app/components/button";
 import "@/app/auth/register/student/page.css";
+import P, { regulerConfirm } from "@/app/components/popup";
 
 interface Tdate extends Date {
   price: number;
@@ -80,12 +80,12 @@ type responset =
       subscribed: boolean;
       dates: Tdate[];
       note: {
-        teacher: string;
+        teacher: { name: string; id: string };
         rate: number;
         discription: string | null;
         day: Weekday;
         date: string;
-      };
+      } | null;
       gender: "male" | "female";
       teacher: string | null;
       currency: "EGP" | "USD";
@@ -100,7 +100,8 @@ type responset =
 const EditData: React.FC<{
   defaultData: DataEdit;
   onClose: () => void;
-}> = ({ defaultData, onClose }) => {
+  subscribed: boolean;
+}> = ({ defaultData, onClose, subscribed }) => {
   // create inputs state
   const [inputs, setInputs] = useState<DataEdit>(defaultData);
   // create message state
@@ -141,7 +142,7 @@ const EditData: React.FC<{
 
   // return the jsx
   return (
-    <form className="h-full" onSubmit={(e) => e.preventDefault()}>
+    <form className="h-full w-max" onSubmit={(e) => e.preventDefault()}>
       <div className="h-full overflow-y-auto p-4 flex flex-col items-center">
         <input
           type="text"
@@ -163,7 +164,9 @@ const EditData: React.FC<{
             ))}
           </div>
         )}
-        <p className="mt-6 text-lg">الجنس</p>
+        <p className="mt-6 text-lg">
+          {subscribed ? "لا يمكنك تغيير جنسك بعد الإشتراك" : "الجنس"}
+        </p>
         <div className={classes["inp"] + "flex flex-wrap"}>
           <div>
             <label htmlFor="male">ذكر</label>
@@ -174,6 +177,7 @@ const EditData: React.FC<{
               onChange={() =>
                 setInputs((inps) => ({ ...inps, gender: "male" }))
               }
+              disabled={subscribed}
             />
           </div>
           <div>
@@ -185,6 +189,7 @@ const EditData: React.FC<{
               onChange={() =>
                 setInputs((inps) => ({ ...inps, gender: "female" }))
               }
+              disabled={subscribed}
             />
           </div>
         </div>
@@ -283,125 +288,59 @@ type PopupData =
       state: "data edit";
       defaultData: DataEdit;
       dates?: undefined;
-      id?: undefined;
+      id: boolean;
     };
-
-const regulerConfirm = ({
-  text,
-  btns,
-  onConfirm,
-  onClose,
-}: {
-  text: string;
-  btns?: [{ text?: string; color?: string }, { text?: string; color?: string }];
-  onConfirm: () => void;
-  onClose: () => void;
-}) => {
-  btns = btns
-    ? [
-        { text: btns[0].text || "تم", color: btns[0].color || "green" },
-        {
-          text: btns[1].text || "إلغاء",
-          color: btns[1].color || "red",
-        },
-      ]
-    : [
-        { text: "تم", color: "green" },
-        { text: "إلغاء", color: "red" },
-      ];
-  return (
-    <div className="h-full overflow-y-auto flex flex-col max-w-full gap-8 p-4 w-max">
-      <p className="sm:text-3xl text-xl text-center p-4">{text}</p>
-      <div className="flex gap-4 justify-evenly">
-        <Button color={btns[1].color} onClick={onClose}>
-          {btns[1].text}
-        </Button>
-        <Button color={btns[0].color} onClick={onConfirm}>
-          {btns[0].text}
-        </Button>
-      </div>
-    </div>
-  );
-};
 
 // declare popup div
 const Popup: React.FC<{ popupData: PopupData; onClose: () => void }> = ({
   popupData,
   onClose,
 }) => {
-  if (!popupData.state) {
-    return;
-  }
-
   return (
-    <motion.div
-      className="w-full h-screen fixed flex justify-center items-center top-0"
-      style={{ zIndex: 5 }}
-      initial={{ backgroundColor: "#0000" }}
-      animate={{
-        backgroundColor: "#1116",
-        transition: { duration: 0.5 },
-      }}
-      exit={{
-        backgroundColor: "#0000",
-        transition: { delay: 0.5, duration: 0.3 },
-      }}
-    >
-      <div
-        className="absolute w-full h-full cursor-pointer"
-        onClick={onClose}
-        style={{ zIndex: -1 }}
-      ></div>
-      <motion.div
-        className="rounded-2xl bg-white flex flex-col gap-4 overflow-hidden"
-        initial={{ height: 0 }}
-        animate={{
-          height: "auto",
-          transition: { delay: 0.3, duration: 0.5 },
-        }}
-        style={{ maxHeight: "85vh" }}
-        exit={{ height: 0, transition: { duration: 0.5 } }}
-      >
-        {popupData.state == "data edit" ? (
-          <EditData defaultData={popupData.defaultData} onClose={onClose} />
-        ) : popupData.state === "dates edit" ? (
-          <EditDates
-            onClose={onClose}
-            defaultDates={popupData.dates.map((date) => ({
-              day: date.day,
-              starts:
-                convertEgyptTimeToLocalTime(date.starts.slice(0, -3)) + ":00",
-              delay: (hrNumber(secondsToHrs(date.delay)) + ":00").slice(1),
-            }))}
-          />
-        ) : popupData.state === "subscribe" && !popupData.defaultData ? (
-          <Subscribe id={popupData.id} onClose={onClose} />
-        ) : popupData.state === "change" ? (
-          <Subscribe id={popupData.id} change onClose={onClose} />
-        ) : (
-          regulerConfirm({
-            ...(popupData.state === "delete"
-              ? {
-                  text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "حذف", color: "red" }, { color: "green" }],
-                }
-              : popupData.state === "subscribe"
-              ? {
-                  text: "هل أنت متأكد من الإشتراك لهذا الطالب ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "إشتراك" }, {}],
-                }
-              : {
-                  text: "هل أنت متأكد من أنك تريد إلغاء إشتراك هذا الطالب ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "إلغاء الإشتراك" }, {}],
-                }),
-            onClose,
-          })
-        )}
-      </motion.div>
-    </motion.div>
+    <P onClose={onClose} visible={Boolean(popupData.state)}>
+      {popupData.state == "data edit" ? (
+        <EditData
+          defaultData={popupData.defaultData}
+          onClose={onClose}
+          subscribed={popupData.id}
+        />
+      ) : popupData.state === "dates edit" ? (
+        <EditDates
+          onClose={onClose}
+          defaultDates={popupData.dates.map((date) => ({
+            day: date.day,
+            starts:
+              convertEgyptTimeToLocalTime(date.starts.slice(0, -3)) + ":00",
+            delay: (hrNumber(secondsToHrs(date.delay)) + ":00").slice(1),
+          }))}
+        />
+      ) : popupData.state === "subscribe" && !popupData.defaultData ? (
+        <Subscribe id={popupData.id} onClose={onClose} />
+      ) : popupData.state === "change" ? (
+        <Subscribe id={popupData.id} change onClose={onClose} />
+      ) : (
+        regulerConfirm({
+          ...(popupData.state === "delete"
+            ? {
+                text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
+                onConfirm: () => {},
+                btns: [{ text: "حذف", color: "red" }, { color: "green" }],
+              }
+            : popupData.state === "subscribe"
+            ? {
+                text: "هل أنت متأكد من الإشتراك لهذا الطالب ؟",
+                onConfirm: () => {},
+                btns: [{ text: "إشتراك" }, {}],
+              }
+            : {
+                text: "هل أنت متأكد من أنك تريد إلغاء إشتراك هذا الطالب ؟",
+                onConfirm: () => {},
+                btns: [{ text: "إلغاء الإشتراك" }, {}],
+              }),
+          onClose,
+        })
+      )}
+    </P>
   );
 };
 
@@ -409,8 +348,6 @@ const Content = () => {
   // crete response state
   const [response, setResponse] = useState<responset>();
   const { id }: { id: string } = useParams();
-  // create load state
-  const [loaded, setLoaded] = useState(false);
   // create popup state
   const [popup, setPopup] = useState<PopupData>({});
 
@@ -444,24 +381,15 @@ const Content = () => {
         day: "sunday",
         discription: "إلخ إلخ إلخ\ngggg\nggg",
         rate: 9,
-        teacher: "محمود جمال",
+        teacher: { name: "محمود جمال", id: "aaaa" },
       },
       phone: "201283410254",
       subscribed: true,
       teacher: "محمد بلال",
-      userType: "superadmin",
+      userType: "self",
       currency: "EGP",
     });
-    setLoaded(true);
   }, []);
-
-  useEffect(() => {
-    if (popup.state) {
-      get<HTMLBodyElement>("html")[0].classList.add("overflow-y-hidden");
-    } else {
-      get<HTMLBodyElement>("html")[0].classList.remove("overflow-y-hidden");
-    }
-  }, [popup]);
 
   useEffect(() => {
     if (response && response.succes) {
@@ -473,8 +401,6 @@ const Content = () => {
 
   return (
     <ArabicLayout>
-      <LoadingDiv loading={!loaded} />
-
       {response ? (
         response.succes ? (
           <>
@@ -512,6 +438,7 @@ const Content = () => {
                                     name: response.name,
                                     gender: response.gender,
                                   },
+                                  id: response.subscribed,
                                 }
                               : { state: "delete", id }
                           )
@@ -540,37 +467,22 @@ const Content = () => {
                   {/* subscribe button */}
                   {response.subscribed ? (
                     response.userType === "superadmin" && (
-                      <button
-                        className={
-                          "p-2 border-2 border-red-500 bg-red-200 " +
-                          "hover:text-white hover:bg-red-500 border-solid " +
-                          "rounded-lg transition-all duration-300"
-                        }
+                      <Button
+                        color="red"
                         onClick={() => setPopup({ state: "desubscribe", id })}
                       >
                         الغاء الإشتراك
-                      </button>
+                      </Button>
                     )
                   ) : response.userType === "self" ? (
                     // if self display the link to subscribe page
-                    <Link
-                      href=""
-                      className={
-                        "p-2 border-2 border-green-500 bg-green-200 " +
-                        "hover:text-white hover:bg-green-500 border-solid " +
-                        "rounded-lg transition-all duration-300 flex items-center"
-                      }
-                    >
+                    <Link href="" className={getClass({})}>
                       إشتراك
                     </Link>
                   ) : (
                     // else display button that make request to subscribing url
-                    <button
-                      className={
-                        "p-2 border-2 border-green-500 bg-green-200 " +
-                        "hover:text-white hover:bg-green-500 border-solid " +
-                        "rounded-lg transition-all duration-300"
-                      }
+                    <Button
+                      color="green"
                       onClick={() =>
                         setPopup({
                           state: "subscribe",
@@ -580,7 +492,7 @@ const Content = () => {
                       }
                     >
                       إشتراك
-                    </button>
+                    </Button>
                   )}
                 </div>
                 {/* display the teacher */}
@@ -597,12 +509,8 @@ const Content = () => {
                 {response.userType !== "self" && response.subscribed && (
                   // if the user is admin or super admin display change teacher button
                   <div>
-                    <button
-                      className={
-                        "p-2 border-2 border-sky-500 bg-sky-200 " +
-                        "hover:text-white hover:bg-sky-500 border-solid " +
-                        "rounded-lg transition-all duration-300 my-2"
-                      }
+                    <Button
+                      color="sky"
                       onClick={() =>
                         setPopup({
                           state: "change",
@@ -611,7 +519,7 @@ const Content = () => {
                       }
                     >
                       {response.teacher ? "تغيير المعلم" : "إختيار معلم"}
-                    </button>
+                    </Button>
                     {!response.teacher && (
                       // if subscribed push him
                       <span className="inline-block mr-4">يجب عليك هذا</span>
@@ -653,8 +561,17 @@ const Content = () => {
                         </tr>
                       ))}
                       <tr>
-                        <td className={classes["td"]}>الإجمالي</td>
-                        <td colSpan={3} className={classes["td"]}>
+                        <td className={classes["td"]} colSpan={2}>
+                          الإجمالي
+                        </td>
+                        <td className={classes["td"]}>
+                          {hrNumber(
+                            secondsToHrs(
+                              sum(response.dates.map((date) => date.delay))
+                            )
+                          )}
+                        </td>
+                        <td className={classes["td"]}>
                           {sum(response.dates.map(({ price }) => price))}{" "}
                           {response.currency === "EGP"
                             ? "جنيه مصري"
@@ -665,63 +582,82 @@ const Content = () => {
                     </tbody>
                   </table>
                 </div>
-                <button
-                  className={
-                    "p-4 border-2 w-full border-green-500 bg-green-200 " +
-                    "hover:text-white hover:bg-green-500 border-solid " +
-                    "rounded-lg transition-all duration-300 mt-5"
-                  }
-                  onClick={() =>
-                    setPopup({ state: "dates edit", dates: response.dates })
-                  }
-                >
-                  تعديل
-                </button>
+                {response.subscribed ? (
+                  <Button
+                    color="gray"
+                    type="div"
+                    className="w-full mt-4"
+                    padding={4}
+                  >
+                    لا يمكنك تعديل بياناتك بعد الإشتراك
+                  </Button>
+                ) : (
+                  <Button
+                    color="green"
+                    padding={4}
+                    onClick={() =>
+                      setPopup({ state: "dates edit", dates: response.dates })
+                    }
+                    className="w-full mt-4"
+                  >
+                    تعديل
+                  </Button>
+                )}
               </section>
               <section className={classes["section"] + "mt-2 overflow-hidden"}>
-                <div className="p-4">
-                  <div className="flex justify-between">
-                    <p className="sm:text-2xl">
-                      {`${arDay(response.note.day)}  ${response.note.date}`}
-                    </p>
-                    <p className="sm:text-2xl">
-                      {response.note.rate}\
-                      <span className="sm:text-lg text-sm">10</span>
-                    </p>
-                  </div>
-                  <div className="p-4">
-                    {response.note.discription
-                      ? response.note.discription.split("\n").map((line, i) => (
-                          <p key={i} className="sm:text-xl my-2">
-                            {line.trim()}
-                          </p>
-                        ))
-                      : "لم يتم كتابة تقرير"}
-                  </div>
-                  <p className="sm:text-2xl text-lg">
-                    المعلم: {response.note.teacher}
-                  </p>
-                </div>
-                <Link
-                  href={`/students/student/${id}/notes`}
-                  className={
-                    "border-t-2 border-solid border-gray-600 block " +
-                    "p-4 text-center hover:bg-gray-200 transition-all duration-300"
-                  }
-                >
-                  إظهار الكل
-                </Link>
+                {response.note ? (
+                  <>
+                    <div className="p-4">
+                      <div className="flex justify-between">
+                        <p className="sm:text-2xl">
+                          {`${arDay(response.note.day)}  ${response.note.date}`}
+                        </p>
+                        <p className="sm:text-2xl">
+                          {response.note.rate}\
+                          <span className="sm:text-lg text-sm">10</span>
+                        </p>
+                      </div>
+                      <div className="p-4">
+                        {response.note.discription
+                          ? response.note.discription
+                              .split("\n")
+                              .map((line, i) => (
+                                <p key={i} className="sm:text-xl my-2">
+                                  {line.trim()}
+                                </p>
+                              ))
+                          : "لم يتم كتابة تقرير"}
+                      </div>
+                      <p className="sm:text-2xl text-lg">
+                        المعلم:{" "}
+                        {response.userType === "self" ? (
+                          response.note.teacher.name
+                        ) : (
+                          <Link
+                            href={`/teachers/teacher/${response.note.teacher.id}`}
+                            className="hover:underline hover:text-green-500"
+                          >
+                            {response.note.teacher.name}
+                          </Link>
+                        )}
+                      </p>
+                    </div>
+                    <Link
+                      href={`/students/student/${id}/notes`}
+                      className={
+                        "border-t-2 border-solid border-gray-600 block " +
+                        "p-4 text-center hover:bg-gray-200 transition-all duration-300"
+                      }
+                    >
+                      إظهار الكل
+                    </Link>
+                  </>
+                ) : (
+                  <></>
+                )}
               </section>
             </main>
-            <AnimatePresence mode="wait">
-              {Popup({
-                popupData: popup,
-                onClose: () => {
-                  setPopup({});
-                },
-              })}
-              /
-            </AnimatePresence>
+            <Popup popupData={popup} onClose={() => setPopup({})} />
           </>
         ) : (
           <></>

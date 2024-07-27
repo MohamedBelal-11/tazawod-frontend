@@ -9,7 +9,6 @@ import { Date, Weekday } from "./utils/students";
 import { convertEgyptTimeToLocalTime, hrNumber, numHours } from "./utils/time";
 import { arDay } from "./utils/arabic";
 import axios from "axios";
-import LoadingDiv from "./components/loadingDiv";
 import { backendUrl } from "./utils/auth";
 import { motion, Variants } from "framer-motion";
 import {
@@ -365,7 +364,6 @@ const CCV: Variants = {
 
 export default function Content() {
   const [response, setResponse] = useState<responset>();
-  const [loaded, setLoaded] = useState(false);
 
   const fetchData1 = async () => {
     // Retrieve the token from the local storage.
@@ -431,11 +429,9 @@ export default function Content() {
         ],
       });
     }
-    setLoaded(true);
   }, [response]);
   return (
     <ArabicLayout>
-      <LoadingDiv loading={!loaded} />
       <header className={classes.header}>
         <img src="/static/imgs/logo-green.png" className="max-w-lg w-3/5" />
         <img src="/static/imgs/quraan.png" className="max-w-48 w-1/6" />

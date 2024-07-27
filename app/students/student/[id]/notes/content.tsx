@@ -5,20 +5,30 @@ import { arDay } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
 import { Weekday } from "@/app/utils/students";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 // decalare note type
-interface Note {
-  teacher: string;
-  rate: number;
-  discription: string | null;
-  day: Weekday;
-  date: string;
-}
+type Note =
+  | {
+      written: true;
+      teacher: { name: string; id: string };
+      rate: number;
+      discription: string;
+      day: Weekday;
+      date: string;
+    }
+  | {
+      written: false;
+      teacher: { name: string; id: string };
+      day: Weekday;
+      date: string;
+    };
 
 // declare response type
 type Response =
   | {
+      userType: "admin" | "self";
       succes: true;
       notes: Note[];
       student: string;
@@ -31,51 +41,51 @@ type Response =
 
 const Content = () => {
   const [response, setResponse] = useState<Response>();
-  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setResponse({
       succes: true,
+      userType: "self",
       notes: [
         {
           date: "11/3/2024",
           day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
-          teacher: "محمد علي",
+          written: true,
+          teacher: { name: "محمد علي", id: "aaaa" },
+        },
+        {
+          written: false,
+          date: "11/3/2024",
+          day: "sunday",
+          teacher: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
           day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
-          teacher: "محمد علي",
+          written: true,
+          teacher: { name: "محمد علي", id: "aaaa" },
+        },
+        {
+          date: "11/3/2024",
+          day: "sunday",
+          written: false,
+          teacher: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
           day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
-          teacher: "محمد علي",
-        },
-        {
-          date: "11/3/2024",
-          day: "sunday",
-          discription: "fghg\nffff\nr",
-          rate: 9,
-          teacher: "محمد علي",
-        },
-        {
-          date: "11/3/2024",
-          day: "sunday",
-          discription: "fghg\nffff\nr",
-          rate: 9,
-          teacher: "محمد علي",
+          written: true,
+          teacher: { name: "محمد علي", id: "aaaa" },
         },
       ],
       student: "محمد بلال",
     });
-    setLoaded(true);
   }, []);
 
   useEffect(() => {
@@ -87,7 +97,6 @@ const Content = () => {
 
   return (
     <ArabicLayout>
-      <LoadingDiv loading={!loaded} />
       {response ? (
         response.succes ? (
           <main className="sm:p-6 p-2">
@@ -118,21 +127,31 @@ const Content = () => {
                         {`${arDay(note.day)}  ${note.date}`}
                       </p>
                       <p className="sm:text-2xl">
-                        {note.rate}\
+                        {note.written ? note.rate : "-"}\
                         <span className="sm:text-lg text-sm">10</span>
                       </p>
                     </div>
                     <div className="p-4">
-                      {note.discription
+                      {note.written
                         ? note.discription.split("\n").map((line, i) => (
                             <p key={i} className="sm:text-xl my-2">
                               {line.trim()}
                             </p>
                           ))
-                        : "لم يتم كتابة تقرير"}
+                        : "لم يتم كتابة المذكرة"}
                     </div>
                     <p className="sm:text-2xl text-lg">
-                      المعلم: {note.teacher}
+                      المعلم:{" "}
+                      {response.userType === "self" ? (
+                        note.teacher.name
+                      ) : (
+                        <Link
+                          href={`/teachers/teacher/${note.teacher.id}`}
+                          className="hover:underline hover:text-green-500"
+                        >
+                          {note.teacher.name}
+                        </Link>
+                      )}
                     </p>
                   </div>
                 ))

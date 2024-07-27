@@ -1,7 +1,13 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useEffect, useState } from "react";
+import {
+  ForwardRefExoticComponent,
+  RefAttributes,
+  SVGProps,
+  useEffect,
+  useState,
+} from "react";
 import {
   Dialog,
   DialogPanel,
@@ -30,11 +36,19 @@ const classes = [
   "font-semibold leading-7 text-gray-900 hover:bg-gray-100",
 ];
 
-type option = {
-  name: string;
-  description: string;
-  href: string;
-};
+type option =
+  | {
+      name: string;
+      description: string;
+      href: string;
+      useID?: false;
+    }
+  | {
+      name: string;
+      description: string;
+      href: [string, string];
+      useID: true;
+    };
 
 const nDV: Variants = {
   hov: {
@@ -62,17 +76,17 @@ const adminOptionList: option[] = [
   {
     name: "المعلمين",
     description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
-    href: "#",
+    href: "/teachers",
   },
   {
     name: "الطلاب",
     description: "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
-    href: "#",
+    href: "/students",
   },
   {
     name: "الدروس والمقابلات",
     description: "عرض جميع الدروس والمقابلات المباشرة وغير المباشرة",
-    href: "#",
+    href: "/meatings",
   },
 ];
 
@@ -81,7 +95,7 @@ const superAdminOptionList: option[] = [
   {
     name: "المشرفين",
     description: "قائمة المشرفين الموافقين عليهم و قائمة دروسهم",
-    href: "#",
+    href: "/admins",
   },
 ];
 
@@ -107,7 +121,8 @@ const studentOptionList: option[] = [
   {
     name: "التقارير",
     description: "آخر التقييمات والملاحظات الخاصة بك",
-    href: "#",
+    href: ["/students/student", "notes"],
+    useID: true
   },
   {
     name: "الإشتراك",
@@ -125,16 +140,22 @@ const teacherOptionList: option[] = [
   {
     name: "التقارير",
     description: "آخر التقييمات والملاحظات الخاصة بك",
-    href: "#",
-  },
-  {
-    name: "الطلاب",
-    description: "عرض جميع الطلاب وتفاريرك الخاصة بهم",
-    href: "#",
+    href: ["/teachers/teacher", "notes"],
+    useID: true,
   },
 ];
 
-const callsToAction = [
+const callsToAction: {
+  name: string;
+  href: string;
+  useID?: false;
+  icon: ForwardRefExoticComponent<
+    Omit<SVGProps<SVGSVGElement>, "ref"> & {
+      title?: string;
+      titleId?: string;
+    } & RefAttributes<SVGSVGElement>
+  >;
+}[] = [
   { name: "شاهد الإعلان الترويجي", href: "#", icon: PlayCircleIcon },
   { name: "تواصل معنا", href: "#", icon: PhoneIcon },
 ];
@@ -286,21 +307,23 @@ export default function ArabicNavBar() {
               <PopoverPanel className="absolute -right-8 top-full z-10 mt-3 w-screen max-w-md overflow-hidden rounded-3xl bg-white shadow-lg ring-1 ring-gray-900/5">
                 <div className="p-4">
                   {list.map((item) => (
-                    <div
+                    <Link
+                      href={
+                        item.useID
+                          ? item.href.join(`/${response?.id}/`)
+                          : item.href
+                      }
                       key={item.name}
                       className="group relative flex items-center gap-x-6 rounded-lg p-4 text-sm leading-6 hover:bg-gray-100 cursor-pointer"
                     >
                       <div className="flex-auto">
-                        <Link
-                          href={item.href}
-                          className="block font-semibold text-gray-900"
-                        >
+                        <p className="block font-semibold text-gray-900">
                           {item.name}
                           <span className="absolute inset-0" />
-                        </Link>
+                        </p>
                         <p className="mt-1 text-gray-600">{item.description}</p>
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
@@ -432,7 +455,11 @@ export default function ArabicNavBar() {
                           <DisclosureButton
                             key={item.name}
                             as="a"
-                            href={item.href}
+                            href={
+                              item.useID
+                                ? item.href.join(`/${response?.id}/`)
+                                : item.href
+                            }
                             className={`block rounded-lg py-2 pl-6 pr-3 text-sm ${classes[1]}`}
                           >
                             {item.name}

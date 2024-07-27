@@ -15,7 +15,6 @@ import { ChevronDoubleLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import LoadingDiv from "../components/loadingDiv";
 import { numList } from "../utils/string";
 import { get } from "../utils/docQuery";
 import { secondsToHrs } from "../content";
@@ -95,7 +94,6 @@ const Content = () => {
   const [response, setResponse] = useState<Responset>();
   // create a state for filters div
   const [filtersDivOpened, setFiltersDivOpened] = useState(true);
-  const [loaded, setLoaded] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [openedTeacher, setOpenedTeacher] = useState<number>();
@@ -310,14 +308,12 @@ const Content = () => {
         },
       ],
     });
-    setLoaded(true);
   }, []);
 
   // return the content
   return (
     <ArabicLayout>
       <div className="h-px"></div>
-      <LoadingDiv loading={!loaded} />
       {response ? (
         response.succes ? (
           <main className="flex bg-white rounded-xl my-6 md:mx-8 max-w-screen overflow-x-hidden">

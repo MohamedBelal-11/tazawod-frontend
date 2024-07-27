@@ -81,6 +81,7 @@ export const arCharsList = [
   'ء',
   'ؤ',
   'ر',
+  'ى',
   'آ',
   'ة',
   'و',

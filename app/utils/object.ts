@@ -11,8 +11,8 @@ export const objCompare = <T>(obj1: T, obj2: T): boolean => {
       if (!objCompare(obj1[i], obj2[i])) {
         return false;
       }
-      return true;
     }
+    return true;
   }
 
   if (

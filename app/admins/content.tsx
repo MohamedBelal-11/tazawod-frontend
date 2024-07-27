@@ -13,6 +13,7 @@ import { backendUrl } from "../utils/auth";
 import axios from "axios";
 import Link from "next/link";
 import { get } from "../utils/docQuery";
+import Button from "@/app/components/button";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -25,16 +26,15 @@ const classes: { [key: string]: string } = {
 type Response =
   | {
       succes: true;
-      userType: "admin" | "superadmin";
-      students: {
+      admins: {
         id: string;
         name: string;
         phone: string;
-        subscribed: boolean;
-        teacher: string | null;
+        is_accepted: boolean;
+        description: string | null;
       }[];
     }
-  | { succes: false ;error: number }
+  | { succes: false; error: number }
   | null;
 
 const fetchData = async (
@@ -46,7 +46,7 @@ const fetchData = async (
   try {
     // Make an HTTP GET request to the server.
     // The request includes an Authorization header with the token.
-    const respons = await axios.get(backendUrl + "/api/students?" + query, {
+    const respons = await axios.get(backendUrl + "/api/admins?" + query, {
       headers: {
         // Set the Authorization header to include the token.
         Authorization: `Token ${token}`,
@@ -74,12 +74,12 @@ const Content = () => {
   const [filters, setFilters] = useState<{
     name: string;
     phone: string;
-    subscribed: "both" | "false" | "true";
+    is_accepted: "both" | "false" | "true";
   }>({
     name: searchParams.get("name") || "",
     phone: searchParams.get("phone") || "",
-    subscribed: boolValues.includes(searchParams.get("subscribed") || "")
-      ? (searchParams.get("subscribed") as "both" | "false" | "true")
+    is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
+      ? (searchParams.get("is_accepted") as "both" | "false" | "true")
       : "both",
   });
 
@@ -88,8 +88,8 @@ const Content = () => {
     setFilters({
       name: searchParams.get("name") || "",
       phone: searchParams.get("phone") || "",
-      subscribed: boolValues.includes(searchParams.get("subscribed") || "")
-        ? (searchParams.get("subscribed") as "both" | "false" | "true")
+      is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
+        ? (searchParams.get("is_accepted") as "both" | "false" | "true")
         : "both",
     });
   }, [searchParams]);
@@ -113,77 +113,76 @@ const Content = () => {
   useEffect(() => {
     setResponse({
       succes: true,
-      userType: "admin",
-      students: [
+      admins: [
         {
           id: "aaaa",
           name: "علي خالد علي",
           phone: "201211111111",
-          subscribed: true,
-          teacher: null,
+          is_accepted: true,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaab",
           name: "عمر علاء الدين أبو بكر",
           phone: "201211111112",
-          subscribed: true,
-          teacher: "محمود جمال",
+          is_accepted: true,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaac",
           name: "فارس شعبان",
           phone: "201211111113",
-          subscribed: true,
-          teacher: null,
+          is_accepted: true,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaad",
           name: "فارس هيثم",
           phone: "201211111114",
-          subscribed: true,
-          teacher: null,
+          is_accepted: true,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaae",
           name: "عبدالرحمان",
           phone: "201211111115",
-          subscribed: false,
-          teacher: "محمد علي",
+          is_accepted: false,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaaf",
           name: "عبدالله",
           phone: "201211111116",
-          subscribed: false,
-          teacher: null,
+          is_accepted: false,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaag",
           name: "محمد أحمد محمد",
           phone: "201211111117",
-          subscribed: false,
-          teacher: "محمد علي",
+          is_accepted: false,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaah",
           name: "مازن محمد (الجمل)",
           phone: "201211111118",
-          subscribed: true,
-          teacher: null,
+          is_accepted: true,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaai",
           name: "مازن هاني",
           phone: "201211111119",
-          subscribed: false,
-          teacher: "محمد علي",
+          is_accepted: false,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
         {
           id: "aaaj",
           name: "محمد محمود",
           phone: "201211111110",
-          subscribed: false,
-          teacher: null,
+          is_accepted: false,
+          description: "بلا بلا بلا بلاب بلاب الب بلا\n dddddddddddddddddddd",
         },
       ],
     });
@@ -200,7 +199,7 @@ const Content = () => {
             <AnimatePresence>
               {openedStudent !== undefined &&
                 (() => {
-                  const student = response.students[openedStudent];
+                  const admin = response.admins[openedStudent];
                   return (
                     <motion.div
                       className="w-full top-0 right-0 h-screen fixed flex items-center justify-center cursor-pointer"
@@ -235,40 +234,30 @@ const Content = () => {
                             <XMarkIcon width={20} />
                           </div>
                         </div>
-                        <Link
-                          href={`/students/student/${student.id}`}
-                          className="sm:text-3xl text-xl text-green-400 hover:underline block"
-                        >
-                          {student.name}
-                        </Link>
+                        <p className="sm:text-3xl text-xl">{admin.name}</p>
                         <p className="text-2xl my-4">
-                          <span dir="ltr">+{student.phone}</span>
+                          <span dir="ltr">+{admin.phone}</span>
                         </p>
-                        <p className="text-xl my-4">
-                          المعلم:{" "}
-                          {student.subscribed && student.teacher === null ? (
-                            <>
-                              <span className="text-red-500">لا يوجد</span>
-                              <br />
-                              <span>
-                                يجب عليك إختيار معلم لهذا الطالب لأنه مشترك
-                              </span>
-                            </>
-                          ) : (
-                            student.teacher || "لا يوجد"
-                          )}
+                        <p>
+                          {admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}
                         </p>
-                        <p>{student.subscribed ? "مشترك" : "غير مشترك"}</p>
 
-                        <Link
-                          href={`/students/student/${student.id}`}
-                          className={
-                            "p-4 rounded-lg bg-green-200 hover:bg-green-500 border-2 " +
-                            "border-solid border-green-500 transition-all w-full my-4 block"
-                          }
+                        {Boolean(admin.description) && (
+                          <div className="p-4">
+                            {admin.description!.split("\n").map((line, i) => (
+                              <p key={i} className="py-1">
+                                {line}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        <Button
+                          color={admin.is_accepted ? "red" : undefined}
+                          className="w-full"
+                          padding={3}
                         >
-                          صفحة المستخدم
-                        </Link>
+                          {admin.is_accepted ? "إلغاء الموافقة" : "موافقة"}
+                        </Button>
                       </motion.div>
                     </motion.div>
                   );
@@ -281,11 +270,7 @@ const Content = () => {
                 } transition-all duration-300`}
                 style={{ maxWidth: "80vw" }}
               >
-                <div
-                  className={
-                    "p-4 overflow-x-hidden bg-white"
-                  }
-                >
+                <div className={"p-4 overflow-x-hidden bg-white w-full"}>
                   <h2 className="text-xl mb-4">فلتر</h2>
                   <input
                     type="text"
@@ -317,27 +302,27 @@ const Content = () => {
                   >
                     <div>
                       <label htmlFor="true" className="ml-2">
-                        مشترك
+                        موافق عليه
                       </label>
                       <input
                         type="radio"
                         id="true"
-                        checked={filters.subscribed === "true"}
+                        checked={filters.is_accepted === "true"}
                         onChange={() => {
-                          setFilters({ ...filters, subscribed: "true" });
+                          setFilters({ ...filters, is_accepted: "true" });
                         }}
                       />
                     </div>
                     <div>
                       <label htmlFor="false" className="ml-2">
-                        غير مشترك
+                        غير موافق عليه
                       </label>
                       <input
                         type="radio"
                         id="false"
-                        checked={filters.subscribed === "false"}
+                        checked={filters.is_accepted === "false"}
                         onChange={() => {
-                          setFilters({ ...filters, subscribed: "false" });
+                          setFilters({ ...filters, is_accepted: "false" });
                         }}
                       />
                     </div>
@@ -348,9 +333,9 @@ const Content = () => {
                       <input
                         type="radio"
                         id="both"
-                        checked={filters.subscribed === "both"}
+                        checked={filters.is_accepted === "both"}
                         onChange={() => {
-                          setFilters({ ...filters, subscribed: "both" });
+                          setFilters({ ...filters, is_accepted: "both" });
                         }}
                       />
                     </div>
@@ -378,9 +363,9 @@ const Content = () => {
               </button>
             </div>
             <div className="flex flex-wrap justify-evenly gap-2">
-              {response.students.map((student, i) => (
+              {response.admins.map((admin, i) => (
                 <motion.div
-                  key={student.id}
+                  key={admin.id}
                   initial={{
                     opacity: 0,
                     y: 50,
@@ -397,19 +382,11 @@ const Content = () => {
                   style={{ minHeight: 200 }}
                   onClick={() => setOpenedSudent(i)}
                 >
-                  <p className="text-xl">{student.name}</p>
+                  <p className="text-xl">{admin.name}</p>
                   <p className="text-lg my-2">
-                    <span dir="ltr">+{student.phone}</span>
+                    <span dir="ltr">+{admin.phone}</span>
                   </p>
-                  <p>{student.subscribed ? "مشترك" : "غير مشترك"}</p>
-                  <p className="text-lg">
-                    المعلم:{" "}
-                    {student.subscribed && student.teacher === null ? (
-                      <span className="text-red-500">لا يوجد</span>
-                    ) : (
-                      student.teacher || "لا يوجد"
-                    )}
-                  </p>
+                  <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
                 </motion.div>
               ))}
             </div>

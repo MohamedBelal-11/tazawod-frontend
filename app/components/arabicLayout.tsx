@@ -1,6 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
 import arabicFooter from "./arabicFooter";
 import ArabicNavBar from "./arabicNavBar";
+import LoadingDiv from "./loadingDiv";
 
 export default function ArabicLayout({
   children,
@@ -13,6 +15,10 @@ export default function ArabicLayout({
   className?: string;
   head?: React.ReactNode;
 }) {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => setLoading(false), [])
+
   return (
     <html lang="ar">
       <head>
@@ -26,6 +32,7 @@ export default function ArabicLayout({
       <body dir="rtl" style={style} className={className}>
         <ArabicNavBar />
         <div className="mt-20"></div>
+        <LoadingDiv loading={loading} />
         {children}
         {arabicFooter}
       </body>
