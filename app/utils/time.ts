@@ -1,12 +1,14 @@
 export const numHours = (time: string) => {
-  let rtime = time.slice(0, -3);
-  return +rtime.slice(0, -3) + +rtime.slice(-2) / 60;
+  let [hours, minutes, secondes] = time.split(":").map(Number);
+  return hours + minutes / 60 + secondes / 60 / 60;
 };
 
 export const hrNumber = (number: number) => {
   let mins = String(Math.round((number - Math.floor(number)) * 60));
   let hrs = String(Math.floor(number));
-  return (hrs.length === 1 ? "0" + hrs : hrs) + ":" + (mins === "0" ? "00" : mins);
+  return (
+    (hrs.length === 1 ? "0" + hrs : hrs) + ":" + (mins === "0" ? "00" : mins)
+  );
 };
 
 import { DateTime } from "luxon";
@@ -37,6 +39,5 @@ export const days: Weekday[] = [
   "friday",
   "saturday",
 ];
-
 
 export { convertEgyptTimeToLocalTime, convertLocalTimeToEgyptTime };

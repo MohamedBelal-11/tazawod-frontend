@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import ArabicLayout from "@/app/components/arabicLayout";
 import Button from "@/app/components/button";
 import Checker from "@/app/components/Checker";
 import Popup, { regulerConfirm } from "@/app/components/popup";
@@ -220,11 +219,11 @@ const AddVideo: React.FC<{ onClose: () => void; playlists: Playlist[] }> = ({
           <>
             <p className="mt-4">التأكد من الرابط</p>
             <ReactPlayer
-              style={{ width: "100%" }}
               allow="autoplay; fullscreen"
               allowFullScreen
               url={trimed}
               width={"100%"}
+              className="aspect-video"
             />
           </>
         );

@@ -2,7 +2,7 @@
 import ArabicLayout from "@/app/components/arabicLayout";
 import Button from "@/app/components/button";
 import Popup from "@/app/components/popup";
-import { arDay } from "@/app/utils/arabic";
+import { arDay, getArabicDate } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
 import { objCompare } from "@/app/utils/object";
@@ -20,14 +20,12 @@ type Note =
       student: { name: string; id: string };
       rate: number;
       discription: string;
-      day: Weekday;
       date: string;
     }
   | {
       written: false;
       id: string;
       student: { name: string; id: string };
-      day: Weekday;
       date: string;
     };
 
@@ -156,7 +154,6 @@ const Content = () => {
       notes: [
         {
           date: "11/3/2024",
-          day: "sunday",
           id: "1",
           discription: "fghg\nffff\nr",
           rate: 9,
@@ -166,13 +163,11 @@ const Content = () => {
         {
           written: false,
           date: "11/3/2024",
-          day: "sunday",
           id: "1",
           student: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           id: "1",
           discription: "fghg\nffff\nr",
           rate: 9,
@@ -181,14 +176,12 @@ const Content = () => {
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           id: "1",
           written: false,
           student: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           id: "1",
           discription: "fghg\nffff\nr",
           rate: 9,
@@ -237,7 +230,7 @@ const Content = () => {
                     >
                       <div className="flex justify-between">
                         <p className="sm:text-2xl">
-                          {`${arDay(note.day)}  ${note.date}`}
+                          {`${getArabicDate(note.date)}`}
                         </p>
                         <p className="sm:text-2xl">
                           {note.written ? note.rate : "-"}\

@@ -1,7 +1,5 @@
 "use client";
-import ArabicLayout from "@/app/components/arabicLayout";
-import LoadingDiv from "@/app/components/loadingDiv";
-import { arDay } from "@/app/utils/arabic";
+import { arDay, getArabicDate } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
 import { Weekday } from "@/app/utils/students";
@@ -15,13 +13,11 @@ type Note =
       teacher: { name: string; id: string };
       rate: number;
       discription: string;
-      day: Weekday;
       date: string;
     }
   | {
       written: false;
       teacher: { name: string; id: string };
-      day: Weekday;
       date: string;
     };
 
@@ -49,7 +45,6 @@ const Content = () => {
       notes: [
         {
           date: "11/3/2024",
-          day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
           written: true,
@@ -58,12 +53,10 @@ const Content = () => {
         {
           written: false,
           date: "11/3/2024",
-          day: "sunday",
           teacher: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
           written: true,
@@ -71,13 +64,11 @@ const Content = () => {
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           written: false,
           teacher: { name: "محمد علي", id: "aaaa" },
         },
         {
           date: "11/3/2024",
-          day: "sunday",
           discription: "fghg\nffff\nr",
           rate: 9,
           written: true,
@@ -124,7 +115,7 @@ const Content = () => {
                   >
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${arDay(note.day)}  ${note.date}`}
+                        {getArabicDate(note.date)}
                       </p>
                       <p className="sm:text-2xl">
                         {note.written ? note.rate : "-"}\

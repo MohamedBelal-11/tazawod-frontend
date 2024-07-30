@@ -7,7 +7,7 @@ import Link from "next/link";
 import globalClasses from "../utils/globalClasses";
 import { Date, Weekday } from "../utils/students";
 import { convertEgyptTimeToLocalTime, hrNumber, numHours } from "../utils/time";
-import { arDay } from "../utils/arabic";
+import { arDay, getArabicDate } from "../utils/arabic";
 import axios from "axios";
 import { backendUrl } from "../utils/auth";
 import { motion, Variants } from "framer-motion";
@@ -233,14 +233,14 @@ type adminMeeting = {
   teacher: string;
   starts: string;
   student: string;
-  delay: string;
+  delay: number;
   url: string;
 };
 
 type meeting = {
   student: string;
   starts: string;
-  delay: string;
+  delay: number;
 };
 
 type responset =
@@ -253,7 +253,6 @@ type responset =
         teacher: string;
         rate: number;
         discription: string;
-        day: Weekday;
         date: string;
       }[];
     }
@@ -265,7 +264,6 @@ type responset =
         teacher: string;
         rate: number;
         discription: string;
-        day: Weekday;
         date: string;
       }[];
     }
@@ -284,7 +282,6 @@ type responset =
         student: string;
         rate: number;
         discription: string;
-        day: Weekday;
         date: string;
       }[];
     }
@@ -652,7 +649,7 @@ export default function Content() {
                       {convertEgyptTimeToLocalTime(
                         hrNumber(
                           numHours(meeting.starts) +
-                            secondsToHrs(+meeting.delay)
+                            secondsToHrs(meeting.delay)
                         )
                       )}
                     </p>
@@ -756,7 +753,7 @@ export default function Content() {
                   return (
                     <div key={i} className="p-8 bg-white rounded-3xl my-6">
                       <h3 className="flex justify-between text-2xl font-semibold">
-                        <span>{arDay(note.day) + " " + note.date}</span>
+                        <span>{getArabicDate(note.date)}</span>
                         <span>
                           {note.rate}/<span className="text-sm">10</span>
                         </span>
@@ -792,7 +789,7 @@ export default function Content() {
                   return (
                     <div key={i} className="p-8 bg-white rounded-3xl my-6">
                       <h3 className="flex justify-between text-2xl font-semibold">
-                        <span>{arDay(note.day) + " " + note.date}</span>
+                        <span>{getArabicDate(note.date)}</span>
                         <span>
                           {note.rate}/<span className="text-sm">10</span>
                         </span>
