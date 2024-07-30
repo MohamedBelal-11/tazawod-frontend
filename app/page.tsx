@@ -1,10 +1,7 @@
-import { Metadata } from "next";
-import Content from "./content";
+import { redirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "الصفحة الرئيسية - أكاديمية تزود",
+const Page = () => {
+  redirect("/ar");
 };
 
-export default function Home() {
-  return <Content />
-}
+export default Page;

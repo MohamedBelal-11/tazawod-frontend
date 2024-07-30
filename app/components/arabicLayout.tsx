@@ -8,16 +8,22 @@ export default function ArabicLayout({
   children,
   style,
   className,
-  head
+  head,
 }: {
   children?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
   head?: React.ReactNode;
 }) {
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+  const [arms, setArms] = useState(true);
 
-  useEffect(() => setLoading(false), [])
+  useEffect(() => {
+    setLoading(false);
+    if (location.pathname.startsWith("/ar/auth")) {
+      setArms(false);
+    }
+  }, []);
 
   return (
     <html lang="ar">
@@ -30,11 +36,12 @@ export default function ArabicLayout({
         {head}
       </head>
       <body dir="rtl" style={style} className={className}>
-        <ArabicNavBar />
+        <span className="hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 bg-amber-200 hover:bg-amber-500 border-amber-500"></span>
+        {arms && <ArabicNavBar />}
         <div className="mt-20"></div>
         <LoadingDiv loading={loading} />
         {children}
-        {arabicFooter}
+        {arms && arabicFooter}
       </body>
     </html>
   );

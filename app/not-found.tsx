@@ -15,7 +15,7 @@ const NotFound = () => {
             <span>Page not found</span>
           </p>
           <div className="*:py-2 *:px-4 *:rounded-xl *:bg-green-600 *:text-white flex sm:flex-nowrap md:gap-8 sm:gap-4 gap-2">
-            <Link href="/">الصفحة الرئيسية</Link>
+            <Link href="/ar/">الصفحة الرئيسية</Link>
             <Link href="/en">Home Page</Link>
           </div>
         </div>

@@ -76,17 +76,17 @@ const adminOptionList: option[] = [
   {
     name: "المعلمين",
     description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
-    href: "/teachers",
+    href: "/ar/teachers",
   },
   {
     name: "الطلاب",
     description: "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
-    href: "/students",
+    href: "/ar/students",
   },
   {
     name: "الدروس والمقابلات",
     description: "عرض جميع الدروس والمقابلات المباشرة وغير المباشرة",
-    href: "/meatings",
+    href: "/ar/meatings",
   },
 ];
 
@@ -95,7 +95,7 @@ const superAdminOptionList: option[] = [
   {
     name: "المشرفين",
     description: "قائمة المشرفين الموافقين عليهم و قائمة دروسهم",
-    href: "/admins",
+    href: "/ar/admins",
   },
 ];
 
@@ -103,17 +103,17 @@ const unlogedOptionList: option[] = [
   {
     name: "تسجيل الدخول",
     description: "لديك حساب بالفعل؟ قم بتسجيل الدخول",
-    href: "/auth/login",
+    href: "/ar/auth/login",
   },
   {
     name: "تسجيل حساب كمعلم",
     description: "إنضم إلينا كمعلم",
-    href: "/auth/register/teacher",
+    href: "/ar/auth/register/teacher",
   },
   {
     name: "تسجيل حساب مشرف",
     description: "إنضم إلينا كمشرف",
-    href: "/auth/register/admin",
+    href: "/ar/auth/register/admin",
   },
 ];
 
@@ -121,18 +121,18 @@ const studentOptionList: option[] = [
   {
     name: "التقارير",
     description: "آخر التقييمات والملاحظات الخاصة بك",
-    href: ["/students/student", "notes"],
-    useID: true
+    href: ["/ar/students/student", "notes"],
+    useID: true,
   },
   {
     name: "الإشتراك",
     description: "إشترك لنفسك أو لغيرك",
-    href: "#",
+    href: "/ar/subscribe",
   },
   {
     name: "الدروس المقطعية",
     description: "شاهد دروس مقطية في أي وقت",
-    href: "#",
+    href: "/ar/watch/playlists",
   },
 ];
 
@@ -140,7 +140,7 @@ const teacherOptionList: option[] = [
   {
     name: "التقارير",
     description: "آخر التقييمات والملاحظات الخاصة بك",
-    href: ["/teachers/teacher", "notes"],
+    href: ["/ar/teachers/teacher", "notes"],
     useID: true,
   },
 ];
@@ -235,11 +235,11 @@ export default function ArabicNavBar() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1 gap-4">
-          <Link href="/">
+          <Link href="/ar/">
             <img className="h-12 min-w-12" src="/static/imgs/quraan.png" />
           </Link>
           {response ? (
-            <Link href="/notifications">
+            <Link href="/ar/notifications">
               <motion.div
                 variants={nDV}
                 whileHover="hov"
@@ -357,34 +357,30 @@ export default function ArabicNavBar() {
             }
             className={classes[0]}
           >
-            {userType !== "unloged"
-              ? "المقابلت القادمة"
-              : "ما هي أكادمية تزود ؟"}
+            {userType !== "unloged" ? "المقابلات" : "ما هي أكادمية تزود ؟"}
           </Link>
-          <Link
-            href={
-              userType === "student"
-                ? "#"
+          {userType !== "superadmin" && (
+            <Link
+              href={
+                userType === "student"
+                  ? "#"
+                  : userType === "teacher"
+                  ? "#"
+                  : userType === "admin"
+                  ? "#"
+                  : "#"
+              }
+              className={classes[0]}
+            >
+              {userType === "student"
+                ? "دليل الطالب"
                 : userType === "teacher"
-                ? "#"
+                ? "دليل المعلم"
                 : userType === "admin"
-                ? "#"
-                : userType === "superadmin"
-                ? "#"
-                : "#"
-            }
-            className={classes[0]}
-          >
-            {userType === "student"
-              ? "دليل الطالب"
-              : userType === "teacher"
-              ? "دليل المعلم"
-              : userType === "admin"
-              ? "دليل المشرف"
-              : userType === "superadmin"
-              ? "طلبات الموافقة"
-              : "لماذا أكادمية تزود ؟"}
-          </Link>
+                ? "دليل المشرف"
+                : "لماذا أكادمية تزود ؟"}
+            </Link>
+          )}
           {userType !== "unloged" ? (
             <Link
               href={`/${userType}s/${userType}/${response?.id}`}
@@ -399,11 +395,11 @@ export default function ArabicNavBar() {
             <p className="font-bold">{response.username}</p>
           ) : (
             <>
-              <Link href="/auth/login" className={classes[0]}>
+              <Link href="/ar/auth/login" className={classes[0]}>
                 تسجيل دخول <span aria-hidden="true">&larr;</span>
               </Link>
               <Link
-                href="/auth/register/student"
+                href="/ar/auth/register/student"
                 className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}
               >
                 تسجيل حساب
@@ -483,32 +479,32 @@ export default function ArabicNavBar() {
                   }
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                 >
-                  المقابلت القادمة
+                  {userType !== "unloged"
+                    ? "المقابلات"
+                    : "ما هي أكادمية تزود ؟"}
                 </Link>
-                <Link
-                  href={
-                    userType === "student"
-                      ? "#"
+                {userType !== "superadmin" && (
+                  <Link
+                    href={
+                      userType === "student"
+                        ? "#"
+                        : userType === "teacher"
+                        ? "#"
+                        : userType === "admin"
+                        ? "#"
+                        : "#"
+                    }
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
+                  >
+                    {userType === "student"
+                      ? "دليل الطالب"
                       : userType === "teacher"
-                      ? "#"
+                      ? "دليل المعلم"
                       : userType === "admin"
-                      ? "#"
-                      : userType === "superadmin"
-                      ? "#"
-                      : "#"
-                  }
-                  className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
-                >
-                  {userType === "student"
-                    ? "دليل الطالب"
-                    : userType === "teacher"
-                    ? "دليل المعلم"
-                    : userType === "admin"
-                    ? "دليل المشرف"
-                    : userType === "superadmin"
-                    ? "طلبات الموافقة"
-                    : "لماذا أكادمية تزود ؟"}
-                </Link>
+                      ? "دليل المشرف"
+                      : "لماذا أكادمية تزود ؟"}
+                  </Link>
+                )}
                 <Link
                   href={`/${userType}s/${userType}/${response?.id}`}
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
@@ -522,13 +518,13 @@ export default function ArabicNavBar() {
                 ) : (
                   <>
                     <Link
-                      href="/auth/login"
+                      href="/ar/auth/login"
                       className={`-mx-3 block rounded-lg px-3 py-2.5 text-base ${classes[1]}`}
                     >
                       تسجيل الدخول
                     </Link>
                     <Link
-                      href="/auth/register/student"
+                      href="/ar/auth/register/student"
                       className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
                     >
                       تسجيل حساب
