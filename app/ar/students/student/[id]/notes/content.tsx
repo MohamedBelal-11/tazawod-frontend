@@ -1,8 +1,7 @@
 "use client";
-import { arDay, getArabicDate } from "@/app/utils/arabic";
+import {  getArabicDate } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
-import { Weekday } from "@/app/utils/students";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

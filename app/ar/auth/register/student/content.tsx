@@ -20,6 +20,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Weekday } from "@/app/utils/students";
 import { get } from "@/app/utils/docQuery";
 import "./page.css"
+import { useArabicLayoutContext } from "@/app/contexts/arabicLayoutContext";
 
 export type MetaInfo = { day: Weekday; starts: string; delay: string };
 
@@ -278,6 +279,11 @@ export default function Content() {
   }>();
   const [message, setMessage] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const {setLayoutProperties} = useArabicLayoutContext()!
+
+  useEffect(() => {
+    setLayoutProperties({className: "pt-4"})
+  }, [setLayoutProperties])
 
   useEffect(() => {
     if (createDate) {

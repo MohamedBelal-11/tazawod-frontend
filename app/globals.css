@@ -23,10 +23,6 @@ img {
   user-select: none;
 }
 
-.rounded-4xl {
-  border-radius: 40px;
-}
-
 .flex-col {
   display: flex;
 }

@@ -35,6 +35,7 @@ const MyPhoneInput: React.FC<{
         countryCodeEditable={false}
         enableSearch
         searchPlaceholder="بحث"
+        inputProps={{ autoComplete: "tel" }}
       />
     </div>
   );
