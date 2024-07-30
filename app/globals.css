@@ -5,6 +5,8 @@
 * {
   position: relative;
   font-family: "Rubik";
+  scroll-margin-top: 180px;
+  scroll-behavior: smooth;
 }
 
 body {

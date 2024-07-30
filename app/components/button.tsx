@@ -25,6 +25,7 @@ const Button: React.FC<{
   className?: string;
   textHov?: string;
   textCol?: string;
+  id?: string;
 }> = ({
   onClick,
   color,
@@ -35,6 +36,7 @@ const Button: React.FC<{
   className = "",
   textHov = "white",
   textCol = "black",
+  id
 }) =>
   type === "div" ? (
     <div
@@ -43,6 +45,7 @@ const Button: React.FC<{
         " inline-block text-center " +
         className
       }
+      id={id}
       onClick={onClick}
     >
       {children}
@@ -53,6 +56,7 @@ const Button: React.FC<{
         getClass({ color, padding, size, textHov, textCol }) + " " + className
       }
       type={type}
+      id={id}
       onClick={onClick}
     >
       {children}

@@ -1,7 +1,7 @@
 "use client";
 import { secondsToHrs } from "@/app/ar/content";
 import { arDay } from "@/app/utils/arabic";
-import { get } from "@/app/utils/docQuery";
+import { get, stateScroll } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
@@ -349,6 +349,8 @@ const Content = () => {
   // create popup state
   const [popup, setPopup] = useState<PopupData>({});
 
+  useEffect(stateScroll, [response]);
+
   useEffect(() => {
     setResponse({
       succes: true,
@@ -586,6 +588,7 @@ const Content = () => {
                     type="div"
                     className="w-full mt-4"
                     padding={4}
+                    id="edit-dates-button"
                   >
                     لا يمكنك تعديل بياناتك بعد الإشتراك
                   </Button>
@@ -597,6 +600,7 @@ const Content = () => {
                       setPopup({ state: "dates edit", dates: response.dates })
                     }
                     className="w-full mt-4"
+                    id="edit-dates-button"
                   >
                     تعديل
                   </Button>

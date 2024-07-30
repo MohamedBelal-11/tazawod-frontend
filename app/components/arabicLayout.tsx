@@ -8,6 +8,10 @@ import {
   useArabicLayoutContext,
 } from "../contexts/arabicLayoutContext";
 
+const activateclass =
+  "hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 " +
+  "bg-emerald-200 hover:bg-emerald-500 border-emerald-500 " +
+  "bg-amber-200 hover:bg-amber-500 border-amber-500";
 const Body: React.FC<{
   arms: boolean;
   loading: boolean;
@@ -20,7 +24,7 @@ const Body: React.FC<{
       style={layoutProperties.style}
       className={layoutProperties.className}
     >
-      <span className="hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 bg-amber-200 hover:bg-amber-500 border-amber-500"></span>
+      <span className={activateclass}></span>
       {arms && (
         <>
           <ArabicNavBar />
