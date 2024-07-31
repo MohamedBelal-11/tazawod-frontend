@@ -13,17 +13,22 @@ export const get = <T extends HTMLElement = HTMLElement>(
   return elements.slice(from, to === 0 ? undefined : to);
 };
 
-export const stateScroll = () => {
-  const { hash } = location;
-  if (
-    hash.startsWith("#") &&
-    hash.length > 1 &&
-    !hash.slice(1).includes("#")
-  ) {
-    const hashed = get(hash)[0] as HTMLElement | undefined;
-    if (hashed) {
-      hashed.scrollIntoView({ behavior: "smooth" });
-      location.hash = "";
+export const stateScroll = (
+  scrolled: boolean,
+  setScrolled: React.Dispatch<React.SetStateAction<boolean>>
+) => {
+  if (!scrolled) {
+    const { hash } = location;
+    if (
+      hash.startsWith("#") &&
+      hash.length > 1 &&
+      !hash.slice(1).includes("#")
+    ) {
+      const hashed = get(hash)[0] as HTMLElement | undefined;
+      if (hashed) {
+        hashed.scrollIntoView({ behavior: "smooth" });
+        setScrolled(true);
+      }
     }
   }
-}
+};

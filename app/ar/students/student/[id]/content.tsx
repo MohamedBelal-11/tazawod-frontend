@@ -16,6 +16,7 @@ import MyPhoneInput from "@/app/components/phoneInput";
 import Button, { getClass } from "@/app/components/button";
 import "@/app/ar/auth/register/student/page.css";
 import P, { regulerConfirm } from "@/app/components/popup";
+import { useScrollContext } from "@/app/contexts/scrollerContext";
 
 interface Tdate extends Date {
   price: number;
@@ -346,10 +347,13 @@ const Content = () => {
   // crete response state
   const [response, setResponse] = useState<responset>();
   const { id }: { id: string } = useParams();
+  const { setScrollProperties } = useScrollContext()!;
   // create popup state
   const [popup, setPopup] = useState<PopupData>({});
 
-  useEffect(stateScroll, [response]);
+  useEffect(() => {
+    setScrollProperties([popup]);
+  }, [setScrollProperties, popup]);
 
   useEffect(() => {
     setResponse({
@@ -582,29 +586,31 @@ const Content = () => {
                     </tbody>
                   </table>
                 </div>
-                {response.subscribed ? (
-                  <Button
-                    color="gray"
-                    type="div"
-                    className="w-full mt-4"
-                    padding={4}
-                    id="edit-dates-button"
-                  >
-                    لا يمكنك تعديل بياناتك بعد الإشتراك
-                  </Button>
-                ) : (
-                  <Button
-                    color="green"
-                    padding={4}
-                    onClick={() =>
-                      setPopup({ state: "dates edit", dates: response.dates })
-                    }
-                    className="w-full mt-4"
-                    id="edit-dates-button"
-                  >
-                    تعديل
-                  </Button>
-                )}
+                {response.userType === "self" &&
+                  (response.subscribed ? (
+                    <Button
+                      color="gray"
+                      type="div"
+                      className="w-full mt-4"
+                      padding={4}
+                      id="edit-dates-button"
+                      textHov="black"
+                    >
+                      لا يمكنك تعديل |مواعيدك بعد الإشتراك
+                    </Button>
+                  ) : (
+                    <Button
+                      color="green"
+                      padding={4}
+                      onClick={() =>
+                        setPopup({ state: "dates edit", dates: response.dates })
+                      }
+                      className="w-full mt-4"
+                      id="edit-dates-button"
+                    >
+                      تعديل
+                    </Button>
+                  ))}
               </section>
               <section className={classes["section"] + "mt-2 overflow-hidden"}>
                 {response.note ? (

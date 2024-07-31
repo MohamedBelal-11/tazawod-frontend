@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import Content from "./content";
 
 export const metadata: Metadata = {
   title: "الإشعارات - أكادمية تزود",
 };
 
 const Page: React.FC = () => {
-  return <></>;
+  return <Content />;
 };
 
 export default Page;

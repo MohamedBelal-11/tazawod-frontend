@@ -7,6 +7,13 @@ import {
   ArabicLayoutContextProvider,
   useArabicLayoutContext,
 } from "../contexts/arabicLayoutContext";
+import {
+  ScrollContextProvider,
+  useScrollContext,
+} from "../contexts/scrollerContext";
+import { stateScroll } from "../utils/docQuery";
+import { usePathname } from "next/navigation";
+import useHash from "../hooks/hash";
 
 const activateclass =
   "hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 " +
@@ -17,7 +24,20 @@ const Body: React.FC<{
   loading: boolean;
   children: React.ReactNode;
 }> = ({ arms, loading, children }) => {
+  const [scrolled, setScrolled] = useState(false);
   const { layoutProperties } = useArabicLayoutContext()!;
+  const { scrollProperties } = useScrollContext()!;
+  const pathname = usePathname();
+  const hash = useHash();
+  useEffect(() => {
+    setScrolled(false);
+  }, [pathname, hash]);
+
+  useEffect(
+    () => stateScroll(scrolled, setScrolled),
+    [scrollProperties, scrolled]
+  );
+
   return (
     <body
       dir="rtl"
@@ -63,9 +83,11 @@ export default function ArabicLayout({
         />
       </head>
       <ArabicLayoutContextProvider>
-        <Body arms={arms} loading={loading}>
-          {children}
-        </Body>
+        <ScrollContextProvider>
+          <Body arms={arms} loading={loading}>
+            {children}
+          </Body>
+        </ScrollContextProvider>
       </ArabicLayoutContextProvider>
     </html>
   );
