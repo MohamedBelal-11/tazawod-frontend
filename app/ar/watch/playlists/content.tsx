@@ -2,6 +2,7 @@
 "use client";
 import Button from "@/app/components/button";
 import Checker from "@/app/components/Checker";
+import LoadingDiv from "@/app/components/loadingDiv";
 import Popup, { regulerConfirm } from "@/app/components/popup";
 import globalClasses from "@/app/utils/globalClasses";
 import { motion, Variants } from "framer-motion";
@@ -324,107 +325,104 @@ const Content: React.FC = () => {
     });
   }, []);
 
+  if (response === undefined) {
+    return <LoadingDiv loading />;
+  }
+
+  if (response === null) {
+    return;
+  }
+
+  if (!response.succes) {
+    return;
+  }
+
   return (
     <>
-      {response ? (
-        response.succes ? (
-          <>
-            {response.super && (
-              <Popup visible={popup.state !== undefined} onClose={closePopup}>
-                {popup.state === "add playlist" ? (
-                  <AddPlaylist onClose={closePopup} />
-                ) : popup.state === "delete" ? (
-                  regulerConfirm({
-                    onClose: closePopup,
-                    onConfirm: () => {},
-                    text: "هل أنت متأكد من أنك تريد حذف قائمة التشغيل هذه",
-                    btns: [
-                      { text: "حذف", color: "red" },
-                      { text: "إلغاء", color: "green" },
-                    ],
-                  })
-                ) : (
-                  <AddVideo
-                    onClose={closePopup}
-                    playlists={response.playlists}
-                  />
-                )}
-              </Popup>
-            )}
-            <main className="sm:p-6 p-2">
-              <div className="flex gap-4 flex-wrap">
-                <h2 className={globalClasses.sectionHeader}>قوائم التشغيل</h2>
-                {response.super && (
-                  <>
-                    <Button
-                      className="flex-1 text-nowrap"
-                      color="green"
-                      onClick={() => setPopup({ state: "add video" })}
-                    >
-                      إضافة فيديو
-                    </Button>
-                    <Button
-                      className="flex-1 text-nowrap"
-                      color="sky"
-                      onClick={() => setPopup({ state: "add playlist" })}
-                    >
-                      إضافة قائمة تشغيل
-                    </Button>
-                  </>
-                )}
-              </div>
-              <motion.div
-                className="mt-6 overflow-hidden rounded-xl"
-                initial="hidden"
-                animate="visible"
-                variants={parentVariants}
-              >
-                {response.playlists.map(({ title, id, videos_count }, i) => (
-                  <motion.div
-                    key={i}
-                    variants={childsVariants}
-                    className={
-                      "bg-white border-b-2 border-solid border-gray-400 " +
-                      "last:border-b-0"
-                    }
-                  >
-                    <Link
-                      href={`/ar/watch/playlists/playlist/${id}`}
-                      className="block sm:p-6 p-3"
-                    >
-                      <p className="font-semibold sm:text-2xl text-xl">
-                        {title}
-                      </p>
-                      <p className="mt-4 text-gray">
-                        {videos_count === 1
-                          ? "فيديو واحد"
-                          : videos_count === 2
-                          ? "فيديوهان"
-                          : videos_count > 2 && videos_count < 11
-                          ? `${videos_count} فيديوهات`
-                          : `${videos_count} فيديو`}
-                      </p>
-                    </Link>
-                    {response.super && (
-                      <Button
-                        onClick={() => setPopup({ state: "delete", id })}
-                        color="red"
-                        className="w-full"
-                      >
-                        حذف
-                      </Button>
-                    )}
-                  </motion.div>
-                ))}
-              </motion.div>
-            </main>
-          </>
-        ) : (
-          <></>
-        )
-      ) : (
-        <></>
+      {response.super && (
+        <Popup visible={popup.state !== undefined} onClose={closePopup}>
+          {popup.state === "add playlist" ? (
+            <AddPlaylist onClose={closePopup} />
+          ) : popup.state === "delete" ? (
+            regulerConfirm({
+              onClose: closePopup,
+              onConfirm: () => {},
+              text: "هل أنت متأكد من أنك تريد حذف قائمة التشغيل هذه",
+              btns: [
+                { text: "حذف", color: "red" },
+                { text: "إلغاء", color: "green" },
+              ],
+            })
+          ) : (
+            <AddVideo onClose={closePopup} playlists={response.playlists} />
+          )}
+        </Popup>
       )}
+      <main className="sm:p-6 p-2">
+        <div className="flex gap-4 flex-wrap">
+          <h2 className={globalClasses.sectionHeader}>قوائم التشغيل</h2>
+          {response.super && (
+            <>
+              <Button
+                className="flex-1 text-nowrap"
+                color="green"
+                onClick={() => setPopup({ state: "add video" })}
+              >
+                إضافة فيديو
+              </Button>
+              <Button
+                className="flex-1 text-nowrap"
+                color="sky"
+                onClick={() => setPopup({ state: "add playlist" })}
+              >
+                إضافة قائمة تشغيل
+              </Button>
+            </>
+          )}
+        </div>
+        <motion.div
+          className="mt-6 overflow-hidden rounded-xl"
+          initial="hidden"
+          animate="visible"
+          variants={parentVariants}
+        >
+          {response.playlists.map(({ title, id, videos_count }, i) => (
+            <motion.div
+              key={i}
+              variants={childsVariants}
+              className={
+                "bg-white border-b-2 border-solid border-gray-400 " +
+                "last:border-b-0"
+              }
+            >
+              <Link
+                href={`/ar/watch/playlists/playlist/${id}`}
+                className="block sm:p-6 p-3"
+              >
+                <p className="font-semibold sm:text-2xl text-xl">{title}</p>
+                <p className="mt-4 text-gray">
+                  {videos_count === 1
+                    ? "فيديو واحد"
+                    : videos_count === 2
+                    ? "فيديوهان"
+                    : videos_count > 2 && videos_count < 11
+                    ? `${videos_count} فيديوهات`
+                    : `${videos_count} فيديو`}
+                </p>
+              </Link>
+              {response.super && (
+                <Button
+                  onClick={() => setPopup({ state: "delete", id })}
+                  color="red"
+                  className="w-full"
+                >
+                  حذف
+                </Button>
+              )}
+            </motion.div>
+          ))}
+        </motion.div>
+      </main>
     </>
   );
 };

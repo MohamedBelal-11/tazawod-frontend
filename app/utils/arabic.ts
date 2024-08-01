@@ -22,6 +22,21 @@ export const arDay = (day: string) => {
   return "الأحد";
 };
 
+export const arabicMonths = [
+  "يناير",
+  "فبراير",
+  "مارس",
+  "إبريل",
+  "مايو",
+  "يونيو",
+  "يوليو",
+  "أغسطس",
+  "سبتمبر",
+  "أكتوبر",
+  "نوفمبر",
+  "ديسمبر",
+];
+
 export const arabicWeekDays = [
   "الأحد",
   "الإثنين",
@@ -31,26 +46,3 @@ export const arabicWeekDays = [
   "الجمعة",
   "السبت",
 ];
-
-export const getArabicDate = (
-  date: string,
-  { day = true, time = true }: { day?: boolean; time?: boolean } = {
-    day: true,
-    time: true,
-  }
-) => {
-  const tdate = new Date(date);
-  return (
-    `${tdate.getFullYear()}/${tdate.getMonth() + 1}/${tdate.getDate()} ${
-      day ? arabicWeekDays[tdate.getDay()] : ""
-    }` +
-    (time
-      ? " " +
-        convertEgyptTimeToLocalTime(
-          `${tdate.getHours() < 10 ? "0" : ""}${tdate.getHours()}:${
-            tdate.getMinutes() < 10 ? "0" : ""
-          }${tdate.getMinutes()}`
-        )
-      : "")
-  );
-};

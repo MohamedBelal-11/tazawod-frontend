@@ -12,6 +12,8 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import LoadingDiv from "@/app/components/loadingDiv";
+import { get } from "@/app/utils/docQuery";
 
 type Response =
   | {
@@ -272,290 +274,282 @@ const Content: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (response && response.succes) {
+      get<HTMLTitleElement>("title").forEach((title) => {
+        title.innerHTML = `صفحة المعلم ${response.name} - أكادمية تزوَد`;
+      });
+    }
+  }, [response]);
+
+  if (response === undefined) {
+    return <LoadingDiv loading />;
+  }
+
+  if (response === null) {
+    return;
+  }
+
+  if (!response.succes) {
+    return;
+  }
+
   return (
     <>
-      {response ? (
-        response.succes ? (
-          <>
-            <main className="sm:px-8 sm:py-4 py-2">
-              <section className={classes["section"] + "p-4 mb-2"}>
-                {/* dispaly name */}
-                <h1
-                  className={`sm:text-4xl text-2xl font-bold mb-4${
-                    response.userType !== "admin"
-                      ? " flex items-center justify-between"
-                      : ""
-                  }`}
-                >
-                  {response.userType !== "admin" ? (
-                    <>
-                      <span>{response.name}</span>
-                      <span
-                        className={
-                          "p-2 rounded-full border-2 border-solid border-gray-500 " +
-                          "duration-300 cursor-pointer hover:text-white " +
-                          `transition-all ${
-                            response.userType === "self"
-                              ? "hover:bg-sky-600 hover:border-sky-600"
-                              : "hover:bg-red-600 hover:border-red-600"
-                          }`
-                        }
-                        title={response.userType === "self" ? "تعديل" : "حذف"}
-                        onClick={() =>
-                          setPopup(
-                            response.userType === "self"
-                              ? "edit data"
-                              : "delete"
-                          )
-                        }
-                      >
-                        {response.userType === "self" ? (
-                          <PencilIcon width={20} />
-                        ) : (
-                          <TrashIcon width={20} />
-                        )}
-                      </span>
-                    </>
-                  ) : (
-                    response.name
-                  )}
-                </h1>
-                {/* display phone number */}
-                <h2 className="sm:text-3xl text-xl mt-4 font-bold">
-                  <span dir="ltr">+{response.phone}</span>
-                </h2>
-                {/* display description */}
-                <p className="sm:text-xl text-md ps-2">
-                  {response.description.split("\n").map((line, i) => (
-                    <span key={i} className="block py-1">
-                      {line}
-                    </span>
-                  ))}
-                </p>
-
-                {/* dispaly is_accepted */}
-                <div className="flex gap-8 items-center">
-                  <p className="text-2xl my-4">
-                    {response.is_accepted ? "موافق عليع" : "غير موافق عليع"}
-                  </p>
-                  {/* accept button */}
-                  {response.userType === "superadmin" &&
-                    (response.is_accepted ? (
-                      <Button color="red" onClick={() => setPopup("fire")}>
-                        الغاء الموافقة
-                      </Button>
-                    ) : (
-                      <Button color="green" onClick={() => setPopup("accept")}>
-                        موافقة
-                      </Button>
-                    ))}
-                </div>
-              </section>
-              {response.is_accepted && (
-                <section className={classes["section"] + "p-4 my-2 w-auto"}>
-                  <p className="sm:text-3xl text-lg mb-4 flex items-center gap-2">
-                    <span>الطلبة</span>
-                    <span className="bg-green-400 rounded-full p-1">
-                      {response.students.length}
-                    </span>
-                  </p>
-                  <div className="w-full overflow-x-auto">
-                    <table className="overflow-x-scroll w-full">
-                      <thead>
-                        <tr>
-                          <th className={classes["td"]}>الطالب</th>
-                          <th className={classes["td"]}>المدة</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {response.students.map((student, i) => (
-                          <tr key={i}>
-                            <td className={classes["td"]}>
-                              {response.userType === "self" ? (
-                                student.name
-                              ) : (
-                                <Link
-                                  href={`/teachers/teacher/${student.id}`}
-                                  className="hover:underline hover:text-green-500"
-                                >
-                                  {student.name}
-                                </Link>
-                              )}
-                            </td>
-                            <td className={classes["td"]}>
-                              {hrNumber(secondsToHrs(student.delay))}
-                            </td>
-                          </tr>
-                        ))}
-                        <tr>
-                          <td className={classes["td"]}>الإجمالي</td>
-                          <td className={classes["td"]}>
-                            {hrNumber(
-                              secondsToHrs(
-                                sum(
-                                  response.students.map(
-                                    (student) => student.delay
-                                  )
-                                )
-                              )
-                            )}
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              )}
-              {response.is_accepted && (
-                <section
-                  className={classes["section"] + "mt-2 overflow-hidden"}
-                >
-                  {response.note ? (
-                    response.note.written ? (
-                      <>
-                        <div className="p-4">
-                          <div className="flex justify-between">
-                            <p className="sm:text-2xl">
-                              {`${arDay(response.note.day)}  ${
-                                response.note.date
-                              }`}
-                            </p>
-                            <p className="sm:text-2xl">
-                              {response.note.rate}\
-                              <span className="sm:text-lg text-sm">10</span>
-                            </p>
-                          </div>
-                          <div className="p-4">
-                            {response.note.discription
-                              ? response.note.discription
-                                  .split("\n")
-                                  .map((line, i) => (
-                                    <p key={i} className="sm:text-xl my-2">
-                                      {line.trim()}
-                                    </p>
-                                  ))
-                              : "لم يتم كتابة تقرير"}
-                          </div>
-                          <p className="sm:text-2xl text-lg">
-                            الطالب:{" "}
-                            {response.userType === "self" ? (
-                              response.note.student.name
-                            ) : (
-                              <Link
-                                href={`/students/student/${response.note.student.id}`}
-                                className="hover:underline hover:text-green-500"
-                              >
-                                {response.note.student.name}
-                              </Link>
-                            )}
-                          </p>
-                        </div>
-                        <Link
-                          href={`/teachers/teacher/${id}/notes`}
-                          className={
-                            "border-t-2 border-solid border-gray-600 block " +
-                            "p-4 text-center hover:bg-gray-200 transition-all duration-300"
-                          }
-                        >
-                          إظهار الكل
-                        </Link>
-                      </>
-                    ) : (
-                      <>
-                        <div className="p-4">
-                          <div className="flex justify-between">
-                            <p className="sm:text-2xl">
-                              {`${arDay(response.note.day)}  ${
-                                response.note.date
-                              }`}
-                            </p>
-                            <p className="sm:text-2xl">
-                              -\
-                              <span className="sm:text-lg text-sm">10</span>
-                            </p>
-                          </div>
-                          <div className="p-4">لم يتم كتابة تقرير</div>
-                          <p className="sm:text-2xl text-lg">
-                            الطالب:{" "}
-                            {response.userType === "self" ? (
-                              response.note.student.name
-                            ) : (
-                              <Link
-                                href={`/students/student/${response.note.student.id}`}
-                                className="hover:underline hover:text-green-500"
-                              >
-                                {response.note.student.name}
-                              </Link>
-                            )}
-                          </p>
-                        </div>
-                        <Link
-                          href={`/teachers/teacher/${id}/notes`}
-                          className={
-                            "border-t-2 border-solid border-gray-600 block " +
-                            "p-4 text-center hover:bg-gray-200 transition-all duration-300"
-                          }
-                        >
-                          إظهار الكل
-                        </Link>
-                      </>
+      <main className="sm:px-8 sm:py-4 py-2">
+        <section className={classes["section"] + "p-4 mb-2"}>
+          {/* dispaly name */}
+          <h1
+            className={`sm:text-4xl text-2xl font-bold mb-4${
+              response.userType !== "admin"
+                ? " flex items-center justify-between"
+                : ""
+            }`}
+          >
+            {response.userType !== "admin" ? (
+              <>
+                <span>{response.name}</span>
+                <span
+                  className={
+                    "p-2 rounded-full border-2 border-solid border-gray-500 " +
+                    "duration-300 cursor-pointer hover:text-white " +
+                    `transition-all ${
+                      response.userType === "self"
+                        ? "hover:bg-sky-600 hover:border-sky-600"
+                        : "hover:bg-red-600 hover:border-red-600"
+                    }`
+                  }
+                  title={response.userType === "self" ? "تعديل" : "حذف"}
+                  onClick={() =>
+                    setPopup(
+                      response.userType === "self" ? "edit data" : "delete"
                     )
+                  }
+                >
+                  {response.userType === "self" ? (
+                    <PencilIcon width={20} />
                   ) : (
-                    <div className="h-80 flex justify-center items-center">
-                      <p>لم يحضر أي مقابلات بعد</p>
-                    </div>
+                    <TrashIcon width={20} />
                   )}
-                </section>
-              )}
-            </main>
-            <Popup onClose={closePopup} visible={Boolean(popup)}>
-              {popup === "edit data" ? (
-                <EditData
-                  defaultData={{
-                    name: response.name,
-                    currency: response.currency,
-                    description: response.description,
-                    gender: response.gender,
-                  }}
-                  onClose={closePopup}
-                  is_accepted={response.is_accepted}
-                />
+                </span>
+              </>
+            ) : (
+              response.name
+            )}
+          </h1>
+          {/* display phone number */}
+          <h2 className="sm:text-3xl text-xl mt-4 font-bold">
+            <span dir="ltr">+{response.phone}</span>
+          </h2>
+          {/* display description */}
+          <p className="sm:text-xl text-md ps-2">
+            {response.description.split("\n").map((line, i) => (
+              <span key={i} className="block py-1">
+                {line}
+              </span>
+            ))}
+          </p>
+
+          {/* dispaly is_accepted */}
+          <div className="flex gap-8 items-center">
+            <p className="text-2xl my-4">
+              {response.is_accepted ? "موافق عليع" : "غير موافق عليع"}
+            </p>
+            {/* accept button */}
+            {response.userType === "superadmin" &&
+              (response.is_accepted ? (
+                <Button color="red" onClick={() => setPopup("fire")}>
+                  الغاء الموافقة
+                </Button>
               ) : (
-                regulerConfirm({
-                  ...(popup === "delete"
-                    ? {
-                        text: "هل أنت متأكد من أنك تريد حذف هذا المعلم ؟",
-                        onConfirm: () => {},
-                        btns: [
-                          { text: "حذف", color: "red" },
-                          { color: "green" },
-                        ],
-                      }
-                    : popup === "accept"
-                    ? {
-                        text: "هل أنت متأكد من الموافقة على المعلم ؟",
-                        onConfirm: () => {},
-                        btns: [{ text: "موافقة" }, {}],
-                      }
-                    : {
-                        text: "هل أنت متأكد من أنك تريد رفض المعلم ؟",
-                        onConfirm: () => {},
-                        btns: [
-                          { text: "رفض", color: "red" },
-                          { color: "green" },
-                        ],
-                      }),
-                  onClose: closePopup,
-                })
-              )}
-            </Popup>
-          </>
+                <Button color="green" onClick={() => setPopup("accept")}>
+                  موافقة
+                </Button>
+              ))}
+          </div>
+        </section>
+        {response.is_accepted && (
+          <section className={classes["section"] + "p-4 my-2 w-auto"}>
+            <p className="sm:text-3xl text-lg mb-4 flex items-center gap-2">
+              <span>الطلبة</span>
+              <span className="bg-green-400 rounded-full p-1">
+                {response.students.length}
+              </span>
+            </p>
+            <div className="w-full overflow-x-auto">
+              <table className="overflow-x-scroll w-full">
+                <thead>
+                  <tr>
+                    <th className={classes["td"]}>الطالب</th>
+                    <th className={classes["td"]}>المدة</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {response.students.map((student, i) => (
+                    <tr key={i}>
+                      <td className={classes["td"]}>
+                        {response.userType === "self" ? (
+                          student.name
+                        ) : (
+                          <Link
+                            href={`/teachers/teacher/${student.id}`}
+                            className="hover:underline hover:text-green-500"
+                          >
+                            {student.name}
+                          </Link>
+                        )}
+                      </td>
+                      <td className={classes["td"]}>
+                        {hrNumber(secondsToHrs(student.delay))}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className={classes["td"]}>الإجمالي</td>
+                    <td className={classes["td"]}>
+                      {hrNumber(
+                        secondsToHrs(
+                          sum(response.students.map((student) => student.delay))
+                        )
+                      )}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        )}
+        {response.is_accepted && (
+          <section className={classes["section"] + "mt-2 overflow-hidden"}>
+            {response.note ? (
+              response.note.written ? (
+                <>
+                  <div className="p-4">
+                    <div className="flex justify-between">
+                      <p className="sm:text-2xl">
+                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                      </p>
+                      <p className="sm:text-2xl">
+                        {response.note.rate}\
+                        <span className="sm:text-lg text-sm">10</span>
+                      </p>
+                    </div>
+                    <div className="p-4">
+                      {response.note.discription
+                        ? response.note.discription
+                            .split("\n")
+                            .map((line, i) => (
+                              <p key={i} className="sm:text-xl my-2">
+                                {line.trim()}
+                              </p>
+                            ))
+                        : "لم يتم كتابة تقرير"}
+                    </div>
+                    <p className="sm:text-2xl text-lg">
+                      الطالب:{" "}
+                      {response.userType === "self" ? (
+                        response.note.student.name
+                      ) : (
+                        <Link
+                          href={`/students/student/${response.note.student.id}`}
+                          className="hover:underline hover:text-green-500"
+                        >
+                          {response.note.student.name}
+                        </Link>
+                      )}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/teachers/teacher/${id}/notes`}
+                    className={
+                      "border-t-2 border-solid border-gray-600 block " +
+                      "p-4 text-center hover:bg-gray-200 transition-all duration-300"
+                    }
+                  >
+                    إظهار الكل
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="p-4">
+                    <div className="flex justify-between">
+                      <p className="sm:text-2xl">
+                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                      </p>
+                      <p className="sm:text-2xl">
+                        -\
+                        <span className="sm:text-lg text-sm">10</span>
+                      </p>
+                    </div>
+                    <div className="p-4">لم يتم كتابة تقرير</div>
+                    <p className="sm:text-2xl text-lg">
+                      الطالب:{" "}
+                      {response.userType === "self" ? (
+                        response.note.student.name
+                      ) : (
+                        <Link
+                          href={`/students/student/${response.note.student.id}`}
+                          className="hover:underline hover:text-green-500"
+                        >
+                          {response.note.student.name}
+                        </Link>
+                      )}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/teachers/teacher/${id}/notes`}
+                    className={
+                      "border-t-2 border-solid border-gray-600 block " +
+                      "p-4 text-center hover:bg-gray-200 transition-all duration-300"
+                    }
+                  >
+                    إظهار الكل
+                  </Link>
+                </>
+              )
+            ) : (
+              <div className="h-80 flex justify-center items-center">
+                <p>لم يحضر أي مقابلات بعد</p>
+              </div>
+            )}
+          </section>
+        )}
+      </main>
+      <Popup onClose={closePopup} visible={Boolean(popup)}>
+        {popup === "edit data" ? (
+          <EditData
+            defaultData={{
+              name: response.name,
+              currency: response.currency,
+              description: response.description,
+              gender: response.gender,
+            }}
+            onClose={closePopup}
+            is_accepted={response.is_accepted}
+          />
         ) : (
-          <></>
-        )
-      ) : (
-        <></>
-      )}
+          regulerConfirm({
+            ...(popup === "delete"
+              ? {
+                  text: "هل أنت متأكد من أنك تريد حذف هذا المعلم ؟",
+                  onConfirm: () => {},
+                  btns: [{ text: "حذف", color: "red" }, { color: "green" }],
+                }
+              : popup === "accept"
+              ? {
+                  text: "هل أنت متأكد من الموافقة على المعلم ؟",
+                  onConfirm: () => {},
+                  btns: [{ text: "موافقة" }, {}],
+                }
+              : {
+                  text: "هل أنت متأكد من أنك تريد رفض المعلم ؟",
+                  onConfirm: () => {},
+                  btns: [{ text: "رفض", color: "red" }, { color: "green" }],
+                }),
+            onClose: closePopup,
+          })
+        )}
+      </Popup>
     </>
   );
 };

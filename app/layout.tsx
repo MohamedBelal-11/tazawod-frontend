@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   },
   applicationName: "Tazawod Academy",
   creator: "Moahemd Belal",
-
+  title: "Tazawod Academy",
 };
 
 export default function RootLayout({
