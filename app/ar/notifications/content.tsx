@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 type Notificationt = {
   title: string;
   link: string;
-  external: Boolean;
+  external: boolean;
+  read: boolean;
 };
 
 type Responset =
@@ -23,10 +24,30 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    setResponse({succes: true, notifications: [
-      {title: "", external: true, link: ""}
-    ]})
-  }, [])
+    setResponse({
+      succes: true,
+      notifications: [
+        {
+          title: "حلقة الشيخ أحمد العزب",
+          external: true,
+          link: "https://www.youtube.com/watch?v=kXAgFcu8SS0&t=77s",
+          read: false,
+        },
+        {
+          title: "حلقة الشيخ أحمد العزب",
+          external: true,
+          link: "https://www.youtube.com/watch?v=kXAgFcu8SS0&t=77s",
+          read: false,
+        },
+        {
+          title: "حلقة الشيخ أحمد العزب",
+          external: true,
+          link: "https://www.youtube.com/watch?v=kXAgFcu8SS0&t=77s",
+          read: true,
+        },
+      ],
+    });
+  }, []);
 
   if (response === null) {
     return;
@@ -64,7 +85,19 @@ const Content: React.FC = () => {
         ) : response.notifications.length === 0 ? (
           <p className="text-xl text-gray-400">لا يوجد أي إشعارات بعد</p>
         ) : (
-          <></>
+          response.notifications.map(({ link, external, read, title }, i) => (
+            <Link
+              href={external ? link : "/ar" + link}
+              key={i}
+              target={external ? "_blank" : undefined}
+              className={
+                "rounded-xl p-5 block text-lg mb-4 last:mb-0 " +
+                (read ? "bg-slate-200" : "bg-sky-200")
+              }
+            >
+              {title}
+            </Link>
+          ))
         )}
       </main>
     </div>
