@@ -1,6 +1,6 @@
 "use client";
 import { getClass } from "@/app/components/button";
-import { getArabicDate } from "@/app/utils/arabic";
+import { bDate } from "@/app/utils/time";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
@@ -58,7 +58,7 @@ const Content: React.FC = () => {
           allowFullScreen
         />
         <p className="mt-4 text-2xl">{response.title}</p>
-        <p>{getArabicDate(response.date)}</p>
+        <p>{bDate.getFormedDate(response.date, { form: "arabic" })}</p>
         <div className="flex justify-between sm:px-2">
           {Boolean(response.previous) && (
             <Link
@@ -68,7 +68,10 @@ const Content: React.FC = () => {
               السابق
             </Link>
           )}
-          <Link href={"/ar/watch/playlists/playlist/" + response.playlist.id} className={getClass({ color: "green" })}>
+          <Link
+            href={"/ar/watch/playlists/playlist/" + response.playlist.id}
+            className={getClass({ color: "green" })}
+          >
             {response.playlist.title}
           </Link>
           {Boolean(response.next) && (

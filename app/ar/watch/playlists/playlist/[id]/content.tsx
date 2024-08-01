@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { childsVariants, parentVariants } from "../../content";
 import Button from "@/app/components/button";
 import { title } from "process";
+import LoadingDiv from "@/app/components/loadingDiv";
 
 interface Video {
   id: number;
@@ -29,20 +30,20 @@ type Response =
   | null;
 
 type PopupData =
-| {
-    state: "add video";
-  }
-| {
-    state: "delete" | "edit";
-    id: number;
-  }
-| {
-    state?: undefined;
-  };
+  | {
+      state: "add video";
+    }
+  | {
+      state: "delete" | "edit";
+      id: number;
+    }
+  | {
+      state?: undefined;
+    };
 
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Response>();
-  const [popup, setPopup] = useState<PopupData>({})
+  const [popup, setPopup] = useState<PopupData>({});
 
   useEffect(() => {
     setResponse({
@@ -74,67 +75,70 @@ const Content: React.FC = () => {
       });
   }, [response]);
 
+  if (response === undefined) {
+    return <LoadingDiv loading />;
+  }
+
+  if (response === null) {
+    return;
+  }
+
+  if (!response.succes) {
+    return;
+  }
+
   return (
-    <>
-      {response ? (
-        response.succes ? (
-          <main className="sm:p-6 p-2">
-            <h1>
-              <span className={globalClasses.sectionHeader}>
-                {response.playlist}
-              </span>
-            </h1>
-            <motion.div
-              className="mt-6 overflow-hidden rounded-xl"
-              initial="hidden"
-              animate="visible"
-              variants={parentVariants}
+    <main className="sm:p-6 p-2">
+      <h1>
+        <span className={globalClasses.sectionHeader}>{response.playlist}</span>
+      </h1>
+      <motion.div
+        className="mt-6 overflow-hidden rounded-xl"
+        initial="hidden"
+        animate="visible"
+        variants={parentVariants}
+      >
+        {response.videos.map(({ title, id }, i) => (
+          <motion.div
+            key={id}
+            variants={childsVariants}
+            className={
+              "bg-white border-b-2 border-solid border-gray-400 " +
+              "last:border-b-0"
+            }
+          >
+            <Link
+              href={`/ar/watch/video/${id}`}
+              className="flex p-3 items-center w-full"
             >
-              {response.videos.map(({ title, id }, i) => (
-                <motion.div
-                  key={id}
-                  variants={childsVariants}
-                  className={
-                    "bg-white border-b-2 border-solid border-gray-400 " +
-                    "last:border-b-0"
-                  }
+              <div className="w-34 p-4">{i + 1}</div>
+              <div className="w-full flex items-center gap-3">
+                <PlayCircleIcon className="sm:min-w-32 min-w-16 sm:w-32 w-16" />
+                <p className="text-lg">
+                  {title.length > 60 ? title.slice(0, 61) + "..." : title}
+                </p>
+              </div>
+            </Link>
+            {response.super && (
+              <div className="px-4 gap-3 flex-col">
+                <Button
+                  onClick={() => setPopup({ state: "delete", id })}
+                  color="red"
                 >
-                  <Link
-                    href={`/ar/watch/video/${id}`}
-                    className="flex p-3 items-center w-full"
-                  >
-                    <div className="w-34 p-4">{i + 1}</div>
-                    <div className="w-full flex items-center gap-3">
-                      <PlayCircleIcon className="sm:min-w-32 min-w-16 sm:w-32 w-16" />
-                      <p className="text-lg">
-                        {title.length > 60 ? title.slice(0, 61) + "..." : title}
-                      </p>
-                    </div>
-                  </Link>
-                  {response.super && (
-                    <div className="px-4 gap-3 flex-col">
-                      <Button
-                        onClick={() => setPopup({ state: "delete", id })}
-                        color="red"
-                      >
-                        حذف
-                      </Button>
-                      <Button color="amber" onClick={() => setPopup({ state: "delete", id })}>
-                        تعديل
-                      </Button>
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </motion.div>
-          </main>
-        ) : (
-          <></>
-        )
-      ) : (
-        <></>
-      )}
-    </>
+                  حذف
+                </Button>
+                <Button
+                  color="amber"
+                  onClick={() => setPopup({ state: "delete", id })}
+                >
+                  تعديل
+                </Button>
+              </div>
+            )}
+          </motion.div>
+        ))}
+      </motion.div>
+    </main>
   );
 };
 

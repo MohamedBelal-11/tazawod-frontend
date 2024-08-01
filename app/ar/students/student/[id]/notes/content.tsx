@@ -1,7 +1,7 @@
 "use client";
-import {  getArabicDate } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
+import { bDate } from "@/app/utils/time";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -114,7 +114,7 @@ const Content = () => {
                   >
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {getArabicDate(note.date)}
+                        {bDate.getFormedDate(note.date, { form: "arabic" })}
                       </p>
                       <p className="sm:text-2xl">
                         {note.written ? note.rate : "-"}\

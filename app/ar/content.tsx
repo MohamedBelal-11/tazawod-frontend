@@ -6,8 +6,13 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import globalClasses from "../utils/globalClasses";
 import { Date, Weekday } from "../utils/students";
-import { convertEgyptTimeToLocalTime, hrNumber, numHours } from "../utils/time";
-import { arDay, getArabicDate } from "../utils/arabic";
+import {
+  bDate,
+  convertEgyptTimeToLocalTime,
+  hrNumber,
+  numHours,
+} from "../utils/time";
+import { arDay } from "../utils/arabic";
 import axios from "axios";
 import { backendUrl } from "../utils/auth";
 import { motion, Variants } from "framer-motion";
@@ -648,8 +653,7 @@ export default function Content() {
                       ينتهي الساعة{" "}
                       {convertEgyptTimeToLocalTime(
                         hrNumber(
-                          numHours(meeting.starts) +
-                            secondsToHrs(meeting.delay)
+                          numHours(meeting.starts) + secondsToHrs(meeting.delay)
                         )
                       )}
                     </p>
@@ -753,7 +757,9 @@ export default function Content() {
                   return (
                     <div key={i} className="p-8 bg-white rounded-3xl my-6">
                       <h3 className="flex justify-between text-2xl font-semibold">
-                        <span>{getArabicDate(note.date)}</span>
+                        <span>
+                          {bDate.getFormedDate(note.date, { form: "arabic" })}
+                        </span>
                         <span>
                           {note.rate}/<span className="text-sm">10</span>
                         </span>
@@ -789,7 +795,7 @@ export default function Content() {
                   return (
                     <div key={i} className="p-8 bg-white rounded-3xl my-6">
                       <h3 className="flex justify-between text-2xl font-semibold">
-                        <span>{getArabicDate(note.date)}</span>
+                        <span>{bDate.getFormedDate(note.date, { form: "arabic" })}</span>
                         <span>
                           {note.rate}/<span className="text-sm">10</span>
                         </span>

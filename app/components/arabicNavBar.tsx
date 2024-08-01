@@ -235,7 +235,7 @@ export default function ArabicNavBar() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1 gap-4">
-          <Link href="/ar/">
+          <Link href="/ar">
             <img className="h-12 min-w-12" src="/static/imgs/quraan.png" />
           </Link>
           {response ? (
@@ -377,7 +377,7 @@ export default function ArabicNavBar() {
           )}
           {userType !== "unloged" ? (
             <Link
-              href={`/${userType}s/${userType}/${response?.id}`}
+              href={`/ar/${userType}s/${userType}/${response?.id}`}
               className={classes[0]}
             >
               الحساب

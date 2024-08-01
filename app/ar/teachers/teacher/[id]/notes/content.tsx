@@ -1,12 +1,10 @@
 "use client";
-import ArabicLayout from "@/app/components/arabicLayout";
 import Button from "@/app/components/button";
 import Popup from "@/app/components/popup";
-import { arDay, getArabicDate } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
 import { objCompare } from "@/app/utils/object";
-import { Weekday } from "@/app/utils/students";
+import { bDate } from "@/app/utils/time";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 const inp =
@@ -230,7 +228,7 @@ const Content = () => {
                     >
                       <div className="flex justify-between">
                         <p className="sm:text-2xl">
-                          {`${getArabicDate(note.date)}`}
+                          {`${bDate.getFormedDate(note.date, { form: "arabic" })}`}
                         </p>
                         <p className="sm:text-2xl">
                           {note.written ? note.rate : "-"}\

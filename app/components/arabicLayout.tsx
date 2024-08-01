@@ -32,13 +32,9 @@ const Body: React.FC<{
   useEffect(() => {
     setScrolled(false);
   }, [pathname, hash]);
-  
+
   useEffect(() => {
-    if (pathname.startsWith("/ar/auth")) {
-      setArms(false);
-    } else {
-      setArms(true)
-    }
+    setArms(!pathname.startsWith("/ar/auth"));
   }, [pathname]);
 
   useEffect(
@@ -50,7 +46,9 @@ const Body: React.FC<{
     <body
       dir="rtl"
       style={layoutProperties.style}
-      className={layoutProperties.className + (loading ? " overflow-y-hidden" : "")}
+      className={
+        layoutProperties.className + (loading ? " overflow-y-hidden" : "")
+      }
     >
       <span className={activateclass}></span>
       {arms && (
@@ -73,7 +71,7 @@ export default function ArabicLayout({
 }) {
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => setLoading(false),[])
+  useEffect(() => setLoading(false), []);
 
   return (
     <html lang="ar">
@@ -83,12 +81,11 @@ export default function ArabicLayout({
           href="/static/imgs/quran.png"
           type="image/PNG"
         />
+        <link rel="preload" href="/static/imgs/quran.gif" type="image/GIF" />
       </head>
       <ArabicLayoutContextProvider>
         <ScrollContextProvider>
-          <Body loading={loading}>
-            {children}
-          </Body>
+          <Body loading={loading}>{children}</Body>
         </ScrollContextProvider>
       </ArabicLayoutContextProvider>
     </html>

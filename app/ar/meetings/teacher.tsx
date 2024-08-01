@@ -20,7 +20,10 @@ type Responset =
 const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
   return (
     <div className="p-3">
-      <main className="p-4 bg-white flex">
+      <main className="p-4 bg-white flex rounded-lg overflow-hidden">
+        <button className="px-1">
+          
+        </button>
         <div className="flex-auto"></div>
       </main>
     </div>

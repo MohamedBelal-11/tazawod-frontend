@@ -17,6 +17,7 @@ import Button, { getClass } from "@/app/components/button";
 import "@/app/ar/auth/register/student/page.css";
 import P, { regulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
+import LoadingDiv from "@/app/components/loadingDiv";
 
 interface Tdate extends Date {
   price: number;
@@ -403,276 +404,272 @@ const Content = () => {
     }
   }, [response]);
 
+  if (response === undefined) {
+    return <LoadingDiv loading />;
+  }
+
+  if (response === null) {
+    return;
+  }
+
+  if (!response.succes) {
+    return;
+  }
+
   return (
     <>
-      {response ? (
-        response.succes ? (
-          <>
-            <main className="sm:px-8 sm:py-4 py-2">
-              <section className={classes["section"] + "p-4 mb-2"}>
-                {/* dispaly name */}
-                <h1
-                  className={`sm:text-4xl text-2xl font-bold mb-4${
-                    response.userType !== "admin"
-                      ? " flex items-center justify-between"
-                      : ""
-                  }`}
-                >
-                  {response.userType !== "admin" ? (
-                    <>
-                      <span>{response.name}</span>
-                      <span
-                        className={
-                          "p-2 rounded-full border-2 border-solid border-gray-500 " +
-                          "duration-300 cursor-pointer hover:text-white " +
-                          `transition-all ${
-                            response.userType === "self"
-                              ? "hover:bg-sky-600 hover:border-sky-600"
-                              : "hover:bg-red-600 hover:border-red-600"
-                          }`
-                        }
-                        title={response.userType === "self" ? "تعديل" : "حذف"}
-                        onClick={() =>
-                          setPopup(
-                            response.userType === "self"
-                              ? {
-                                  state: "data edit",
-                                  defaultData: {
-                                    currency: response.currency,
-                                    name: response.name,
-                                    gender: response.gender,
-                                  },
-                                  id: response.subscribed,
-                                }
-                              : { state: "delete", id }
-                          )
-                        }
-                      >
-                        {response.userType === "self" ? (
-                          <PencilIcon width={20} />
-                        ) : (
-                          <TrashIcon width={20} />
-                        )}
-                      </span>
-                    </>
-                  ) : (
-                    response.name
-                  )}
-                </h1>
-                {/* display phone number */}
-                <h2 className="sm:text-3xl text-xl mt-4 font-bold">
-                  <span dir="ltr">+{response.phone}</span>
-                </h2>
-                {/* dispaly subscribing */}
-                <div className="flex gap-8 items-center">
-                  <p className="text-2xl my-4">
-                    {response.subscribed ? "مشترك" : "غير مشترك"}
-                  </p>
-                  {/* subscribe button */}
-                  {response.subscribed ? (
-                    response.userType === "superadmin" && (
-                      <Button
-                        color="red"
-                        onClick={() => setPopup({ state: "desubscribe", id })}
-                      >
-                        الغاء الإشتراك
-                      </Button>
+      <main className="sm:px-8 sm:py-4 py-2">
+        <section className={classes["section"] + "p-4 mb-2"}>
+          {/* dispaly name */}
+          <h1
+            className={`sm:text-4xl text-2xl font-bold mb-4${
+              response.userType !== "admin"
+                ? " flex items-center justify-between"
+                : ""
+            }`}
+          >
+            {response.userType !== "admin" ? (
+              <>
+                <span>{response.name}</span>
+                <span
+                  className={
+                    "p-2 rounded-full border-2 border-solid border-gray-500 " +
+                    "duration-300 cursor-pointer hover:text-white " +
+                    `transition-all ${
+                      response.userType === "self"
+                        ? "hover:bg-sky-600 hover:border-sky-600"
+                        : "hover:bg-red-600 hover:border-red-600"
+                    }`
+                  }
+                  title={response.userType === "self" ? "تعديل" : "حذف"}
+                  onClick={() =>
+                    setPopup(
+                      response.userType === "self"
+                        ? {
+                            state: "data edit",
+                            defaultData: {
+                              currency: response.currency,
+                              name: response.name,
+                              gender: response.gender,
+                            },
+                            id: response.subscribed,
+                          }
+                        : { state: "delete", id }
                     )
-                  ) : response.userType === "self" ? (
-                    // if self display the link to subscribe page
-                    <Link href="" className={getClass({})}>
-                      إشتراك
-                    </Link>
+                  }
+                >
+                  {response.userType === "self" ? (
+                    <PencilIcon width={20} />
                   ) : (
-                    // else display button that make request to subscribing url
-                    <Button
-                      color="green"
-                      onClick={() =>
-                        setPopup({
-                          state: "subscribe",
-                          id,
-                          defaultData: Boolean(response.teacher),
-                        })
-                      }
-                    >
-                      إشتراك
-                    </Button>
+                    <TrashIcon width={20} />
                   )}
+                </span>
+              </>
+            ) : (
+              response.name
+            )}
+          </h1>
+          {/* display phone number */}
+          <h2 className="sm:text-3xl text-xl mt-4 font-bold">
+            <span dir="ltr">+{response.phone}</span>
+          </h2>
+          {/* dispaly subscribing */}
+          <div className="flex gap-8 items-center">
+            <p className="text-2xl my-4">
+              {response.subscribed ? "مشترك" : "غير مشترك"}
+            </p>
+            {/* subscribe button */}
+            {response.subscribed ? (
+              response.userType === "superadmin" && (
+                <Button
+                  color="red"
+                  onClick={() => setPopup({ state: "desubscribe", id })}
+                >
+                  الغاء الإشتراك
+                </Button>
+              )
+            ) : response.userType === "self" ? (
+              // if self display the link to subscribe page
+              <Link href="" className={getClass({})}>
+                إشتراك
+              </Link>
+            ) : (
+              // else display button that make request to subscribing url
+              <Button
+                color="green"
+                onClick={() =>
+                  setPopup({
+                    state: "subscribe",
+                    id,
+                    defaultData: Boolean(response.teacher),
+                  })
+                }
+              >
+                إشتراك
+              </Button>
+            )}
+          </div>
+          {/* display the teacher */}
+          <p className="text-xl mb-2">
+            المعلم:{" "}
+            {!response.teacher && response.subscribed ? (
+              // if there isn't teacher and is subscribed color by red
+              <span className="text-red-500">لا يوجد</span>
+            ) : (
+              // else keep it black
+              response.teacher || "لا يوجد"
+            )}
+          </p>
+          {response.userType !== "self" && response.subscribed && (
+            // if the user is admin or super admin display change teacher button
+            <div>
+              <Button
+                color="sky"
+                onClick={() =>
+                  setPopup({
+                    state: "change",
+                    id,
+                  })
+                }
+              >
+                {response.teacher ? "تغيير المعلم" : "إختيار معلم"}
+              </Button>
+              {!response.teacher && (
+                // if subscribed push him
+                <span className="inline-block mr-4">يجب عليك هذا</span>
+              )}
+            </div>
+          )}
+        </section>
+        <section className={classes["section"] + "p-4 my-2 w-auto"}>
+          <p className="text-3xl mb-4">المواعيد</p>
+          <div className="w-full overflow-x-auto">
+            <table className="overflow-x-scroll w-full">
+              <thead>
+                <tr>
+                  <th className={classes["td"]}>اليوم</th>
+                  <th className={classes["td"]}>يبدأ</th>
+                  <th className={classes["td"]}>المدة</th>
+                  <th className={classes["td"]}>السعر</th>
+                </tr>
+              </thead>
+              <tbody>
+                {response.dates.map((date, i) => (
+                  <tr key={i}>
+                    <td className={classes["td"]}>{arDay(date.day)}</td>
+                    <td className={classes["td"]}>
+                      {convertEgyptTimeToLocalTime(date.starts.slice(0, -3))}
+                    </td>
+                    <td className={classes["td"]}>
+                      {hrNumber(secondsToHrs(date.delay))}
+                    </td>
+                    <td className={classes["td"]}>
+                      {date.price}{" "}
+                      {response.currency === "EGP"
+                        ? "جنيه مصري"
+                        : "دولار أمريكي"}{" "}
+                      شهريًا
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className={classes["td"]} colSpan={2}>
+                    الإجمالي
+                  </td>
+                  <td className={classes["td"]}>
+                    {hrNumber(
+                      secondsToHrs(
+                        sum(response.dates.map((date) => date.delay))
+                      )
+                    )}
+                  </td>
+                  <td className={classes["td"]}>
+                    {sum(response.dates.map(({ price }) => price))}{" "}
+                    {response.currency === "EGP" ? "جنيه مصري" : "دولار أمريكي"}{" "}
+                    شهريًا
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {response.userType === "self" &&
+            (response.subscribed ? (
+              <Button
+                color="gray"
+                type="div"
+                className="w-full mt-4"
+                padding={4}
+                id="edit-dates-button"
+                textHov="black"
+              >
+                لا يمكنك تعديل |مواعيدك بعد الإشتراك
+              </Button>
+            ) : (
+              <Button
+                color="green"
+                padding={4}
+                onClick={() =>
+                  setPopup({ state: "dates edit", dates: response.dates })
+                }
+                className="w-full mt-4"
+                id="edit-dates-button"
+              >
+                تعديل
+              </Button>
+            ))}
+        </section>
+        <section className={classes["section"] + "mt-2 overflow-hidden"}>
+          {response.note ? (
+            <>
+              <div className="p-4">
+                <div className="flex justify-between">
+                  <p className="sm:text-2xl">
+                    {`${arDay(response.note.day)}  ${response.note.date}`}
+                  </p>
+                  <p className="sm:text-2xl">
+                    {response.note.rate}\
+                    <span className="sm:text-lg text-sm">10</span>
+                  </p>
                 </div>
-                {/* display the teacher */}
-                <p className="text-xl mb-2">
+                <div className="p-4">
+                  {response.note.discription
+                    ? response.note.discription.split("\n").map((line, i) => (
+                        <p key={i} className="sm:text-xl my-2">
+                          {line.trim()}
+                        </p>
+                      ))
+                    : "لم يتم كتابة تقرير"}
+                </div>
+                <p className="sm:text-2xl text-lg">
                   المعلم:{" "}
-                  {!response.teacher && response.subscribed ? (
-                    // if there isn't teacher and is subscribed color by red
-                    <span className="text-red-500">لا يوجد</span>
+                  {response.userType === "self" ? (
+                    response.note.teacher.name
                   ) : (
-                    // else keep it black
-                    response.teacher || "لا يوجد"
+                    <Link
+                      href={`/teachers/teacher/${response.note.teacher.id}`}
+                      className="hover:underline hover:text-green-500"
+                    >
+                      {response.note.teacher.name}
+                    </Link>
                   )}
                 </p>
-                {response.userType !== "self" && response.subscribed && (
-                  // if the user is admin or super admin display change teacher button
-                  <div>
-                    <Button
-                      color="sky"
-                      onClick={() =>
-                        setPopup({
-                          state: "change",
-                          id,
-                        })
-                      }
-                    >
-                      {response.teacher ? "تغيير المعلم" : "إختيار معلم"}
-                    </Button>
-                    {!response.teacher && (
-                      // if subscribed push him
-                      <span className="inline-block mr-4">يجب عليك هذا</span>
-                    )}
-                  </div>
-                )}
-              </section>
-              <section className={classes["section"] + "p-4 my-2 w-auto"}>
-                <p className="text-3xl mb-4">المواعيد</p>
-                <div className="w-full overflow-x-auto">
-                  <table className="overflow-x-scroll w-full">
-                    <thead>
-                      <tr>
-                        <th className={classes["td"]}>اليوم</th>
-                        <th className={classes["td"]}>يبدأ</th>
-                        <th className={classes["td"]}>المدة</th>
-                        <th className={classes["td"]}>السعر</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {response.dates.map((date, i) => (
-                        <tr key={i}>
-                          <td className={classes["td"]}>{arDay(date.day)}</td>
-                          <td className={classes["td"]}>
-                            {convertEgyptTimeToLocalTime(
-                              date.starts.slice(0, -3)
-                            )}
-                          </td>
-                          <td className={classes["td"]}>
-                            {hrNumber(secondsToHrs(date.delay))}
-                          </td>
-                          <td className={classes["td"]}>
-                            {date.price}{" "}
-                            {response.currency === "EGP"
-                              ? "جنيه مصري"
-                              : "دولار أمريكي"}{" "}
-                            شهريًا
-                          </td>
-                        </tr>
-                      ))}
-                      <tr>
-                        <td className={classes["td"]} colSpan={2}>
-                          الإجمالي
-                        </td>
-                        <td className={classes["td"]}>
-                          {hrNumber(
-                            secondsToHrs(
-                              sum(response.dates.map((date) => date.delay))
-                            )
-                          )}
-                        </td>
-                        <td className={classes["td"]}>
-                          {sum(response.dates.map(({ price }) => price))}{" "}
-                          {response.currency === "EGP"
-                            ? "جنيه مصري"
-                            : "دولار أمريكي"}{" "}
-                          شهريًا
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                {response.userType === "self" &&
-                  (response.subscribed ? (
-                    <Button
-                      color="gray"
-                      type="div"
-                      className="w-full mt-4"
-                      padding={4}
-                      id="edit-dates-button"
-                      textHov="black"
-                    >
-                      لا يمكنك تعديل |مواعيدك بعد الإشتراك
-                    </Button>
-                  ) : (
-                    <Button
-                      color="green"
-                      padding={4}
-                      onClick={() =>
-                        setPopup({ state: "dates edit", dates: response.dates })
-                      }
-                      className="w-full mt-4"
-                      id="edit-dates-button"
-                    >
-                      تعديل
-                    </Button>
-                  ))}
-              </section>
-              <section className={classes["section"] + "mt-2 overflow-hidden"}>
-                {response.note ? (
-                  <>
-                    <div className="p-4">
-                      <div className="flex justify-between">
-                        <p className="sm:text-2xl">
-                          {`${arDay(response.note.day)}  ${response.note.date}`}
-                        </p>
-                        <p className="sm:text-2xl">
-                          {response.note.rate}\
-                          <span className="sm:text-lg text-sm">10</span>
-                        </p>
-                      </div>
-                      <div className="p-4">
-                        {response.note.discription
-                          ? response.note.discription
-                              .split("\n")
-                              .map((line, i) => (
-                                <p key={i} className="sm:text-xl my-2">
-                                  {line.trim()}
-                                </p>
-                              ))
-                          : "لم يتم كتابة تقرير"}
-                      </div>
-                      <p className="sm:text-2xl text-lg">
-                        المعلم:{" "}
-                        {response.userType === "self" ? (
-                          response.note.teacher.name
-                        ) : (
-                          <Link
-                            href={`/teachers/teacher/${response.note.teacher.id}`}
-                            className="hover:underline hover:text-green-500"
-                          >
-                            {response.note.teacher.name}
-                          </Link>
-                        )}
-                      </p>
-                    </div>
-                    <Link
-                      href={`/students/student/${id}/notes`}
-                      className={
-                        "border-t-2 border-solid border-gray-600 block " +
-                        "p-4 text-center hover:bg-gray-200 transition-all duration-300"
-                      }
-                    >
-                      إظهار الكل
-                    </Link>
-                  </>
-                ) : (
-                  <></>
-                )}
-              </section>
-            </main>
-            <Popup popupData={popup} onClose={() => setPopup({})} />
-          </>
-        ) : (
-          <></>
-        )
-      ) : (
-        <></>
-      )}
+              </div>
+              <Link
+                href={`/students/student/${id}/notes`}
+                className={
+                  "border-t-2 border-solid border-gray-600 block " +
+                  "p-4 text-center hover:bg-gray-200 transition-all duration-300"
+                }
+              >
+                إظهار الكل
+              </Link>
+            </>
+          ) : (
+            <></>
+          )}
+        </section>
+      </main>
+      <Popup popupData={popup} onClose={() => setPopup({})} />
     </>
   );
 };
