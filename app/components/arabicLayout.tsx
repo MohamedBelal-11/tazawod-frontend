@@ -20,18 +20,26 @@ const activateclass =
   "bg-emerald-200 hover:bg-emerald-500 border-emerald-500 " +
   "bg-amber-200 hover:bg-amber-500 border-amber-500";
 const Body: React.FC<{
-  arms: boolean;
   loading: boolean;
   children: React.ReactNode;
-}> = ({ arms, loading, children }) => {
+}> = ({ loading, children }) => {
   const [scrolled, setScrolled] = useState(false);
   const { layoutProperties } = useArabicLayoutContext()!;
   const { scrollProperties } = useScrollContext()!;
+  const [arms, setArms] = useState(true);
   const pathname = usePathname();
   const hash = useHash();
   useEffect(() => {
     setScrolled(false);
   }, [pathname, hash]);
+  
+  useEffect(() => {
+    if (pathname.startsWith("/ar/auth")) {
+      setArms(false);
+    } else {
+      setArms(true)
+    }
+  }, [pathname]);
 
   useEffect(
     () => stateScroll(scrolled, setScrolled),
@@ -42,7 +50,7 @@ const Body: React.FC<{
     <body
       dir="rtl"
       style={layoutProperties.style}
-      className={layoutProperties.className}
+      className={layoutProperties.className + (loading ? " overflow-y-hidden" : "")}
     >
       <span className={activateclass}></span>
       {arms && (
@@ -64,14 +72,8 @@ export default function ArabicLayout({
   children?: React.ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
-  const [arms, setArms] = useState(true);
 
-  useEffect(() => {
-    setLoading(false);
-    if (location.pathname.startsWith("/ar/auth")) {
-      setArms(false);
-    }
-  }, []);
+  useEffect(() => setLoading(false),[])
 
   return (
     <html lang="ar">
@@ -84,7 +86,7 @@ export default function ArabicLayout({
       </head>
       <ArabicLayoutContextProvider>
         <ScrollContextProvider>
-          <Body arms={arms} loading={loading}>
+          <Body loading={loading}>
             {children}
           </Body>
         </ScrollContextProvider>

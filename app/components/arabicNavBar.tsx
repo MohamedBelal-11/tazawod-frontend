@@ -207,7 +207,7 @@ export default function ArabicNavBar() {
       // fetchData();
       setResponse({
         username: "محمد بلال",
-        usertype: "student",
+        usertype: "teacher",
         notification_count: 2,
         id: "abcd-efgh-ijkl-mnop",
       });
@@ -345,20 +345,14 @@ export default function ArabicNavBar() {
             </Transition>
           </Popover>
 
-          <Link
-            href={
-              userType === "student"
-                ? "#"
-                : userType === "teacher"
-                ? "#"
-                : userType === "admin"
-                ? "#"
-                : "#"
-            }
-            className={classes[0]}
-          >
-            {userType !== "unloged" ? "المقابلات" : "ما هي أكادمية تزود ؟"}
-          </Link>
+          {userType !== "student" && (
+            <Link
+              href={userType === "unloged" ? "#" : "/ar/meetings"}
+              className={classes[0]}
+            >
+              {userType !== "unloged" ? "المقابلات" : "ما هي أكادمية تزود ؟"}
+            </Link>
+          )}
           {userType !== "superadmin" && (
             <Link
               href={
@@ -465,24 +459,16 @@ export default function ArabicNavBar() {
                     </>
                   )}
                 </Disclosure>
-                <Link
-                  href={
-                    userType === "student"
-                      ? "#"
-                      : userType === "teacher"
-                      ? "#"
-                      : userType === "admin"
-                      ? "#"
-                      : userType === "superadmin"
-                      ? "#"
-                      : "#"
-                  }
-                  className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
-                >
-                  {userType !== "unloged"
-                    ? "المقابلات"
-                    : "ما هي أكادمية تزود ؟"}
-                </Link>
+                {userType !== "student" && (
+                  <Link
+                    href={userType === "unloged" ? "#" : "/ar/meetings"}
+                    className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
+                  >
+                    {userType !== "unloged"
+                      ? "المقابلات"
+                      : "ما هي أكادمية تزود ؟"}
+                  </Link>
+                )}
                 {userType !== "superadmin" && (
                   <Link
                     href={
