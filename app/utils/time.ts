@@ -1,6 +1,6 @@
 export const numHours = (time: string) => {
-  let [hours, minutes, secondes] = time.split(":").map(Number);
-  return hours + minutes / 60 + secondes / 60 / 60;
+  let [hours, minutes, secondes = null] = time.split(":").map(Number);
+  return hours + minutes / 60 + (secondes ? secondes / 60 / 60 : 0);
 };
 
 export const hrNumber = (number: number) => {
@@ -11,9 +11,95 @@ export const hrNumber = (number: number) => {
   );
 };
 
+export const convertLocalDateTimeToEgypt = (localDateTimeString: string) => {
+  // Parse the input date-time string in local time zone
+  const localDateTime = DateTime.fromISO(localDateTimeString, {
+    zone: DateTime.local().zoneName,
+  });
+
+  // Convert to Egypt time zone
+  const egyptDateTime = localDateTime.setZone("Africa/Cairo");
+
+  return egyptDateTime.toISO(); // Return as ISO string
+};
+
+export const convertEgyptDateTimeToLocal = (egyptDateTimeString: string) => {
+  // Parse the input date-time string in Egypt time zone
+  const egyptDateTime = DateTime.fromISO(egyptDateTimeString, {
+    zone: "Africa/Cairo",
+  });
+
+  // Convert to local time zone
+  const localDateTime = egyptDateTime.setZone(DateTime.local().zoneName);
+
+  return localDateTime.toISO(); // Return as ISO string
+};
+
+export const convertLocalWeekdayToEgypt = (
+  localWeekday: Weekday,
+  time: string
+) => {
+  const [hour, minute, socends = null] = time.split(":").map(Number);
+
+  const localeDateTime = DateTime.fromObject({
+    year: 2024,
+    month: 7,
+    day: days.indexOf(localWeekday) === 0 ? 7 : days.indexOf(localWeekday), // Specific date
+    hour,
+    minute,
+    second: socends || 0,
+  });
+  // Convert to Egypt time
+  const EgyptDateTime = localeDateTime.setZone("Africa/Cairo");
+
+  // Get the day and time in Egypt time zone
+  const dayInEgypt =
+    days[EgyptDateTime.weekday === 7 ? 0 : EgyptDateTime.weekday]; // Full day name
+  const timeInEgypt = EgyptDateTime.toFormat("HH:mm:ss"); // Time in HH:mm:ss format
+
+  return [dayInEgypt, timeInEgypt] as [Weekday, string];
+};
+
+export const convertEgyptWeekdayToLocal = (
+  localWeekday: Weekday,
+  time: string
+) => {
+  const [hour, minute, socends = null] = time.split(":").map(Number);
+
+  const egyptDateTime = DateTime.fromObject({
+    year: 2024,
+    month: 7,
+    day: days.indexOf(localWeekday) === 0 ? 7 : days.indexOf(localWeekday), // Specific date
+    hour,
+    minute,
+    second: socends || 0,
+  }).setZone("Africa/Cairo", { keepLocalTime: true });
+  // Convert to your local time
+  const localDateTime = egyptDateTime.setZone(DateTime.local().zoneName);
+
+  // Get the day and time in your local time zone
+  const dayInLocal =
+    days[localDateTime.weekday === 7 ? 0 : localDateTime.weekday]; // Full day name
+  const timeInLocal = localDateTime.toFormat("HH:mm:ss"); // Time in HH:mm:ss format
+
+  return [dayInLocal, timeInLocal] as [Weekday, string];
+};
+
+export const sortDaysFromToday = (day: Weekday) => {
+  const today = bDate.getDay({ form: "number" }) as number;
+  if (today == days.indexOf(day)) {
+    return 0;
+  } else if (today > days.indexOf(day)) {
+    return 7 + (days.indexOf(day) - today);
+  } else {
+    return days.indexOf(day) - today;
+  }
+};
+
 import { DateTime } from "luxon";
 import { Weekday } from "./students";
 import { arabicMonths, arabicWeekDays } from "./arabic";
+import { secondsToHrs } from "../ar/content";
 
 // Convert local time to Egypt time
 function convertLocalTimeToEgyptTime(localTimeString: string): string {
@@ -78,7 +164,7 @@ export const bDate = {
   },
   getMonth(
     {
-      form = "english",
+      form = "number",
       date,
     }: {
       form?: "arabic" | "english" | "number";
@@ -120,4 +206,11 @@ export const bDate = {
       }` + (time ? " " + convertEgyptTimeToLocalTime(this.getTime()) : "")
     );
   },
+};
+
+export const sumStartAndDelay = (start: string, delay: string | number) => {
+  return hrNumber(
+    numHours(start) +
+      (typeof delay === "string" ? numHours(delay) : secondsToHrs(delay))
+  );
 };

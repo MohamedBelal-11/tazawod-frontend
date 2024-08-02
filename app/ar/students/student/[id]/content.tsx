@@ -6,7 +6,12 @@ import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
 import { Date, Weekday } from "@/app/utils/students";
-import { convertEgyptTimeToLocalTime, hrNumber } from "@/app/utils/time";
+import {
+  convertEgyptTimeToLocalTime,
+  convertEgyptWeekdayToLocal,
+  days,
+  hrNumber,
+} from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -416,6 +421,13 @@ const Content = () => {
     return;
   }
 
+  const dates: Tdate[] = response.dates
+    .map((date) => {
+      const [day, starts] = convertEgyptWeekdayToLocal(date.day, date.starts);
+      return { ...date, day, starts };
+    })
+    .sort((a, b) => days.indexOf(a.day) - days.indexOf(b.day));
+
   return (
     <>
       <main className="sm:px-8 sm:py-4 py-2">
@@ -554,11 +566,11 @@ const Content = () => {
                 </tr>
               </thead>
               <tbody>
-                {response.dates.map((date, i) => (
+                {dates.map((date, i) => (
                   <tr key={i}>
                     <td className={classes["td"]}>{arDay(date.day)}</td>
                     <td className={classes["td"]}>
-                      {convertEgyptTimeToLocalTime(date.starts.slice(0, -3))}
+                      {date.starts.slice(0, -3)}
                     </td>
                     <td className={classes["td"]}>
                       {hrNumber(secondsToHrs(date.delay))}

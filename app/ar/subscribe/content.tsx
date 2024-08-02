@@ -11,6 +11,7 @@ type Responset =
       total: number;
       currency: "EGP" | "USD";
       ID: string;
+      freeTierUsed: boolean;
     }
   | {
       student: false;
@@ -27,6 +28,7 @@ const Content: React.FC = () => {
       currency: "EGP",
       ID: "aaasff",
       total: 55.5,
+      freeTierUsed: false,
     });
   }, []);
 
@@ -49,9 +51,11 @@ const Content: React.FC = () => {
             <Button className="w-56 text-xl" color="green">
               الإشتراك عن طريق المحفظة أو البطاقة المصرفية
             </Button>
-            <Button className="w-56 text-xl" color="amber">
-              الإسبوع المجاني
-            </Button>
+            {Boolean(response && !response.freeTierUsed) && (
+              <Button className="w-56 text-xl" color="amber">
+                الإسبوع المجاني
+              </Button>
+            )}
           </div>
           {Boolean(response) && (
             <div className="flex-col items-center gap-3">
@@ -60,7 +64,9 @@ const Content: React.FC = () => {
                 {response?.currency === "EGP" ? "جنيه مصري" : "دولار أمريكي"}
               </p>
               <Link
-                href={"/ar/students/student/" + response?.ID + "#edit-dates-button"}
+                href={
+                  "/ar/students/student/" + response?.ID + "#edit-dates-button"
+                }
                 className={getClass({ color: "emerald" })}
               >
                 تغيير المواعيد
