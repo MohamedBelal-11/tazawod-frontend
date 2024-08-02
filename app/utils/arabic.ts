@@ -1,5 +1,3 @@
-import { convertEgyptTimeToLocalTime } from "./time";
-
 export const arDay = (day: string) => {
   if (day === "monday") {
     return "الإثنين";
@@ -46,3 +44,28 @@ export const arabicWeekDays = [
   "الجمعة",
   "السبت",
 ];
+
+export const arCase = (str: string) => {
+  let returnedString = "";
+  for (let char of str) {
+    if (char === "أ" || char === "آ" || char === "إ") {
+      returnedString += "ا";
+    } else if (char === "ي") {
+      returnedString += "ى";
+    } else if (char === "ة") {
+      returnedString += "ه";
+    } else if (
+      !(
+        char === "ً" ||
+        char === "َ" ||
+        char === "ُ" ||
+        char === "ِ" ||
+        char === "ٍ" ||
+        char === "ْ"
+      )
+    ) {
+      returnedString += char;
+    }
+  }
+  return returnedString;
+};

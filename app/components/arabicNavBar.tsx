@@ -377,7 +377,11 @@ export default function ArabicNavBar() {
           )}
           {userType !== "unloged" ? (
             <Link
-              href={`/ar/${userType}s/${userType}/${response?.id}`}
+              href={
+                userType === "admin" || userType === "superadmin"
+                  ? `/ar/${userType}s/${userType}/${response?.id}`
+                  : "/ar/admin/acount"
+              }
               className={classes[0]}
             >
               الحساب
@@ -408,7 +412,12 @@ export default function ArabicNavBar() {
         onClose={setMobileMenuOpen}
       >
         <div className="fixed inset-0 z-10" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+        <DialogPanel
+          className={
+            "fixed inset-y-0 right-0 z-10 w-full overflow-y-auto " +
+            "bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+          }
+        >
           <div className="flex items-center justify-between">
             <Link href="#" className="-m-1.5 p-1.5">
               <img className="h-12 w-auto" src="/static/imgs/quran.gif" />

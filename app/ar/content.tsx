@@ -1,7 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import ArabicLayout from "../components/arabicLayout";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import globalClasses from "../utils/globalClasses";
@@ -9,8 +8,11 @@ import { Date, Weekday } from "../utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
+  convertEgyptWeekdayToLocal,
   hrNumber,
   numHours,
+  sumStartAndDelay,
+  sortDaysFromToday,
 } from "../utils/time";
 import { arDay } from "../utils/arabic";
 import axios from "axios";
@@ -490,33 +492,44 @@ export default function Content() {
                 initial="hidden"
                 animate="visible"
               >
-                {response.quraan_days.map((date, i) => {
-                  return (
-                    <motion.div
-                      key={i}
-                      className={
-                        "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
-                        "transition-all duration-300 w-max *:w-max"
-                      }
-                      variants={CCV}
-                    >
-                      <p className="text-3xl font-bold">{arDay(date.day)}</p>
-                      <p className="text-2xl">
-                        يبدأ الساعة{" "}
-                        {convertEgyptTimeToLocalTime(date.starts.slice(0, -3))}
-                      </p>
+                {response.quraan_days
+                  .map((mt) => {
+                    const [day, time] = convertEgyptWeekdayToLocal(
+                      mt.day,
+                      mt.starts
+                    ) as [Weekday, string];
+                    return { ...mt, day, starts: time };
+                  })
+                  .sort(
+                    (a, b) =>
+                      sortDaysFromToday(a.day) - sortDaysFromToday(b.day)
+                  )
+                  .map((date, i) => {
+                    return (
+                      <motion.div
+                        key={i}
+                        className={
+                          "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
+                          "transition-all duration-300 w-max *:w-max"
+                        }
+                        variants={CCV}
+                      >
+                        <p className="text-3xl font-bold">{arDay(date.day)}</p>
+                        <p className="text-2xl">
+                          يبدأ الساعة {date.starts.slice(0, -3)}
+                        </p>
 
-                      <p>
-                        ينتهي الساعة{" "}
-                        {convertEgyptTimeToLocalTime(
-                          hrNumber(
-                            numHours(date.starts) + secondsToHrs(date.delay)
-                          )
-                        )}
-                      </p>
-                    </motion.div>
-                  );
-                })}
+                        <p>
+                          ينتهي الساعة{" "}
+                          {convertEgyptTimeToLocalTime(
+                            hrNumber(
+                              numHours(date.starts) + secondsToHrs(date.delay)
+                            )
+                          )}
+                        </p>
+                      </motion.div>
+                    );
+                  })}
               </motion.div>
             </section>
           ) : response.userType === "teacher" ? (
@@ -652,9 +665,7 @@ export default function Content() {
                     <p>
                       ينتهي الساعة{" "}
                       {convertEgyptTimeToLocalTime(
-                        hrNumber(
-                          numHours(meeting.starts) + secondsToHrs(meeting.delay)
-                        )
+                        sumStartAndDelay(meeting.starts, meeting.delay)
                       )}
                     </p>
                     <a
@@ -795,7 +806,9 @@ export default function Content() {
                   return (
                     <div key={i} className="p-8 bg-white rounded-3xl my-6">
                       <h3 className="flex justify-between text-2xl font-semibold">
-                        <span>{bDate.getFormedDate(note.date, { form: "arabic" })}</span>
+                        <span>
+                          {bDate.getFormedDate(note.date, { form: "arabic" })}
+                        </span>
                         <span>
                           {note.rate}/<span className="text-sm">10</span>
                         </span>

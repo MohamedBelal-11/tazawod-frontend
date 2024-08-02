@@ -11,15 +11,25 @@ import {
 // import { numHours } from "@/app/utils/time";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { Dispatch, FormEvent, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { backendUrl } from "@/app/utils/auth";
 import PasswordInput from "@/app/components/passwordInput";
-import { convertLocalTimeToEgyptTime, days } from "@/app/utils/time";
+import {
+  convertLocalTimeToEgyptTime,
+  convertLocalWeekdayToEgypt,
+  days,
+} from "@/app/utils/time";
 import MyPhoneInput from "@/app/components/phoneInput";
 import { AnimatePresence, motion } from "framer-motion";
 import { Weekday } from "@/app/utils/students";
 import { get } from "@/app/utils/docQuery";
-import "./page.css"
+import "./page.css";
 import { useArabicLayoutContext } from "@/app/contexts/arabicLayoutContext";
 
 export type MetaInfo = { day: Weekday; starts: string; delay: string };
@@ -279,11 +289,11 @@ export default function Content() {
   }>();
   const [message, setMessage] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const {setLayoutProperties} = useArabicLayoutContext()!
+  const { setLayoutProperties } = useArabicLayoutContext()!;
 
   useEffect(() => {
-    setLayoutProperties({className: "pt-4"})
-  }, [setLayoutProperties])
+    setLayoutProperties({ className: "pt-4" });
+  }, [setLayoutProperties]);
 
   useEffect(() => {
     if (createDate) {
@@ -291,7 +301,7 @@ export default function Content() {
     } else {
       get<HTMLBodyElement>("html")[0].classList.remove("overflow-y-hidden");
     }
-  }, [createDate])
+  }, [createDate]);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -302,10 +312,15 @@ export default function Content() {
         gender: gender,
         password: password,
         quraan_days: quraan_days.map((date) => {
+          const [day, starts] = convertLocalWeekdayToEgypt(
+            date.day,
+            date.starts
+          );
+
           return {
-            ...date,
-            starts:
-              convertLocalTimeToEgyptTime(date.starts.slice(0, -3)) + ":00",
+            delay: date.delay,
+            starts,
+            day,
           };
         }),
       };
@@ -450,16 +465,38 @@ export default function Content() {
         return [...m, "يجب أن تحدد جنسك"];
       });
     }
-    // alive1 = true;
+    alive1 = true;
+    let dayslistd: Weekday[] = [];
     for (let list of [quraan_days]) {
       if (list.length === 0) {
         setMessage((m) => {
           return [
             ...m,
-            "هناك خانة مواعيد فارغة رجاءً ضع  فيها موعد واحد على الأقل",
+            "خانة المواعيد فارغة رجاءً ضع  فيها موعد واحد على الأقل",
           ];
         });
         alive = false;
+        alive1 = false;
+      }
+      for (let date of list) {
+        if (!alive1) {
+          break;
+        }
+        let [EGday] = convertLocalWeekdayToEgypt(date.day, date.starts);
+        for (let day of dayslistd) {
+          if (day === EGday) {
+            setMessage((m) => {
+              return [
+                ...m,
+                "هناك موعدان في نفس اليوم حسب توقيت مصر قم بتوسيع المسافة بينهما",
+              ];
+            });
+            alive = false;
+            alive1 = false;
+            break;
+          }
+        }
+        dayslistd.push(EGday)
       }
     }
     //     break;
