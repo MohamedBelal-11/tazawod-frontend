@@ -597,6 +597,7 @@ export default function Content() {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
+            titled="arabic"
           />
           <PasswordInput
             value={password2}

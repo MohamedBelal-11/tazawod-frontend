@@ -76,7 +76,20 @@ const Content = () => {
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage([]);
-    const marksList = ["!", "@", "#", "$", "%", "^", "&", "*", "?", "_", "-", "."];
+    const marksList = [
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "?",
+      "_",
+      "-",
+      ".",
+    ];
     let alive = true;
     if (name.trim() === "") {
       alive = false;
@@ -212,7 +225,7 @@ const Content = () => {
             required
             autoComplete="name"
           />
-          <MyPhoneInput value={phoneNumber} onChange={setPhoneNumber} /> 
+          <MyPhoneInput value={phoneNumber} onChange={setPhoneNumber} />
           {phoneNumber.startsWith("970") && (
             <motion.p
               variants={{
@@ -227,7 +240,7 @@ const Content = () => {
                   key={i}
                   variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
                 >
-                  {c} 
+                  {c}
                 </motion.span>
               ))}
             </motion.p>
@@ -244,7 +257,7 @@ const Content = () => {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
-            style={{}}
+            titled="arabic"
           />
           <PasswordInput
             value={password2}

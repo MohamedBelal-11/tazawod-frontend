@@ -12,7 +12,6 @@ import {
   sumStartAndDelay,
 } from "@/app/utils/time";
 import { ChevronDoubleLeftIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 interface Meet extends Date {
@@ -67,6 +66,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
         arCase(almightyTrim(filters.studentName.toLowerCase()))
       )
     );
+  const workDays = getWorkDays(meetings)
 
   return (
     <>
@@ -91,10 +91,10 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
                 }
               />
               <div className="mt-4">
-                {getWorkDays(meetings).map((day, i) => (
+                {workDays.slice(1).map((day, i) => (
                   <div key={i}>
                     <a
-                      className="inline-block p-3 rounded-lg border-2 border-gray-600"
+                      className="inline-block mt-4 p-3 rounded-lg border-2 border-gray-600"
                       href={"#" + day}
                     >
                       {arDay(day)}
@@ -117,7 +117,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
             />
           </div>
           <div className="flex-auto p-4">
-            {getWorkDays(meetings).map((day, index) => (
+            {workDays.map((day, index) => (
               <div key={index} className="mb-4 last:mb-0">
                 <p id={day}>
                   <span
@@ -139,9 +139,9 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
                       const convertedSum = sumStartAndDelay(starts, delay);
 
                       return (
-                        <div key={i} className="p-2">
-                          <p className="text-lg pb-2">الطالب {student}</p>
-                          <p className="pb-2">
+                        <div key={i} className="p-4 rounded-lg border-2 border-gray-700">
+                          <p className="text-lg mb-2">الطالب {student}</p>
+                          <p className="mb-2">
                             يبدأ الساعة {convertedStart}{" "}
                             {sortDaysFromToday(day) === 0
                               ? numHours(timeNow) > numHours(convertedStart)
@@ -151,10 +151,9 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
                                 : i === 0
                                 ? "(التالي)"
                                 : ""
-                              : index === 0 && i === 0
-                              ? "(التالي)"
                               : ""}
                           </p>
+                          <p className="pb-2">ينتهي الساعة {convertedSum}{" "}</p>
                         </div>
                       );
                     })}

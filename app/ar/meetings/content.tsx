@@ -19,7 +19,7 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    setResponse({ succes: true, userType: "teacher" });
+    setResponse({ succes: true, userType: "admin" });
   }, []);
 
   if (response === undefined) {

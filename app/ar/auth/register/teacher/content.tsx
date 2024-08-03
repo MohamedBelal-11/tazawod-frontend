@@ -254,7 +254,7 @@ const Content = () => {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
-            style={{}}
+            titled="arabic"
           />
           <PasswordInput
             value={password2}

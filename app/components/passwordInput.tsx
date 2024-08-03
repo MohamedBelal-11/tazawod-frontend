@@ -15,6 +15,7 @@ interface PasswordInputProps
   > {
   divclassname?: string;
   divStyle?: React.CSSProperties;
+  titled?: "arabic" | "english";
 }
 
 const PasswordInput = (props: PasswordInputProps) => {
@@ -38,7 +39,20 @@ const PasswordInput = (props: PasswordInputProps) => {
       >
         {hidden ? <EyeIcon width={20} /> : <EyeSlashIcon width={20} />}
       </div>
-      <input {...props} type={hidden ? "password" : "text"} />
+      <input
+        {...props}
+        type={hidden ? "password" : "text"}
+        pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+        title={
+          props.titled === "arabic"
+            ? "يجب أن تكون كلمة المرور مكونة من 8 أحرف على الأقل، " +
+              "وتحتوي على حرف واحد على الأقل، ورقم واحد، وحرف خاص واحد"
+            : props.titled === "english"
+            ? "Password must be at least 8 characters long and " +
+              "include at least one letter, one number, and one special character"
+            : undefined
+        }
+      />
     </div>
   );
 };
