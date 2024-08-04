@@ -11,6 +11,67 @@ export const hrNumber = (number: number) => {
   );
 };
 
+export const isBetween = (
+  starts: [string, Weekday],
+  delay: string,
+  starts2: [string, Weekday],
+  delay2: string
+) => {
+  const started = starts[0].split(":").map(Number);
+  const dalyed = delay.split(":").map(Number);
+  const started2 = starts2[0].split(":").map(Number);
+  const dalyed2 = delay2.split(":").map(Number);
+
+  const startDate = DateTime.fromObject({
+    year: 2024,
+    month: 7,
+    day: days.indexOf(starts[1]) === 0 ? 7 : days.indexOf(starts[1]), // Specific date
+    hour: started[0],
+    minute: started[1],
+    second: started[2] || 0,
+  });
+
+  const EndDate = startDate.plus({
+    hours: dalyed[0],
+    minutes: dalyed[1],
+    seconds: dalyed[2] || undefined,
+  });
+
+  const startDate2 = DateTime.fromObject({
+    year: 2024,
+    month: 7,
+    day: days.indexOf(starts2[1]) === 0 ? 7 : days.indexOf(starts2[1]), // Specific date
+    hour: started2[0],
+    minute: started2[1],
+    second: started2[2] || 0,
+  });
+
+  const EndDate2 = startDate2.plus({
+    hours: dalyed2[0],
+    minutes: dalyed2[1],
+    seconds: dalyed2[2] || undefined,
+  });
+
+  return (
+    (startDate2 > startDate && startDate2 < EndDate) ||
+    (EndDate2 > startDate && EndDate2 < EndDate) ||
+    (startDate > startDate2 && startDate < EndDate2) ||
+    (EndDate > startDate2 && EndDate < EndDate2) ||
+    (startDate.weekday === 7
+      ? (startDate.minus({ days: 7 }) > startDate2 &&
+          startDate.minus({ days: 7 }) < EndDate2) ||
+        (EndDate.minus({ days: 7 }) > startDate2 &&
+          EndDate.minus({ days: 7 }) < EndDate2)
+      : false) ||
+    (startDate2.weekday === 7
+      ? (startDate2.minus({ days: 7 }) > startDate &&
+          startDate2.minus({ days: 7 }) < EndDate) ||
+        (EndDate2.minus({ days: 7 }) > startDate &&
+          EndDate2.minus({ days: 7 }) < EndDate)
+      : false)
+  );
+};
+
 export const convertLocalDateTimeToEgypt = (localDateTimeString: string) => {
   // Parse the input date-time string in local time zone
   const localDateTime = DateTime.fromISO(localDateTimeString, {

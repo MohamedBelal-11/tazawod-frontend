@@ -255,6 +255,7 @@ const Content = () => {
             required
             autoComplete="new-password"
             titled="arabic"
+            onPaste={(e) => {e.preventDefault()}}
           />
           <PasswordInput
             value={password2}
@@ -268,6 +269,7 @@ const Content = () => {
             divclassname="max-w-96 w-full"
             autoComplete="new-password"
             required
+            onPaste={(e) => {e.preventDefault()}}
           />
           <h2 className="text-xl">حدد جنسك</h2>
           <div className="flex justify-evenly">

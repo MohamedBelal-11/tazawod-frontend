@@ -21,9 +21,10 @@ import {
 import { backendUrl } from "@/app/utils/auth";
 import PasswordInput from "@/app/components/passwordInput";
 import {
-  convertLocalTimeToEgyptTime,
   convertLocalWeekdayToEgypt,
   days,
+  isBetween,
+  numHours,
 } from "@/app/utils/time";
 import MyPhoneInput from "@/app/components/phoneInput";
 import { AnimatePresence, motion } from "framer-motion";
@@ -358,7 +359,7 @@ export default function Content() {
     });
     const marksList = ["!", "@", "#", "$", "%", "^", "&", "*", "?", "_", "-"];
     let alive = true;
-    // let tmpList: any[][] = [];
+    let tmpList: [string, string, Weekday][] = [];
     if (name.trim() === "") {
       alive = false;
       setMessage((m) => {
@@ -496,48 +497,35 @@ export default function Content() {
             break;
           }
         }
-        dayslistd.push(EGday)
+        dayslistd.push(EGday);
+      }
+      for (let date of list.sort(
+        (a, b) => days.indexOf(a.day) - days.indexOf(b.day)
+      )) {
+        if (!alive1) {
+          break;
+        }
+
+        for (let dateNum of tmpList) {
+          if (
+            isBetween(
+              [date.starts, date.day],
+              date.delay,
+              [dateNum[0], dateNum[2]],
+              dateNum[1]
+            )
+          ) {
+            alive1 = false;
+            alive = false;
+            setMessage((m) => {
+              return [...m, "المواعيد متداخلة رجاءً راجع مواعيدك"];
+            });
+            break;
+          }
+        }
+        tmpList.push([date.starts, date.delay, date.day]);
       }
     }
-    //     break;
-    //   }
-    //   for (let date of list) {
-    //     if (!alive1) {
-    //       break;
-    //     }
-    //     for (let dateNum of tmpList) {
-    //       if (
-    //         (numHours(date.starts) > dateNum[0] &&
-    //           numHours(date.starts) < dateNum[1] &&
-    //           date.day === dateNum[2]) ||
-    //         (numHours(date.starts) + numHours(date.delay) > dateNum[0] &&
-    //           numHours(date.starts) + numHours(date.delay) < dateNum[1] &&
-    //           date.day === dateNum[2]) ||
-    //         (dateNum[0] > numHours(date.starts) &&
-    //           dateNum[0] < numHours(date.starts) + numHours(date.delay) &&
-    //           date.day === dateNum[2]) ||
-    //         (dateNum[1] > numHours(date.starts) &&
-    //           dateNum[1] < numHours(date.starts) + numHours(date.delay) &&
-    //           date.day === dateNum[2]) ||
-    //         (numHours(date.starts) === dateNum[0] &&
-    //           numHours(date.starts) + numHours(date.delay) === dateNum[1] &&
-    //           date.day === dateNum[2])
-    //       ) {
-    //         alive1 = false;
-    //         alive = false;
-    //         setMessage((m) => {
-    //           return [...m, "المواعيد متداخلة رجاءً راجع مواعيدك"];
-    //         });
-    //         break;
-    //       }
-    //     }
-    //     tmpList.push([
-    //       numHours(date.starts),
-    //       numHours(date.starts) + numHours(date.delay),
-    //       date.day,
-    //     ]);
-    //   }
-    // }
 
     if (alive) {
       handleSubmit();
@@ -597,6 +585,7 @@ export default function Content() {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
+            onPaste={(e) => {e.preventDefault()}}
             titled="arabic"
           />
           <PasswordInput
@@ -611,6 +600,7 @@ export default function Content() {
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"
             required
+            onPaste={(e) => {e.preventDefault()}}
             autoComplete="new-password"
           />
           <h2 className="text-xl">حدد جنسك</h2>

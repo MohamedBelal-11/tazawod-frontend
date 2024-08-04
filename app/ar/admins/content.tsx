@@ -13,6 +13,7 @@ import axios from "axios";
 import Link from "next/link";
 import { get } from "../../utils/docQuery";
 import Button from "@/app/components/button";
+import ScrollTopButton from "@/app/components/scrollTopButton";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -193,203 +194,211 @@ const Content = () => {
       <div className="h-px"></div>
       {response ? (
         response.succes ? (
-          <main className="flex bg-white rounded-xl my-6 md:mx-8 max-w-screen overflow-x-hidden">
-            {/* creating filters div */}
-            <AnimatePresence>
-              {openedStudent !== undefined &&
-                (() => {
-                  const admin = response.admins[openedStudent];
-                  return (
-                    <motion.div
-                      className="w-full top-0 right-0 h-screen fixed flex items-center justify-center cursor-pointer"
-                      style={{ zIndex: 10, backgroundColor: "#0006" }}
-                    >
-                      <div
-                        className="w-full h-full absolute"
-                        style={{ zIndex: -1 }}
-                        onClick={() => setOpenedSudent(undefined)}
-                      ></div>
+          <>
+            <main className="flex bg-white rounded-xl my-6 md:mx-8 max-w-screen overflow-x-hidden">
+              {/* creating filters div */}
+              <AnimatePresence>
+                {openedStudent !== undefined &&
+                  (() => {
+                    const admin = response.admins[openedStudent];
+                    return (
                       <motion.div
-                        className="overflow-y-auto p-4 rounded-2xl bg-white cursor-auto overflow-x-hidden"
-                        initial={{ width: 0, height: 0 }}
-                        animate={{
-                          width: "100%",
-                          height: "auto",
-                          transition: { duration: 0.7 },
-                        }}
-                        style={{ maxWidth: 800, maxHeight: "90vh" }}
-                        exit={{
-                          width: 0,
-                          height: 0,
-                          transition: { duration: 0.7 },
-                        }}
-                        onClick={() => {}}
+                        className="w-full top-0 right-0 h-screen fixed flex items-center justify-center cursor-pointer"
+                        style={{ zIndex: 10, backgroundColor: "#0006" }}
                       >
-                        <div className="flex mb-1">
-                          <div
-                            className="p-1 rounded-full border-2 border-gray-400 border-solid cursor-pointer"
-                            onClick={() => setOpenedSudent(undefined)}
-                          >
-                            <XMarkIcon width={20} />
-                          </div>
-                        </div>
-                        <p className="sm:text-3xl text-xl">{admin.name}</p>
-                        <p className="text-2xl my-4">
-                          <span dir="ltr">+{admin.phone}</span>
-                        </p>
-                        <p>
-                          {admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}
-                        </p>
-
-                        {Boolean(admin.description) && (
-                          <div className="p-4">
-                            {admin.description!.split("\n").map((line, i) => (
-                              <p key={i} className="py-1">
-                                {line}
-                              </p>
-                            ))}
-                          </div>
-                        )}
-                        <Button
-                          color={admin.is_accepted ? "red" : undefined}
-                          className="w-full"
-                          padding={3}
+                        <div
+                          className="w-full h-full absolute"
+                          style={{ zIndex: -1 }}
+                          onClick={() => setOpenedSudent(undefined)}
+                        ></div>
+                        <motion.div
+                          className="overflow-y-auto p-4 rounded-2xl bg-white cursor-auto overflow-x-hidden"
+                          initial={{ width: 0, height: 0 }}
+                          animate={{
+                            width: "100%",
+                            height: "auto",
+                            transition: { duration: 0.7 },
+                          }}
+                          style={{ maxWidth: 800, maxHeight: "90vh" }}
+                          exit={{
+                            width: 0,
+                            height: 0,
+                            transition: { duration: 0.7 },
+                          }}
+                          onClick={() => {}}
                         >
-                          {admin.is_accepted ? "إلغاء الموافقة" : "موافقة"}
-                        </Button>
+                          <div className="flex mb-1">
+                            <div
+                              className="p-1 rounded-full border-2 border-gray-400 border-solid cursor-pointer"
+                              onClick={() => setOpenedSudent(undefined)}
+                            >
+                              <XMarkIcon width={20} />
+                            </div>
+                          </div>
+                          <p className="sm:text-3xl text-xl">{admin.name}</p>
+                          <p className="text-2xl my-4">
+                            <span dir="ltr">+{admin.phone}</span>
+                          </p>
+                          <p>
+                            {admin.is_accepted
+                              ? "موافق عليه"
+                              : "غير موافق عليه"}
+                          </p>
+
+                          {Boolean(admin.description) && (
+                            <div className="p-4">
+                              {admin.description!.split("\n").map((line, i) => (
+                                <p key={i} className="py-1">
+                                  {line}
+                                </p>
+                              ))}
+                            </div>
+                          )}
+                          <Button
+                            color={admin.is_accepted ? "red" : undefined}
+                            className="w-full"
+                            padding={3}
+                          >
+                            {admin.is_accepted ? "إلغاء الموافقة" : "موافقة"}
+                          </Button>
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
-                  );
-                })()}
-            </AnimatePresence>
-            <div className="flex">
-              <div
-                className={`overflow-x-hidden ${
-                  filtersDivOpened ? "w-64" : "w-0"
-                } transition-all duration-300`}
-                style={{ maxWidth: "80vw" }}
-              >
-                <div className={"p-4 overflow-x-hidden bg-white w-full"}>
-                  <h2 className="text-xl mb-4">فلتر</h2>
-                  <input
-                    type="text"
-                    placeholder="الاسم"
-                    value={filters.name}
-                    onChange={(e) => {
-                      setFilters({ ...filters, name: e.target.value });
-                    }}
-                    className={classes["inp"]}
-                  />
-                  <input
-                    type="text"
-                    placeholder="رقم الهاتف"
-                    value={filters.phone}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (
-                        [...numList, ""].includes(
-                          value.length > 0 ? value[value.length - 1] : ""
-                        )
-                      ) {
-                        setFilters({ ...filters, phone: value });
-                      }
-                    }}
-                    className={classes["inp"]}
-                  />
-                  <div
-                    className={classes["inp"] + "flex flex-col items-center"}
-                  >
-                    <div>
-                      <label htmlFor="true" className="ml-2">
-                        موافق عليه
-                      </label>
-                      <input
-                        type="radio"
-                        id="true"
-                        checked={filters.is_accepted === "true"}
-                        onChange={() => {
-                          setFilters({ ...filters, is_accepted: "true" });
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="false" className="ml-2">
-                        غير موافق عليه
-                      </label>
-                      <input
-                        type="radio"
-                        id="false"
-                        checked={filters.is_accepted === "false"}
-                        onChange={() => {
-                          setFilters({ ...filters, is_accepted: "false" });
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="both" className="ml-2">
-                        الكل
-                      </label>
-                      <input
-                        type="radio"
-                        id="both"
-                        checked={filters.is_accepted === "both"}
-                        onChange={() => {
-                          setFilters({ ...filters, is_accepted: "both" });
-                        }}
-                      />
+                    );
+                  })()}
+              </AnimatePresence>
+              <div className="flex">
+                <div
+                  className={`overflow-x-hidden ${
+                    filtersDivOpened ? "w-64" : "w-0"
+                  } transition-all duration-300`}
+                  style={{ maxWidth: "80vw" }}
+                >
+                  <div className={"p-4 overflow-x-hidden bg-white w-full"}>
+                    <h2 className="text-xl mb-4">فلتر</h2>
+                    <input
+                      type="text"
+                      placeholder="الاسم"
+                      value={filters.name}
+                      onChange={(e) => {
+                        setFilters({ ...filters, name: e.target.value });
+                      }}
+                      className={classes["inp"]}
+                    />
+                    <input
+                      type="text"
+                      placeholder="رقم الهاتف"
+                      value={filters.phone}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        let alive = true;
+                        for (const c of value) {
+                          if (numList.includes(c)) {
+                            alive = false;
+                            break;
+                          }
+                        }
+                        if (alive) {
+                          setFilters({ ...filters, phone: value });
+                        }
+                      }}
+                      className={classes["inp"]}
+                    />
+                    <div
+                      className={classes["inp"] + "flex flex-col items-center"}
+                    >
+                      <div>
+                        <label htmlFor="true" className="ml-2">
+                          موافق عليه
+                        </label>
+                        <input
+                          type="radio"
+                          id="true"
+                          checked={filters.is_accepted === "true"}
+                          onChange={() => {
+                            setFilters({ ...filters, is_accepted: "true" });
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="false" className="ml-2">
+                          غير موافق عليه
+                        </label>
+                        <input
+                          type="radio"
+                          id="false"
+                          checked={filters.is_accepted === "false"}
+                          onChange={() => {
+                            setFilters({ ...filters, is_accepted: "false" });
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="both" className="ml-2">
+                          الكل
+                        </label>
+                        <input
+                          type="radio"
+                          id="both"
+                          checked={filters.is_accepted === "both"}
+                          onChange={() => {
+                            setFilters({ ...filters, is_accepted: "both" });
+                          }}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              {/* creating toggle button of filters div */}
-              <button
-                className="flex border-gray-500 border-solid border-x-2 w-6"
-                onClick={() => {
-                  setFiltersDivOpened(!filtersDivOpened);
-                }}
-              >
-                {filtersDivOpened ? (
-                  <ChevronDoubleRightIcon
-                    width={20}
-                    style={{ top: 150, position: "fixed" }}
-                  />
-                ) : (
-                  <ChevronDoubleLeftIcon
-                    width={20}
-                    style={{ top: 150, position: "fixed" }}
-                  />
-                )}
-              </button>
-            </div>
-            <div className="flex flex-wrap justify-evenly gap-2">
-              {response.admins.map((admin, i) => (
-                <motion.div
-                  key={admin.id}
-                  initial={{
-                    opacity: 0,
-                    y: 50,
+                {/* creating toggle button of filters div */}
+                <button
+                  className="flex border-gray-500 border-solid border-x-2 w-6"
+                  onClick={() => {
+                    setFiltersDivOpened(!filtersDivOpened);
                   }}
-                  animate={{
-                    opacity: openedStudent === i ? 0 : 1,
-                    y: openedStudent === i ? 80 : 0,
-                    transition: { delay: openedStudent === i ? 0 : i * 0.2 },
-                  }}
-                  className={
-                    "border-4 border-solid border-gray-300 sm:w-64 " +
-                    "p-4 w-40 rounded-xl my-4 cursor-pointer"
-                  }
-                  style={{ minHeight: 200 }}
-                  onClick={() => setOpenedSudent(i)}
                 >
-                  <p className="text-xl">{admin.name}</p>
-                  <p className="text-lg my-2">
-                    <span dir="ltr">+{admin.phone}</span>
-                  </p>
-                  <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
-                </motion.div>
-              ))}
-            </div>
-          </main>
+                  {filtersDivOpened ? (
+                    <ChevronDoubleRightIcon
+                      width={20}
+                      style={{ top: 150, position: "fixed" }}
+                    />
+                  ) : (
+                    <ChevronDoubleLeftIcon
+                      width={20}
+                      style={{ top: 150, position: "fixed" }}
+                    />
+                  )}
+                </button>
+              </div>
+              <div className="flex flex-wrap justify-evenly gap-2">
+                {response.admins.map((admin, i) => (
+                  <motion.div
+                    key={admin.id}
+                    initial={{
+                      opacity: 0,
+                      y: 50,
+                    }}
+                    animate={{
+                      opacity: openedStudent === i ? 0 : 1,
+                      y: openedStudent === i ? 80 : 0,
+                      transition: { delay: openedStudent === i ? 0 : i * 0.2 },
+                    }}
+                    className={
+                      "border-4 border-solid border-gray-300 sm:w-64 " +
+                      "p-4 w-40 rounded-xl my-4 cursor-pointer"
+                    }
+                    style={{ minHeight: 200 }}
+                    onClick={() => setOpenedSudent(i)}
+                  >
+                    <p className="text-xl">{admin.name}</p>
+                    <p className="text-lg my-2">
+                      <span dir="ltr">+{admin.phone}</span>
+                    </p>
+                    <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </main>
+            <ScrollTopButton />
+          </>
         ) : response.error === 1 ? (
           <div
             className="flex justify-center items-center"
