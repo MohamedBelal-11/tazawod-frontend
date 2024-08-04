@@ -585,6 +585,7 @@ export default function Content() {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
+            onPaste={(e) => {e.preventDefault()}}
             titled="arabic"
           />
           <PasswordInput
@@ -599,6 +600,7 @@ export default function Content() {
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"
             required
+            onPaste={(e) => {e.preventDefault()}}
             autoComplete="new-password"
           />
           <h2 className="text-xl">حدد جنسك</h2>

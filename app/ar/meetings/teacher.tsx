@@ -18,7 +18,7 @@ interface Meet extends Date {
   student: string;
 }
 
-const classes: { [key: string]: string } = {
+export const classes: { [key: string]: string } = {
   inp: "w-full p-2 border-2 border-gray-400 focus:border-sky-500 outline-0 rounded-md",
 };
 
@@ -82,7 +82,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
           >
             <div className="p-4">
               <input
-                placeholder="إسم الطالب"
+                placeholder="اسم الطالب"
                 type="text"
                 className={classes["inp"]}
                 value={filters.studentName}

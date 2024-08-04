@@ -88,6 +88,11 @@ const adminOptionList: option[] = [
     description: "عرض جميع الدروس والمقابلات المباشرة وغير المباشرة",
     href: "/ar/meatings",
   },
+  {
+    name: "الدروس المقطعية",
+    description: "شاهد دروس مقطية في أي وقت",
+    href: "/ar/watch/playlists",
+  },
 ];
 
 const superAdminOptionList: option[] = [
@@ -115,6 +120,11 @@ const unlogedOptionList: option[] = [
     description: "إنضم إلينا كمشرف",
     href: "/ar/auth/register/admin",
   },
+  {
+    name: "الدروس المقطعية",
+    description: "شاهد دروس مقطية في أي وقت",
+    href: "/ar/watch/playlists",
+  },
 ];
 
 const studentOptionList: option[] = [
@@ -137,6 +147,11 @@ const studentOptionList: option[] = [
 ];
 
 const teacherOptionList: option[] = [
+  {
+    name: "الدروس المقطعية",
+    description: "شاهد دروس مقطية في أي وقت",
+    href: "/ar/watch/playlists",
+  },
   {
     name: "التقارير",
     description: "آخر التقييمات والملاحظات الخاصة بك",
