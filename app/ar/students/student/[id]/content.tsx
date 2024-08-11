@@ -23,6 +23,8 @@ import "@/app/ar/auth/register/student/page.css";
 import P, { regulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
 import LoadingDiv from "@/app/components/loadingDiv";
+import { fetchResponse } from "@/app/utils/response";
+import Forbidden from "@/app/forbidden";
 
 interface Tdate extends Date {
   price: number;
@@ -362,44 +364,8 @@ const Content = () => {
   }, [setScrollProperties, popup]);
 
   useEffect(() => {
-    setResponse({
-      succes: true,
-      dates: [
-        {
-          day: "sunday",
-          starts: "07:00:00",
-          delay: 1800,
-          price: 50,
-        },
-        {
-          day: "tuesday",
-          starts: "07:00:00",
-          delay: 1800,
-          price: 50,
-        },
-        {
-          day: "thurusday",
-          starts: "07:00:00",
-          delay: 1800,
-          price: 50,
-        },
-      ],
-      gender: "male",
-      name: "محمد بلال",
-      note: {
-        date: "27/11/2023",
-        day: "sunday",
-        discription: "إلخ إلخ إلخ\ngggg\nggg",
-        rate: 9,
-        teacher: { name: "محمود جمال", id: "aaaa" },
-      },
-      phone: "201283410254",
-      subscribed: true,
-      teacher: "محمد بلال",
-      userType: "self",
-      currency: "EGP",
-    });
-  }, []);
+    fetchResponse({ setResponse, url: `/api/students/student/${id}` });
+  }, [id]);
 
   useEffect(() => {
     if (response && response.succes) {
@@ -412,12 +378,21 @@ const Content = () => {
   if (response === undefined) {
     return <LoadingDiv loading />;
   }
-
   if (response === null) {
     return;
   }
 
   if (!response.succes) {
+    if (response.error === 1) {
+      return <Forbidden />;
+    }
+    if (response.error === 2) {
+      return (
+        <div className="p-4 bg-white">
+          <p className="text-gray-500 text-lg">لم يتم الموافقة عليك بعد</p>
+        </div>
+      );
+    }
     return;
   }
 
@@ -502,7 +477,7 @@ const Content = () => {
               )
             ) : response.userType === "self" ? (
               // if self display the link to subscribe page
-              <Link href="" className={getClass({})}>
+              <Link href="/ar/subscribe" className={getClass({})}>
                 إشتراك
               </Link>
             ) : (

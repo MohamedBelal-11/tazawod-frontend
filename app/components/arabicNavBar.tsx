@@ -196,36 +196,29 @@ export default function ArabicNavBar() {
     // This function will make an HTTP GET request to the server to retrieve data.
     // The request includes an Authorization header with a token.
     // The token is retrieved from the local storage.
-    // const fetchData = async () => {
-    // Retrieve the token from the local storage.
-    //   const token = localStorage.getItem("token");
+    const fetchData = async () => {
+      // Retrieve the token from the local storage.
+      const token = localStorage.getItem("token");
 
-    //   try {
-    //     // Make an HTTP GET request to the server.
-    //     // The request includes an Authorization header with the token.
-    //     const respons = await axios.get(backendUrl + "/api/home/", {
-    //       headers: {
-    //         // Set the Authorization header to include the token.
-    //         Authorization: `Token ${token}`,
-    //       },
-    //     });
+      try {
+        // Make an HTTP GET request to the server.
+        // The request includes an Authorization header with the token.
+        const respons = await axios.get(backendUrl + "/api/nav/", {
+          headers: {
+            // Set the Authorization header to include the token.
+            Authorization: `Token ${token}`,
+          },
+        });
 
-    //     // If the request is successful, update the response state with the data received from the server.
-    //     console.log(respons.data);
-    //     setResponse(respons.data);
-    //   } catch (error) {
-    //     // If there is an error, log the error to the console.
-    //     console.error(error);
-    //   }
-    // };
+        // If the request is successful, update the response state with the data received from the server.
+        setResponse(respons.data);
+      } catch (error) {
+        // If there is an error, log the error to the console.
+        console.error(error);
+      }
+    };
     if (!response) {
-      // fetchData();
-      setResponse({
-        username: "محمد بلال",
-        usertype: "teacher",
-        notification_count: 2,
-        id: "abcd-efgh-ijkl-mnop",
-      });
+      fetchData();
     }
   }, [response]);
 
@@ -394,8 +387,8 @@ export default function ArabicNavBar() {
             <Link
               href={
                 userType === "admin" || userType === "superadmin"
-                  ? `/ar/${userType}s/${userType}/${response?.id}`
-                  : "/ar/admin/acount"
+                  ? "/ar/admin/acount"
+                  : `/ar/${userType}s/${userType}/${response?.id}`
               }
               className={classes[0]}
             >
@@ -454,7 +447,7 @@ export default function ArabicNavBar() {
                       <DisclosureButton
                         className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base ${classes[1]} transition-all`}
                       >
-                        الدروس
+                        الخيارات
                         <ChevronDownIcon
                           className={classNames(
                             open ? "rotate-180" : "",
@@ -516,7 +509,11 @@ export default function ArabicNavBar() {
                   </Link>
                 )}
                 <Link
-                  href={`/${userType}s/${userType}/${response?.id}`}
+                  href={
+                    userType.includes("admin")
+                      ? "/ar/admin/acount"
+                      : `/ar/${userType}s/${userType}/${response?.id}`
+                  }
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                 >
                   الحساب

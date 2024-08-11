@@ -17,8 +17,8 @@ import useHash from "../hooks/hash";
 
 const activateclass =
   "hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 " +
-  "bg-emerald-200 hover:bg-emerald-500 border-emerald-500 " +
-  "bg-amber-200 hover:bg-amber-500 border-amber-500";
+  "bg-emerald-200 hover:bg-emerald-500 border-emerald-500 bg-red-300 " +
+  "bg-amber-200 hover:bg-amber-500 border-amber-500 bg-green-300";
 const Body: React.FC<{
   loading: boolean;
   children: React.ReactNode;
