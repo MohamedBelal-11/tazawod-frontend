@@ -384,7 +384,6 @@ export default function Content() {
       });
 
       // If the request is successful, update the response state with the data received from the server.
-      console.log(respons.data);
       setResponse(respons.data);
     } catch (error) {
       // If there is an error, log the error to the console.
@@ -397,41 +396,30 @@ export default function Content() {
     // This function will make an HTTP GET request to the server to retrieve data.
     // The request includes an Authorization header with a token.
     // The token is retrieved from the local storage.
-    // const fetchData = async () => {
-    //   // Retrieve the token from the local storage.
-    //   const token = localStorage.getItem("token");
+    const fetchData = async () => {
+      // Retrieve the token from the local storage.
+      const token = localStorage.getItem("token");
 
-    //   try {
-    //     // Make an HTTP GET request to the server.
-    //     // The request includes an Authorization header with the token.
-    //     const respons = await axios.get(backendUrl + "/api/home/", {
-    //       headers: {
-    //         // Set the Authorization header to include the token.
-    //         Authorization: `Token ${token}`,
-    //       },
-    //     });
+      try {
+        // Make an HTTP GET request to the server.
+        // The request includes an Authorization header with the token.
+        const respons = await axios.get(backendUrl + "/api/home/", {
+          headers: {
+            // Set the Authorization header to include the token.
+            Authorization: `Token ${token}`,
+          },
+        });
 
-    //     // If the request is successful, update the response state with the data received from the server.
-    //     console.log(respons.data);
-    //     setResponse(respons.data);
-    //   } catch (error) {
-    //     // If there is an error, log the error to the console.
-    //     console.error(error);
-    //   }
-    // };
+        // If the request is successful, update the response state with the data received from the server.
+        console.log(respons.data);
+        setResponse(respons.data);
+      } catch (error) {
+        // If there is an error, log the error to the console.
+        console.error(error);
+      }
+    };
     if (!response) {
-      // fetchData();
-      setResponse({
-        userType: "student",
-        subscribed: true,
-        currentMeet: { teacher: "فهد محمد", url: null },
-        notes: [],
-        quraan_days: [
-          { starts: "07:00:00", delay: 1800, day: "sunday" },
-          { starts: "07:00:00", delay: 1800, day: "tuesday" },
-          { starts: "07:00:00", delay: 1800, day: "thurusday" },
-        ],
-      });
+      fetchData();
     }
   }, [response]);
   return (
@@ -709,7 +697,7 @@ export default function Content() {
               </h2>
               <div className="mt-4 flex justify-evenly">
                 <Link
-                  href="#"
+                  href="/ar/subscribe"
                   className={
                     "p-8 bg-yellow-100 rounded-2xl border-2 border-yellow-400 " +
                     "border-solid hover:bg-yellow-400 transition-all"

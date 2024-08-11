@@ -55,10 +55,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
   const [filters, setFilters] = useState<Filters>({ studentName: "" });
   const meetings = unfixedmeetings
     .map((mt) => {
-      const [day, time] = convertEgyptWeekdayToLocal(mt.day, mt.starts) as [
-        Weekday,
-        string
-      ];
+      const [day, time] = convertEgyptWeekdayToLocal(mt.day, mt.starts);
       return { ...mt, day, starts: time } as Meet;
     })
     .filter((m) =>
