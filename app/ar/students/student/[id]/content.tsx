@@ -14,27 +14,52 @@ import {
 } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 import EditDates from "./editDates";
 import MyPhoneInput from "@/app/components/phoneInput";
 import Button, { getClass } from "@/app/components/button";
 import "@/app/ar/auth/register/student/page.css";
-import P, { regulerConfirm } from "@/app/components/popup";
+import P, { RegulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
 import LoadingDiv from "@/app/components/loadingDiv";
-import { fetchResponse } from "@/app/utils/response";
+import {
+  DefaultResponse,
+  fetchResponse,
+  fetchPost,
+} from "@/app/utils/response";
 import Forbidden from "@/app/forbidden";
 
 interface Tdate extends Date {
   price: number;
 }
 
+const changefTeacher = ({
+  phone,
+  setResponse,
+  id,
+  change,
+}: {
+  setResponse: React.Dispatch<
+    React.SetStateAction<DefaultResponse | undefined>
+  >;
+  phone: string;
+  id: string;
+  change: boolean;
+}) =>
+  fetchPost({
+    data: { phone },
+    setResponse,
+    url: `/users/${change ? "changeteacher" : "subscribeteacher"}/${id}/`,
+  });
+
 const Subscribe: React.FC<{
   id: string;
   onClose: () => void;
+  refetch: () => void;
   change?: boolean;
-}> = ({ id, onClose, change = false }) => {
+}> = ({ id, onClose, change = false, refetch }) => {
+  const [response, setResponse] = useState<DefaultResponse>();
   const [phone, setPhone] = useState("20");
 
   return (
@@ -56,10 +81,28 @@ const Subscribe: React.FC<{
         <Button color="red" onClick={onClose}>
           إلغاء
         </Button>
-        <Button color="green" onClick={() => {}}>
+        <Button
+          color="green"
+          onClick={() => changefTeacher({ phone, change, setResponse, id })}
+        >
           {change ? "تم" : "إشتراك"}
         </Button>
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم بنجاح"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </div>
   );
 };
@@ -299,10 +342,13 @@ type PopupData =
     };
 
 // declare popup div
-const Popup: React.FC<{ popupData: PopupData; onClose: () => void }> = ({
-  popupData,
-  onClose,
-}) => {
+const Popup: React.FC<{
+  popupData: PopupData;
+  onClose: () => void;
+  refetch: () => void;
+}> = ({ popupData, onClose, refetch }) => {
+  const router = useRouter();
+
   return (
     <P onClose={onClose} visible={Boolean(popupData.state)}>
       {popupData.state == "data edit" ? (
@@ -322,30 +368,50 @@ const Popup: React.FC<{ popupData: PopupData; onClose: () => void }> = ({
           }))}
         />
       ) : popupData.state === "subscribe" && !popupData.defaultData ? (
-        <Subscribe id={popupData.id} onClose={onClose} />
+        <Subscribe id={popupData.id} refetch={refetch} onClose={onClose} />
       ) : popupData.state === "change" ? (
-        <Subscribe id={popupData.id} change onClose={onClose} />
+        <Subscribe
+          id={popupData.id}
+          change
+          refetch={refetch}
+          onClose={onClose}
+        />
       ) : (
-        regulerConfirm({
-          ...(popupData.state === "delete"
-            ? {
-                text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
-                onConfirm: () => {},
-                btns: [{ text: "حذف", color: "red" }, { color: "green" }],
-              }
-            : popupData.state === "subscribe"
-            ? {
-                text: "هل أنت متأكد من الإشتراك لهذا الطالب ؟",
-                onConfirm: () => {},
-                btns: [{ text: "إشتراك" }, {}],
-              }
-            : {
-                text: "هل أنت متأكد من أنك تريد إلغاء إشتراك هذا الطالب ؟",
-                onConfirm: () => {},
-                btns: [{ text: "إلغاء الإشتراك" }, {}],
-              }),
-          onClose,
-        })
+        <RegulerConfirm
+          {...{
+            ...(popupData.state === "delete"
+              ? {
+                  text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
+                  btns: [{ text: "حذف", color: "red" }, { color: "green" }],
+                  url: `/users/user/${popupData.id}/delete/`,
+                  onConfirm: () => router.replace("/"),
+                }
+              : popupData.state === "subscribe"
+              ? {
+                  text: "هل أنت متأكد من الإشتراك لهذا الطالب ؟",
+                  btns: [{ text: "إشتراك" }, {}],
+                  url: `/users/student/${popupData.id}/subscribe/`,
+                  onConfirm: () => {
+                    setTimeout(() => {
+                      onClose();
+                      refetch();
+                    }, 3000);
+                  },
+                }
+              : {
+                  text: "هل أنت متأكد من أنك تريد إلغاء إشتراك هذا الطالب ؟",
+                  btns: [{ text: "إلغاء الإشتراك" }, {}],
+                  url: `/users/student/${popupData.id}/desubscribe/`,
+                  onConfirm: () => {
+                    setTimeout(() => {
+                      onClose();
+                      refetch();
+                    }, 3000);
+                  },
+                }),
+            onClose,
+          }}
+        />
       )}
     </P>
   );
@@ -363,9 +429,13 @@ const Content = () => {
     setScrollProperties([popup]);
   }, [setScrollProperties, popup]);
 
-  useEffect(() => {
+  const refetch = useCallback(() => {
     fetchResponse({ setResponse, url: `/api/students/student/${id}` });
   }, [id]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (response && response.succes) {
@@ -656,7 +726,7 @@ const Content = () => {
           )}
         </section>
       </main>
-      <Popup popupData={popup} onClose={() => setPopup({})} />
+      <Popup popupData={popup} onClose={() => setPopup({})} refetch={refetch} />
     </>
   );
 };

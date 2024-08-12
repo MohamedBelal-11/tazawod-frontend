@@ -61,7 +61,7 @@ const deleteAdmin = ({
 }) => {
   fetchResponse({
     setResponse,
-    url: `/users/admin/${id}/delete/`,
+    url: `/users/user/${id}/delete/`,
   });
   setTimeout(() => {
     closeP();
@@ -92,7 +92,7 @@ const acceptAdmin = ({
   }, 3000);
 };
 
-const StudentDiv: React.FC<{
+const AdminDiv: React.FC<{
   admin: Admin;
   refetch: () => void;
   closeP: () => void;
@@ -341,7 +341,7 @@ const Content = () => {
                     style={{ zIndex: -1 }}
                     onClick={() => setOpenedSudent(undefined)}
                   ></div>
-                  <StudentDiv
+                  <AdminDiv
                     admin={response.admins[openedStudent]}
                     closeP={() => setOpenedSudent(undefined)}
                     refetch={refetch}

@@ -3,7 +3,7 @@
 import Button from "@/app/components/button";
 import Checker from "@/app/components/Checker";
 import LoadingDiv from "@/app/components/loadingDiv";
-import Popup, { regulerConfirm } from "@/app/components/popup";
+import Popup, { RegulerConfirm } from "@/app/components/popup";
 import globalClasses from "@/app/utils/globalClasses";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
@@ -344,7 +344,7 @@ const Content: React.FC = () => {
           {popup.state === "add playlist" ? (
             <AddPlaylist onClose={closePopup} />
           ) : popup.state === "delete" ? (
-            regulerConfirm({
+            RegulerConfirm({
               onClose: closePopup,
               onConfirm: () => {},
               text: "هل أنت متأكد من أنك تريد حذف قائمة التشغيل هذه",

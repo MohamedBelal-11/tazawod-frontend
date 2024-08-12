@@ -1,18 +1,36 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Button from "./button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { get } from "../utils/docQuery";
+import { DefaultResponse, fetchResponse } from "../utils/response";
 
-export const regulerConfirm = ({
+const dofetch = ({
+  setResponse,
+  url,
+}: {
+  setResponse: React.Dispatch<
+    React.SetStateAction<DefaultResponse | undefined>
+  >;
+  url: string;
+}) => {
+  fetchResponse({
+    setResponse,
+    url,
+  });
+};
+
+export const RegulerConfirm = ({
   text,
   btns,
   onConfirm,
   onClose,
+  url,
 }: {
   text: string;
   btns?: [{ text?: string; color?: string }, { text?: string; color?: string }];
-  onConfirm: () => void;
+  onConfirm?: () => void;
   onClose: () => void;
+  url?: string;
 }) => {
   btns = btns
     ? [
@@ -26,6 +44,8 @@ export const regulerConfirm = ({
         { text: "تم", color: "green" },
         { text: "إلغاء", color: "red" },
       ];
+
+  const [response, setResponse] = useState<DefaultResponse>();
   return (
     <div className="h-full overflow-y-auto flex flex-col max-w-full gap-8 p-4 w-max">
       <p className="sm:text-3xl text-xl text-center p-4">{text}</p>
@@ -33,10 +53,31 @@ export const regulerConfirm = ({
         <Button color={btns[1].color} onClick={onClose}>
           {btns[1].text}
         </Button>
-        <Button color={btns[0].color} onClick={onConfirm}>
+        <Button
+          color={btns[0].color}
+          onClick={() => {
+            (url ? () => dofetch({ setResponse, url }) : () => {})();
+            (onConfirm ? onConfirm : () => {})();
+          }}
+        >
           {btns[0].text}
         </Button>
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم بنجاح"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </div>
   );
 };
@@ -46,15 +87,14 @@ const Popup: React.FC<{
   children?: React.ReactNode;
   visible?: boolean;
 }> = ({ onClose, children, visible }) => {
-
   useEffect(() => {
     const body = get<HTMLBodyElement>("body")[0];
     if (visible) {
-      body.classList.add("overflow-y-hidden")
+      body.classList.add("overflow-y-hidden");
     } else {
       body.classList.remove("overflow-y-hidden");
     }
-  }, [visible])
+  }, [visible]);
 
   return (
     <AnimatePresence>
