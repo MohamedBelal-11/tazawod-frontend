@@ -1,6 +1,6 @@
 "use client";
 import Button from "@/app/components/button";
-import Popup, { regulerConfirm } from "@/app/components/popup";
+import Popup, { RegulerConfirm } from "@/app/components/popup";
 import { secondsToHrs } from "@/app/ar/content";
 import { arDay } from "@/app/utils/arabic";
 import { sum } from "@/app/utils/number";
@@ -528,7 +528,7 @@ const Content: React.FC = () => {
             is_accepted={response.is_accepted}
           />
         ) : (
-          regulerConfirm({
+          RegulerConfirm({
             ...(popup === "delete"
               ? {
                   text: "هل أنت متأكد من أنك تريد حذف هذا المعلم ؟",
