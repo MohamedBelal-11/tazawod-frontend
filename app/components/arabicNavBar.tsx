@@ -358,7 +358,7 @@ export default function ArabicNavBar() {
               href={userType === "unloged" ? "#" : "/ar/meetings"}
               className={classes[0]}
             >
-              {userType !== "unloged" ? "المقابلات" : "ما هي أكادمية تزود ؟"}
+              {userType !== "unloged" ? "المقابلات" : "ما هي أكاديمية تزود ؟"}
             </Link>
           )}
           {userType !== "superadmin" && (
@@ -380,7 +380,7 @@ export default function ArabicNavBar() {
                 ? "دليل المعلم"
                 : userType === "admin"
                 ? "دليل المشرف"
-                : "لماذا أكادمية تزود ؟"}
+                : "لماذا أكاديمية تزود ؟"}
             </Link>
           )}
           {userType !== "unloged" ? (
@@ -483,7 +483,7 @@ export default function ArabicNavBar() {
                   >
                     {userType !== "unloged"
                       ? "المقابلات"
-                      : "ما هي أكادمية تزود ؟"}
+                      : "ما هي أكاديمية تزود ؟"}
                   </Link>
                 )}
                 {userType !== "superadmin" && (
@@ -505,7 +505,7 @@ export default function ArabicNavBar() {
                       ? "دليل المعلم"
                       : userType === "admin"
                       ? "دليل المشرف"
-                      : "لماذا أكادمية تزود ؟"}
+                      : "لماذا أكاديمية تزود ؟"}
                   </Link>
                 )}
                 <Link

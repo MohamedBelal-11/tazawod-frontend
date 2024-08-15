@@ -69,7 +69,7 @@ export const RegulerConfirm = ({
             response && response.succes ? "green" : "red"
           }-300 border-2 border-${
             response && response.succes ? "green" : "red"
-          }-500 rounded-xl`}
+          }-500 rounded-xl mt-4`}
         >
           {response === null
             ? "حدث خطأٌ ما"

@@ -1,3 +1,5 @@
+import React from "react";
+
 export const getClass = ({
   color = "green",
   padding = 2,
@@ -21,7 +23,7 @@ const Button: React.FC<{
   padding?: number;
   size?: string;
   type?: "submit" | "div" | "reset";
-  children?: string;
+  children?: React.ReactNode;
   className?: string;
   textHov?: string;
   textCol?: string;

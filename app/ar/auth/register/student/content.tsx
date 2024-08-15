@@ -635,7 +635,7 @@ export default function Content() {
             </div>
           </div>
           <h2 className="text-xl">
-            مواعيد درس تحفيظ القرآن (مطلوب واحد على الأقل)
+            مواعيد درس تحفيظ القرءان (مطلوب واحد على الأقل)
           </h2>
           <div className={classes.lesson}>
             {quraan_days.map((date, i) => {
