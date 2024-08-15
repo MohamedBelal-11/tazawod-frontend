@@ -107,6 +107,28 @@ const Subscribe: React.FC<{
   );
 };
 
+const sendEditedData = ({
+  data,
+  setLoading,
+  setResponse,
+  onClose,
+  refetch,
+}: {
+  data: { [key: string]: any };
+  setResponse: React.Dispatch<
+    React.SetStateAction<DefaultResponse | undefined>
+  >;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  refetch: () => void;
+  onClose: () => void;
+}) => {
+  fetchPost({ data, setResponse, url: "/users/student/editdata/", setLoading });
+  setTimeout(() => {
+    onClose();
+    refetch();
+  }, 3000);
+};
+
 type DataEdit = {
   name: string;
   gender: "male" | "female";
@@ -150,12 +172,15 @@ type responset =
 const EditData: React.FC<{
   defaultData: DataEdit;
   onClose: () => void;
+  refetch: () => void;
   subscribed: boolean;
-}> = ({ defaultData, onClose, subscribed }) => {
+}> = ({ defaultData, onClose, subscribed, refetch }) => {
   // create inputs state
   const [inputs, setInputs] = useState<DataEdit>(defaultData);
   // create message state
   const [message, setMesssage] = useState<{ name: string[] }>({ name: [] });
+  const [response, setResponse] = useState<DefaultResponse>();
+  const [loading, setLoading] = useState(false);
 
   const setName = (method: (name: string[]) => string[]) => {
     setMesssage((m) => ({ ...m, name: method(m.name) }));
@@ -192,7 +217,19 @@ const EditData: React.FC<{
 
   // return the jsx
   return (
-    <form className="h-full w-max" onSubmit={(e) => e.preventDefault()}>
+    <form
+      className="h-full w-max"
+      onSubmit={(e) => {
+        e.preventDefault();
+        sendEditedData({
+          data: { ...inputs, name: almightyTrim(inputs.name) },
+          onClose,
+          refetch,
+          setLoading,
+          setResponse,
+        });
+      }}
+    >
       <div className="h-full overflow-y-auto p-4 flex flex-col items-center">
         <input
           type="text"
@@ -280,10 +317,14 @@ const EditData: React.FC<{
         >
           إلغاء
         </div>
-        {objCompare(
-          { ...inputs, name: almightyTrim(inputs.name) },
-          defaultData
-        ) ? (
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : objCompare(
+            { ...inputs, name: almightyTrim(inputs.name) },
+            defaultData
+          ) ? (
           <div
             className={
               "p-2 border-2 border-gray-500 bg-gray-200 " +
@@ -305,6 +346,21 @@ const EditData: React.FC<{
           </button>
         )}
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl mt-4`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم بنجاح"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </form>
   );
 };
@@ -356,6 +412,7 @@ const Popup: React.FC<{
           defaultData={popupData.defaultData}
           onClose={onClose}
           subscribed={popupData.id}
+          refetch={refetch}
         />
       ) : popupData.state === "dates edit" ? (
         <EditDates
@@ -366,6 +423,7 @@ const Popup: React.FC<{
               convertEgyptTimeToLocalTime(date.starts.slice(0, -3)) + ":00",
             delay: (hrNumber(secondsToHrs(date.delay)) + ":00").slice(1),
           }))}
+          refresh={refetch}
         />
       ) : popupData.state === "subscribe" && !popupData.defaultData ? (
         <Subscribe id={popupData.id} refetch={refetch} onClose={onClose} />

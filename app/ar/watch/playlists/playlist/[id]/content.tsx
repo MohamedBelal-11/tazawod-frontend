@@ -71,7 +71,7 @@ const Content: React.FC = () => {
   useEffect(() => {
     if (response && response.succes)
       get<HTMLTitleElement>("title").forEach((title) => {
-        title.innerHTML = `${response.playlist} - أكادمية تزَود`;
+        title.innerHTML = `${response.playlist} - أكاديمية تزَود`;
       });
   }, [response]);
 

@@ -1,7 +1,9 @@
 "use client";
 import { MetaInfo } from "@/app/ar/auth/register/student/content";
+import Button from "@/app/components/button";
 import { arDay } from "@/app/utils/arabic";
 import { objCompare } from "@/app/utils/object";
+import { DefaultResponse, fetchPost } from "@/app/utils/response";
 import { Weekday } from "@/app/utils/students";
 import { days } from "@/app/utils/time";
 import React, { useState } from "react";
@@ -220,13 +222,44 @@ const Add: React.FC<{
   );
 };
 
+const sendDates = ({
+  setLoading,
+  setResponse,
+  dates,
+  onClose,
+  refresh
+}: {
+  setResponse: React.Dispatch<
+    React.SetStateAction<DefaultResponse | undefined>
+  >;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  dates: MetaInfo[];
+  onClose: () => void;
+  refresh: () => void;
+}) => {
+  fetchPost({
+    setResponse,
+    setLoading,
+    url: `/users/student/editdates`,
+    data: { dates },
+  });
+  setTimeout(() => {
+    onClose();
+    refresh()
+  }, 3000);
+};
+
 const Layout: React.FC<{
   dates: MetaInfo[];
   setDates: React.Dispatch<React.SetStateAction<MetaInfo[]>>;
   setAdding: React.Dispatch<React.SetStateAction<boolean>>;
   onClose: () => void;
   defaultDates: MetaInfo[];
-}> = ({ dates, setDates, onClose, defaultDates, setAdding }) => {
+  refresh: () => void;
+}> = ({ dates, setDates, onClose, defaultDates, setAdding, refresh }) => {
+  const [response, setResponse] = useState<DefaultResponse>();
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="h-full">
       <div className="h-full p-8 overflow-y-auto">
@@ -274,10 +307,14 @@ const Layout: React.FC<{
         >
           إلغاء
         </button>
-        {objCompare(
-          dates.sort((a, b) => a.day.localeCompare(b.day)),
-          defaultDates.sort((a, b) => a.day.localeCompare(b.day))
-        ) || dates.length === 0 ? (
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : objCompare(
+            dates.sort((a, b) => a.day.localeCompare(b.day)),
+            defaultDates.sort((a, b) => a.day.localeCompare(b.day))
+          ) || dates.length === 0 ? (
           <div
             className={
               "p-2 border-2 border-gray-500 bg-gray-200 " +
@@ -293,12 +330,29 @@ const Layout: React.FC<{
               "hover:text-white hover:bg-green-500 border-solid " +
               "rounded-lg transition-all duration-300"
             }
-            onClick={() => {}}
+            onClick={() =>
+              sendDates({ dates, setLoading, setResponse, onClose, refresh })
+            }
           >
             تعديل
           </button>
         )}
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl mt-4`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم بنجاح"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </div>
   );
 };
@@ -306,9 +360,11 @@ const Layout: React.FC<{
 const EditDates = ({
   defaultDates,
   onClose,
+  refresh,
 }: {
   defaultDates: MetaInfo[];
   onClose: () => void;
+  refresh: () => void;
 }) => {
   const [dates, setDates] = useState<MetaInfo[]>(defaultDates);
   const [adding, setAdding] = useState(false);
@@ -317,11 +373,7 @@ const EditDates = ({
     <Add dates={dates} onClose={() => setAdding(false)} setDates={setDates} />
   ) : (
     <Layout
-      dates={dates}
-      defaultDates={defaultDates}
-      onClose={onClose}
-      setDates={setDates}
-      setAdding={setAdding}
+      {...{ dates, defaultDates, onClose, refresh, setAdding, setDates }}
     />
   );
 };

@@ -277,7 +277,7 @@ const Content: React.FC = () => {
   useEffect(() => {
     if (response && response.succes) {
       get<HTMLTitleElement>("title").forEach((title) => {
-        title.innerHTML = `صفحة المعلم ${response.name} - أكادمية تزوَد`;
+        title.innerHTML = `صفحة المعلم ${response.name} - أكاديمية تزوَد`;
       });
     }
   }, [response]);
