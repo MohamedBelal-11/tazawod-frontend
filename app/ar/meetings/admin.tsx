@@ -19,6 +19,9 @@ const embValue = <T = any,>(value: T, arr: T[]) => {
   if (!arr.includes(value)) {
     return [...arr, value];
   }
+  if (arr.length === 1){
+    return arr
+  }
   return arr.filter((v) => v !== value);
 };
 

@@ -1,12 +1,6 @@
 "use client";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { SetStateAction, useCallback, useEffect, useState } from "react";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 import { almightyTrim, numList } from "../../utils/string";
 import {
   ChevronDoubleLeftIcon,
@@ -36,6 +30,23 @@ interface Admin {
   description: string | null;
 }
 
+export const childVariantsforfilters: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 50,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+  },
+};
+
+export const parentVariantsforfilters: Variants = {
+  visible: {
+    transition: { staggerChildren: 0.2 },
+  },
+};
+
 // typing the response
 type Response =
   | {
@@ -62,11 +73,13 @@ const deleteAdmin = ({
   fetchResponse({
     setResponse,
     url: `/users/user/${id}/delete/`,
+    onFinish() {
+      setTimeout(() => {
+        closeP();
+        refetch();
+      }, 1500);
+    },
   });
-  setTimeout(() => {
-    closeP();
-    refetch();
-  }, 3000);
 };
 
 const acceptAdmin = ({
@@ -85,11 +98,13 @@ const acceptAdmin = ({
   fetchResponse({
     setResponse,
     url: `/users/admin/${id}/${accepted ? "de" : ""}accept/`,
+    onFinish() {
+      setTimeout(() => {
+        closeP();
+        refetch();
+      }, 1500);
+    },
   });
-  setTimeout(() => {
-    closeP();
-    refetch();
-  }, 3000);
 };
 
 const AdminDiv: React.FC<{
@@ -323,7 +338,7 @@ const Content = () => {
       {response === undefined ? (
         <LoadingDiv loading />
       ) : response === null ? (
-        <div className="m-6 p-6 justify-center items-center flex">
+        <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
           حدث خطأٌ ما
         </div>
       ) : response.succes ? (
@@ -451,21 +466,16 @@ const Content = () => {
                 )}
               </button>
             </div>
-            <div className="flex flex-wrap justify-evenly gap-2">
+            <motion.div
+              variants={parentVariantsforfilters}
+              initial="hidden"
+              animate="visible"
+              className="flex flex-wrap justify-evenly gap-2"
+            >
               {response.admins.map((admin, i) => (
                 <motion.div
                   key={admin.id}
-                  initial={{
-                    opacity: 0,
-                    y: 50,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      delay: i * 0.2,
-                    },
-                  }}
+                  variants={childVariantsforfilters}
                   className={
                     "border-4 border-solid border-gray-300 sm:w-64 " +
                     "p-4 w-40 rounded-xl my-4 cursor-pointer"
@@ -480,7 +490,7 @@ const Content = () => {
                   <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
                 </motion.div>
               ))}
-            </div>
+            </motion.div>
           </main>
           {loading && (
             <div className="justify-center flex bg-white">
@@ -513,7 +523,9 @@ const Content = () => {
           </div>
         </div>
       ) : (
-        <></>
+        <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+          حدث خطأٌ ما
+        </div>
       )}
     </>
   );

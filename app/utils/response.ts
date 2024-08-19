@@ -24,11 +24,13 @@ export const fetchResponse = async <T = any>({
   url,
   query = "",
   setLoading,
+  onFinish
 }: {
   setResponse: React.Dispatch<React.SetStateAction<T | null>>;
   url: string;
   query?: string;
   setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  onFinish?: (succes: boolean) => void;
 }) => {
   // Retrieve the token from the local storage.
   (setLoading ? setLoading : () => {})(true);
@@ -52,12 +54,16 @@ export const fetchResponse = async <T = any>({
           : response.data
       );
       (setLoading ? setLoading : () => {})(false);
+      (onFinish ? onFinish : () => {})(
+        response.data.succes === undefined ? false : response.data.succes
+      );
     })
     .catch((error) => {
       // If there is an error, log the error to the console
       setResponse((s) => (s !== undefined ? s : null));
       console.error(error);
       (setLoading ? setLoading : () => {})(false);
+      (onFinish ? onFinish : () => {})(false);
     });
 };
 
@@ -66,18 +72,19 @@ export const fetchPost = async <T = any>({
   url,
   data,
   setLoading,
+  onFinish,
 }: {
   setResponse: React.Dispatch<React.SetStateAction<T | null>>;
   url: string;
   data: { [key: string]: any };
   setLoading?: React.Dispatch<React.SetStateAction<boolean>>;
+  onFinish?: (succes: boolean) => void;
 }) => {
   // Retrieve the token from the local storage.
   (setLoading ? setLoading : () => {})(true);
   const token = localStorage.getItem("token");
   axiosInstance
-    .post(backendUrl + url, {
-      ...data,
+    .post(backendUrl + url, data, {
       headers: {
         // Set the Authorization header to include the token.
         Authorization: `Token ${token}`,
@@ -85,6 +92,7 @@ export const fetchPost = async <T = any>({
     })
     .then((response) => {
       // If the request is successful, update the response state with the data received from the server.
+      console.log(data);
       console.log(response);
 
       setResponse((s) =>
@@ -95,11 +103,16 @@ export const fetchPost = async <T = any>({
           : response.data
       );
       (setLoading ? setLoading : () => {})(false);
+      (onFinish ? onFinish : () => {})(
+        response.data.succes === undefined ? false : response.data.succes
+      );
     })
     .catch((error) => {
+      console.log(data);
       // If there is an error, log the error to the console
       setResponse((s) => (s !== undefined ? s : null));
       console.error(error);
       (setLoading ? setLoading : () => {})(false);
+      (onFinish ? onFinish : () => {})(false);
     });
 };

@@ -86,7 +86,7 @@ const adminOptionList: option[] = [
   {
     name: "الدروس والمقابلات",
     description: "عرض جميع الدروس والمقابلات المباشرة وغير المباشرة",
-    href: "/ar/meatings",
+    href: "/ar/meetings",
   },
   {
     name: "الدروس المقطعية",

@@ -240,13 +240,15 @@ const sendDates = ({
   fetchPost({
     setResponse,
     setLoading,
-    url: `/users/student/editdates`,
+    url: `/users/student/editdates/`,
     data: { dates },
+    onFinish() {
+      setTimeout(() => {
+        onClose();
+        refresh()
+      }, 1500);
+    }
   });
-  setTimeout(() => {
-    onClose();
-    refresh()
-  }, 3000);
 };
 
 const Layout: React.FC<{

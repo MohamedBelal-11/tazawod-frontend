@@ -10,10 +10,15 @@ import { Weekday } from "@/app/utils/students";
 import { hrNumber } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import LoadingDiv from "@/app/components/loadingDiv";
 import { get } from "@/app/utils/docQuery";
+import {
+  DefaultResponse,
+  fetchPost,
+  fetchResponse,
+} from "@/app/utils/response";
 
 type Response =
   | {
@@ -21,7 +26,7 @@ type Response =
       userType: "self" | "admin" | "superadmin";
       name: string;
       phone: string;
-      perefered_time: "morning" | "afternoon" | "night";
+      prefered_time: "morning" | "afternoon" | "night";
       description: string;
       is_accepted: true;
       currency: "EGP" | "USD";
@@ -50,7 +55,7 @@ type Response =
       name: string;
       phone: string;
       gender: "male" | "female";
-      perefered_time: "morning" | "afternoon" | "night";
+      prefered_time: "morning" | "afternoon" | "night";
       description: string;
       is_accepted: false;
       currency: "EGP" | "USD";
@@ -73,18 +78,51 @@ type DataEdit = {
   name: string;
   gender: "male" | "female";
   currency: "EGP" | "USD";
+  prefered_time: "morning" | "afternoon" | "night";
   description: string;
+};
+
+const sendEditedData = ({
+  data,
+  setLoading,
+  setResponse,
+  onClose,
+  refetch,
+}: {
+  data: { [key: string]: any };
+  setResponse: React.Dispatch<
+    React.SetStateAction<DefaultResponse | undefined>
+  >;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  refetch: () => void;
+  onClose: () => void;
+}) => {
+  fetchPost({
+    data,
+    setResponse,
+    url: "/users/teacher/editdata/",
+    setLoading,
+    onFinish: () => {
+      setTimeout(() => {
+        onClose();
+        refetch();
+      }, 1500);
+    },
+  });
 };
 
 const EditData: React.FC<{
   defaultData: DataEdit;
   onClose: () => void;
+  refetch: () => void;
   is_accepted: boolean;
-}> = ({ defaultData, onClose, is_accepted }) => {
+}> = ({ defaultData, onClose, is_accepted, refetch }) => {
   // create inputs state
   const [inputs, setInputs] = useState<DataEdit>(defaultData);
   // create message state
   const [message, setMesssage] = useState<{ name: string[] }>({ name: [] });
+  const [response, setResponse] = useState<DefaultResponse>();
+  const [loading, setLoading] = useState(false);
 
   const setName = (method: (name: string[]) => string[]) => {
     setMesssage((m) => ({ ...m, name: method(m.name) }));
@@ -123,7 +161,20 @@ const EditData: React.FC<{
   return (
     <form
       className="h-full flex flex-col"
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={(e) => {
+        e.preventDefault();
+        sendEditedData({
+          data: {
+            ...inputs,
+            name: almightyTrim(inputs.name),
+            description: inputs.description.trim(),
+          },
+          onClose,
+          refetch,
+          setLoading,
+          setResponse,
+        });
+      }}
       style={{ maxWidth: 800, maxHeight: "85vh", width: "calc(100vw - 40px)" }}
     >
       <div
@@ -212,15 +263,70 @@ const EditData: React.FC<{
             />
           </div>
         </div>
+        <p className="mt-6 text-lg">الوفت المفضل</p>
+        <div className={classes["inp"] + "flex flex-wrap justify-evenly"}>
+          <div>
+            <label htmlFor="morning">صباحًا</label>
+            <input
+              type="radio"
+              id="morning"
+              checked={inputs.prefered_time === "morning"}
+              onChange={() =>
+                setInputs((inps) => ({ ...inps, prefered_time: "morning" }))
+              }
+            />
+          </div>
+          <div>
+            <label htmlFor="afternoon">بعد الظهيرة</label>
+            <input
+              type="radio"
+              id="afternoon"
+              checked={inputs.prefered_time === "afternoon"}
+              onChange={() =>
+                setInputs((inps) => ({ ...inps, prefered_time: "afternoon" }))
+              }
+            />
+          </div>
+          <div>
+            <label htmlFor="night">مساءً</label>
+            <input
+              type="radio"
+              id="night"
+              checked={inputs.prefered_time === "night"}
+              onChange={() =>
+                setInputs((inps) => ({ ...inps, prefered_time: "night" }))
+              }
+            />
+          </div>
+        </div>
+        {response !== undefined && (
+          <p
+            className={`p-6 bg-${
+              response && response.succes ? "green" : "red"
+            }-300 border-2 border-${
+              response && response.succes ? "green" : "red"
+            }-500 rounded-xl mt-4`}
+          >
+            {response === null
+              ? "حدث خطأٌ ما"
+              : response.succes
+              ? "تم بنجاح"
+              : "حدث خطأٌ ما"}
+          </p>
+        )}
       </div>
       <div className="flex p-2 border-t-2 border-solid border-gray-600 justify-evenly">
         <Button color="red" className="cursor-pointer" onClick={onClose}>
           إلغاء
         </Button>
-        {objCompare(
-          { ...inputs, name: almightyTrim(inputs.name) },
-          defaultData
-        ) ? (
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : objCompare(
+            { ...inputs, name: almightyTrim(inputs.name) },
+            defaultData
+          ) ? (
           <Button color="gray" type="div" textHov="black">
             تعديل
           </Button>
@@ -240,39 +346,20 @@ const Content: React.FC = () => {
   const [popup, setPopup] = useState<
     "edit data" | "delete" | "accept" | "fire"
   >();
+  const router = useRouter();
 
   const closePopup = () => setPopup(undefined);
 
-  useEffect(() => {
-    setResponse({
-      succes: true,
-      description: almightyTrim(`
-        بسم الله الرحمن الرحيم 
-        إن الحمد لله نحمده ونستعين به
-      `),
-      is_accepted: true,
-      name: "محمد علي",
-      perefered_time: "afternoon",
-      phone: "201250344450",
-      gender: "male",
-      students: [
-        { name: "محمد بلال", delay: 3600, id: "aaaa" },
-        { name: "عمر علاءالدين", delay: 7200, id: "aaab" },
-        { name: "علي خالد علي", delay: 5400, id: "aaac" },
-      ],
-      // note: {
-      //   written: true,
-      //   date: "27/11/2023",
-      //   day: "sunday",
-      //   discription: "إلخ إلخ إلخ\ngggg\nggg",
-      //   rate: 9,
-      //   student: { name: "محمود جمال", id: "aaaa" },
-      // },
-      note: null,
-      userType: "superadmin",
-      currency: "EGP",
+  const refetch = useCallback(() => {
+    fetchResponse({
+      setResponse,
+      url: `/api/teachers/teacher/${id}/`,
     });
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
 
   useEffect(() => {
     if (response && response.succes) {
@@ -353,7 +440,7 @@ const Content: React.FC = () => {
           {/* dispaly is_accepted */}
           <div className="flex gap-8 items-center">
             <p className="text-2xl my-4">
-              {response.is_accepted ? "موافق عليع" : "غير موافق عليع"}
+              {response.is_accepted ? "موافق عليه" : "غير موافق عليه"}
             </p>
             {/* accept button */}
             {response.userType === "superadmin" &&
@@ -367,6 +454,14 @@ const Content: React.FC = () => {
                 </Button>
               ))}
           </div>
+          <p className="text-2xl my-4">
+            الوقت المفضل:{" "}
+            {response.prefered_time === "morning"
+              ? "صباحًا"
+              : response.prefered_time === "afternoon"
+              ? "بعد الظهيرة"
+              : "مساءُ"}
+          </p>
         </section>
         {response.is_accepted && (
           <section className={classes["section"] + "p-4 my-2 w-auto"}>
@@ -377,45 +472,53 @@ const Content: React.FC = () => {
               </span>
             </p>
             <div className="w-full overflow-x-auto">
-              <table className="overflow-x-scroll w-full">
-                <thead>
-                  <tr>
-                    <th className={classes["td"]}>الطالب</th>
-                    <th className={classes["td"]}>المدة</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {response.students.map((student, i) => (
-                    <tr key={i}>
+              {response.students.length === 0 ? (
+                <div className="p-8 flex justify-center">
+                  لا يوجد أي طلاب لهذا المعلم
+                </div>
+              ) : (
+                <table className="overflow-x-scroll w-full">
+                  <thead>
+                    <tr>
+                      <th className={classes["td"]}>الطالب</th>
+                      <th className={classes["td"]}>المدة</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {response.students.map((student, i) => (
+                      <tr key={i}>
+                        <td className={classes["td"]}>
+                          {response.userType === "self" ? (
+                            student.name
+                          ) : (
+                            <Link
+                              href={`/ar/students/student/${student.id}`}
+                              className="hover:underline hover:text-green-500"
+                            >
+                              {student.name}
+                            </Link>
+                          )}
+                        </td>
+                        <td className={classes["td"]}>
+                          {hrNumber(secondsToHrs(student.delay))}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <td className={classes["td"]}>الإجمالي</td>
                       <td className={classes["td"]}>
-                        {response.userType === "self" ? (
-                          student.name
-                        ) : (
-                          <Link
-                            href={`/teachers/teacher/${student.id}`}
-                            className="hover:underline hover:text-green-500"
-                          >
-                            {student.name}
-                          </Link>
+                        {hrNumber(
+                          secondsToHrs(
+                            sum(
+                              response.students.map((student) => student.delay)
+                            )
+                          )
                         )}
                       </td>
-                      <td className={classes["td"]}>
-                        {hrNumber(secondsToHrs(student.delay))}
-                      </td>
                     </tr>
-                  ))}
-                  <tr>
-                    <td className={classes["td"]}>الإجمالي</td>
-                    <td className={classes["td"]}>
-                      {hrNumber(
-                        secondsToHrs(
-                          sum(response.students.map((student) => student.delay))
-                        )
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              )}
             </div>
           </section>
         )}
@@ -523,31 +626,52 @@ const Content: React.FC = () => {
               currency: response.currency,
               description: response.description,
               gender: response.gender,
+              prefered_time: response.prefered_time,
             }}
+            refetch={refetch}
             onClose={closePopup}
             is_accepted={response.is_accepted}
           />
         ) : (
-          RegulerConfirm({
-            ...(popup === "delete"
-              ? {
-                  text: "هل أنت متأكد من أنك تريد حذف هذا المعلم ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "حذف", color: "red" }, { color: "green" }],
-                }
-              : popup === "accept"
-              ? {
-                  text: "هل أنت متأكد من الموافقة على المعلم ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "موافقة" }, {}],
-                }
-              : {
-                  text: "هل أنت متأكد من أنك تريد رفض المعلم ؟",
-                  onConfirm: () => {},
-                  btns: [{ text: "رفض", color: "red" }, { color: "green" }],
-                }),
-            onClose: closePopup,
-          })
+          <RegulerConfirm
+            {...{
+              ...(popup === "delete"
+                ? {
+                    text: "هل أنت متأكد من أنك تريد حذف هذا المعلم ؟",
+                    url: `/users/user/${id}/delete/`,
+                    onConfirm(succes) {
+                      if (succes) {
+                        router.replace("/");
+                      }
+                    },
+                    btns: [{ text: "حذف", color: "red" }, { color: "green" }],
+                  }
+                : popup === "accept"
+                ? {
+                    text: "هل أنت متأكد من الموافقة على المعلم ؟",
+                    url: `/users/teacher/${id}/accept/`,
+                    onConfirm() {
+                      setTimeout(() => {
+                        closePopup();
+                        refetch();
+                      }, 1500);
+                    },
+                    btns: [{ text: "موافقة" }, {}],
+                  }
+                : {
+                    text: "هل أنت متأكد من أنك تريد رفض المعلم ؟",
+                    url: `/users/teacher/${id}/deaccept/`,
+                    onConfirm() {
+                      setTimeout(() => {
+                        closePopup();
+                        refetch();
+                      }, 1500);
+                    },
+                    btns: [{ text: "رفض", color: "red" }, { color: "green" }],
+                  }),
+              onClose: closePopup,
+            }}
+          />
         )}
       </Popup>
     </>

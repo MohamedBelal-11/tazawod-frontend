@@ -7,15 +7,18 @@ import { DefaultResponse, fetchResponse } from "../utils/response";
 const dofetch = ({
   setResponse,
   url,
+  onConfirm
 }: {
   setResponse: React.Dispatch<
     React.SetStateAction<DefaultResponse | undefined>
   >;
   url: string;
+  onConfirm?: (success: boolean) => void;
 }) => {
   fetchResponse({
     setResponse,
     url,
+    onFinish: onConfirm
   });
 };
 
@@ -28,7 +31,7 @@ export const RegulerConfirm = ({
 }: {
   text: string;
   btns?: [{ text?: string; color?: string }, { text?: string; color?: string }];
-  onConfirm?: () => void;
+  onConfirm?: (success: boolean) => void;
   onClose: () => void;
   url?: string;
 }) => {
@@ -56,8 +59,8 @@ export const RegulerConfirm = ({
         <Button
           color={btns[0].color}
           onClick={() => {
-            (url ? () => dofetch({ setResponse, url }) : () => {})();
-            (onConfirm ? onConfirm : () => {})();
+            (url ? () => dofetch({ setResponse, url, onConfirm }) : () => {})();
+            (!url ? (onConfirm ? onConfirm : () => {}) : () => {})(true);
           }}
         >
           {btns[0].text}

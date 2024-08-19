@@ -335,7 +335,7 @@ const feutures: { header: string; description: string }[] = [
   {
     header: "تخصيص مواعد",
     description:
-      "يمكن للطلاب نخصيص مواعيد في الوقت الذي يريدونه بشكل متنوع دون أي قود",
+      "يمكن للطلاب تخصيص مواعيد في الوقت الذي يريدونه بشكل متنوع دون أي قود",
   },
 ];
 
@@ -842,6 +842,34 @@ export default function Content() {
             </div>
           </section>
           <article>
+            <motion.div
+              className="bg-white rounded-lg my-4 p-4"
+              initial={{ x: "45%", scale: 0.7 }}
+              whileInView={{ x: 0, scale: 1 }}
+              viewport={{ amount: 0.5 }}
+              transition={{ type: "spring", mass: "0.5" }}
+            >
+              <p className="text-3xl text-center">
+                أكاديمية تزود لتعليم القرءان الكريم وعلومه
+              </p>
+              <div className="flex gap-4 flex-wrap">
+                <div className="flex justify-center items-center">
+                  <img src="/static/imgs/ahmed.jpg" className="my-6 min-w-64 max-w-64" />
+                </div>
+                <div className="flex-col flex justify-center min-h-80 px-6">
+                  <p className="text-2xl my-6 text-center">
+                    تحت إشراف فضيلة الشيخ أحمد البيومي الأزهري
+                  </p>
+                  <p className="text-2xl my-6 text-center">
+                    المجاز بالقراءات العشر الصغرى والحاصل على ليسانس في أصول
+                    الدين والدعوة قسم التقسير وعلوم القرءان جامعة الأزهر
+                  </p>
+                </div>
+                <div className="flex justify-center items-center">
+                  <img src="/static/imgs/ahmed2.jpg" className="my-6 min-w-72 max-w-72" />
+                </div>
+              </div>
+            </motion.div>
             {feutures.map((feuture, i) => (
               <motion.div
                 key={i}

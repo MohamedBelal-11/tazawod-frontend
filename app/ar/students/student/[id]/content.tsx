@@ -1,7 +1,7 @@
 "use client";
 import { secondsToHrs } from "@/app/ar/content";
 import { arDay } from "@/app/utils/arabic";
-import { get, stateScroll } from "@/app/utils/docQuery";
+import { get } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
@@ -29,6 +29,7 @@ import {
   fetchPost,
 } from "@/app/utils/response";
 import Forbidden from "@/app/forbidden";
+import NotFound from "@/app/not-found";
 
 interface Tdate extends Date {
   price: number;
@@ -39,6 +40,8 @@ const changefTeacher = ({
   setResponse,
   id,
   change,
+  onClose,
+  refetch,
 }: {
   setResponse: React.Dispatch<
     React.SetStateAction<DefaultResponse | undefined>
@@ -46,12 +49,22 @@ const changefTeacher = ({
   phone: string;
   id: string;
   change: boolean;
-}) =>
+  onClose: () => void;
+  refetch: () => void;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   fetchPost({
     data: { phone },
     setResponse,
     url: `/users/${change ? "changeteacher" : "subscribeteacher"}/${id}/`,
+    onFinish() {
+      setTimeout(() => {
+        refetch();
+        onClose();
+      }, 1500);
+    },
   });
+};
 
 const Subscribe: React.FC<{
   id: string;
@@ -61,6 +74,7 @@ const Subscribe: React.FC<{
 }> = ({ id, onClose, change = false, refetch }) => {
   const [response, setResponse] = useState<DefaultResponse>();
   const [phone, setPhone] = useState("20");
+  const [loading, setLoading] = useState(false);
 
   return (
     <div
@@ -83,9 +97,28 @@ const Subscribe: React.FC<{
         </Button>
         <Button
           color="green"
-          onClick={() => changefTeacher({ phone, change, setResponse, id })}
+          onClick={
+            loading
+              ? undefined
+              : () =>
+                  changefTeacher({
+                    phone,
+                    change,
+                    setResponse,
+                    id,
+                    onClose,
+                    refetch,
+                    setLoading,
+                  })
+          }
         >
-          {change ? "تم" : "إشتراك"}
+          {loading ? (
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          ) : change ? (
+            "تم"
+          ) : (
+            "إشتراك"
+          )}
         </Button>
       </div>
       {response !== undefined && (
@@ -100,6 +133,12 @@ const Subscribe: React.FC<{
             ? "حدث خطأٌ ما"
             : response.succes
             ? "تم بنجاح"
+            : response.error === 4
+            ? "لم يتم إيجاد المعلم"
+            : response.error === 5
+            ? "لم يتم قبول هذا المعلم"
+            : response.error === 7
+            ? "مواعيد الطالب وهذا المعلم متداخلة"
             : "حدث خطأٌ ما"}
         </p>
       )}
@@ -122,11 +161,18 @@ const sendEditedData = ({
   refetch: () => void;
   onClose: () => void;
 }) => {
-  fetchPost({ data, setResponse, url: "/users/student/editdata/", setLoading });
-  setTimeout(() => {
-    onClose();
-    refetch();
-  }, 3000);
+  fetchPost({
+    data,
+    setResponse,
+    url: "/users/student/editdata/",
+    setLoading,
+    onFinish() {
+      setTimeout(() => {
+        onClose();
+        refetch();
+      }, 1500);
+    },
+  });
 };
 
 type DataEdit = {
@@ -159,7 +205,7 @@ type responset =
         date: string;
       } | null;
       gender: "male" | "female";
-      teacher: string | null;
+      teacher: { name: string; id: string } | null;
       currency: "EGP" | "USD";
     }
   | {
@@ -324,7 +370,7 @@ const EditData: React.FC<{
         ) : objCompare(
             { ...inputs, name: almightyTrim(inputs.name) },
             defaultData
-          ) ? (
+          ) || message.name.length !== 0 ? (
           <div
             className={
               "p-2 border-2 border-gray-500 bg-gray-200 " +
@@ -442,7 +488,11 @@ const Popup: React.FC<{
                   text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
                   btns: [{ text: "حذف", color: "red" }, { color: "green" }],
                   url: `/users/user/${popupData.id}/delete/`,
-                  onConfirm: () => router.replace("/"),
+                  onConfirm: (succes) => {
+                    if (succes) {
+                      router.replace("/");
+                    }
+                  },
                 }
               : popupData.state === "subscribe"
               ? {
@@ -453,7 +503,7 @@ const Popup: React.FC<{
                     setTimeout(() => {
                       onClose();
                       refetch();
-                    }, 3000);
+                    }, 1500);
                   },
                 }
               : {
@@ -464,7 +514,7 @@ const Popup: React.FC<{
                     setTimeout(() => {
                       onClose();
                       refetch();
-                    }, 3000);
+                    }, 1500);
                   },
                 }),
             onClose,
@@ -484,8 +534,8 @@ const Content = () => {
   const [popup, setPopup] = useState<PopupData>({});
 
   useEffect(() => {
-    setScrollProperties([popup]);
-  }, [setScrollProperties, popup]);
+    setScrollProperties([response]);
+  }, [setScrollProperties, response]);
 
   const refetch = useCallback(() => {
     fetchResponse({ setResponse, url: `/api/students/student/${id}` });
@@ -520,6 +570,9 @@ const Content = () => {
           <p className="text-gray-500 text-lg">لم يتم الموافقة عليك بعد</p>
         </div>
       );
+    }
+    if (response.error === 3) {
+      return <NotFound />;
     }
     return;
   }
@@ -627,12 +680,19 @@ const Content = () => {
           {/* display the teacher */}
           <p className="text-xl mb-2">
             المعلم:{" "}
-            {!response.teacher && response.subscribed ? (
+            {response.teacher ? (
+              <Link
+                href={`/ar/teachers/teacher/${response.teacher.id}`}
+                className="hover:underline hover:text-green-500"
+              >
+                {response.teacher.name}
+              </Link>
+            ) : response.subscribed ? (
               // if there isn't teacher and is subscribed color by red
               <span className="text-red-500">لا يوجد</span>
             ) : (
               // else keep it black
-              response.teacher || "لا يوجد"
+              "لا يوجد"
             )}
           </p>
           {response.userType !== "self" && response.subscribed && (
@@ -717,7 +777,7 @@ const Content = () => {
                 id="edit-dates-button"
                 textHov="black"
               >
-                لا يمكنك تعديل |مواعيدك بعد الإشتراك
+                لا يمكنك تعديل مواعيدك بعد الإشتراك
               </Button>
             ) : (
               <Button

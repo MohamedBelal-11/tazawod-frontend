@@ -7,12 +7,6 @@ const arabicFooter = (
       </p>
     </div>
     <div className="text-xl mb-4">
-      <p className="mb-1">
-        إدارة الأستاذ{" "}
-        <a href="" className="text-green-500 hover:underline">
-          محمد أحمد صابر البيومي
-        </a>
-      </p>
       <p>
         تصميم وبرمجة المهندس{" "}
         <a
