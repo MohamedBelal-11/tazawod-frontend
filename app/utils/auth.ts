@@ -1,1 +1,1 @@
-export const backendUrl = "Mohamed11Belal.pythonanywhere.com";
+export const backendUrl = "mohamed11belal.pythonanywhere.com";
