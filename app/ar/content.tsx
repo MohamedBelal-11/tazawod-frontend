@@ -844,9 +844,8 @@ export default function Content() {
           <article>
             <motion.div
               className="bg-white rounded-lg my-4 p-4"
-              initial={{ x: "45%", scale: 0.7 }}
-              whileInView={{ x: 0, scale: 1 }}
-              viewport={{ amount: 0.5 }}
+              initial={{ scale: 0.5 }}
+              whileInView={{ scale: 1 }}
               transition={{ type: "spring", mass: "0.5" }}
             >
               <p className="text-3xl text-center">
