@@ -24,7 +24,7 @@ export const fetchResponse = async <T = any>({
   url,
   query = "",
   setLoading,
-  onFinish
+  onFinish,
 }: {
   setResponse: React.Dispatch<React.SetStateAction<T | null>>;
   url: string;
@@ -54,9 +54,7 @@ export const fetchResponse = async <T = any>({
           : response.data
       );
       (setLoading ? setLoading : () => {})(false);
-      (onFinish ? onFinish : () => {})(
-        response.data.succes === undefined ? false : response.data.succes
-      );
+      (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
     })
     .catch((error) => {
       // If there is an error, log the error to the console
@@ -103,9 +101,7 @@ export const fetchPost = async <T = any>({
           : response.data
       );
       (setLoading ? setLoading : () => {})(false);
-      (onFinish ? onFinish : () => {})(
-        response.data.succes === undefined ? false : response.data.succes
-      );
+      (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
     })
     .catch((error) => {
       console.log(data);
