@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Content from "./content";
 
 export const metadata: Metadata = {
-  title: "التحقق من الهاتف"
+  title: "التحقق من بريد الجيميل"
 }
 const Page = () =>{
   return <Content />

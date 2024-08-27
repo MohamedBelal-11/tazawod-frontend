@@ -111,12 +111,12 @@ const unlogedOptionList: option[] = [
     href: "/ar/auth/login",
   },
   {
-    name: "تسجيل حساب كمعلم",
+    name: "إنشاء حساب كمعلم",
     description: "إنضم إلينا كمعلم",
     href: "/ar/auth/register/teacher",
   },
   {
-    name: "تسجيل حساب مشرف",
+    name: "إنشاء حساب مشرف",
     description: "إنضم إلينا كمشرف",
     href: "/ar/auth/register/admin",
   },
@@ -387,7 +387,7 @@ export default function ArabicNavBar() {
             <Link
               href={
                 userType === "admin" || userType === "superadmin"
-                  ? "/ar/admin/acount"
+                  ? "/ar/admin-acount"
                   : `/ar/${userType}s/${userType}/${response?.id}`
               }
               className={classes[0]}
@@ -408,7 +408,7 @@ export default function ArabicNavBar() {
                 href="/ar/auth/register/student"
                 className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}
               >
-                تسجيل حساب
+                إنشاء حساب
               </Link>
             </>
           )}
@@ -511,7 +511,7 @@ export default function ArabicNavBar() {
                 <Link
                   href={
                     userType.includes("admin")
-                      ? "/ar/admin/acount"
+                      ? "/ar/admin-acount"
                       : `/ar/${userType}s/${userType}/${response?.id}`
                   }
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
@@ -534,7 +534,7 @@ export default function ArabicNavBar() {
                       href="/ar/auth/register/student"
                       className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
                     >
-                      تسجيل حساب
+                      إنشاء حساب
                     </Link>
                   </>
                 )}

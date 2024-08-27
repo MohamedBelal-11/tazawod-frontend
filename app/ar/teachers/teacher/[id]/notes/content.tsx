@@ -87,7 +87,6 @@ const EditNote: React.FC<{ note: Note | undefined; onClose: () => void }> = ({
             placeholder="التقييم"
             className={inp}
             maxLength={2}
-            required
             autoComplete="name"
           />
           <div className="flex flex-col">

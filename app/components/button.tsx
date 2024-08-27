@@ -18,7 +18,7 @@ export const getClass = ({
   `rounded-lg transition-all duration-300 text-${textCol}`;
 
 const Button: React.FC<{
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLButtonElement | HTMLDivElement>;
   color?: string;
   padding?: number;
   size?: string;

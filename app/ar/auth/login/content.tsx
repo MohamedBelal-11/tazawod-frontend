@@ -4,11 +4,10 @@ import { backendUrl } from "@/app/utils/auth";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import MyPhoneInput from "@/app/components/phoneInput";
 import { motion } from "framer-motion";
 
 const Content = () => {
-  const [phone, setPhone] = useState("20");
+  const [gmail, setGmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +21,7 @@ const Content = () => {
     try {
       // Prepare data to be sent to the server
       const data = {
-        phone_number: phone, // Phone number entered by the user
+        email: gmail, // Gmail number entered by the user
         password: password, // Password entered by the user
       };
 
@@ -51,7 +50,7 @@ const Content = () => {
         // If the status code is 400, there was an error with the login credentials
 
         // Set an error message to be displayed to the user
-        setMessage("كلمة المرور أو رقم الهاتف خاطئ");
+        setMessage("كلمة المرور أو عنوان البريد الإلكتروني خاطئ");
       }
     } catch (error) {
       // If there was an error during the login process, log the error and display an error message
@@ -69,8 +68,17 @@ const Content = () => {
           className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8"
         >
           <h1 className="text-3xl font-bold">تسجيل الدخول</h1>
-
-          <MyPhoneInput value={phone} onChange={setPhone} />
+          <input
+            type="text"
+            value={gmail}
+            onChange={(e) => {
+              setGmail(e.target.value);
+            }}
+            dir="ltr"
+            placeholder="البريد الإلكتروني"
+            className={"p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl"}
+            autoComplete="email"
+          />
           <PasswordInput
             value={password}
             onChange={(e) => {
@@ -81,7 +89,6 @@ const Content = () => {
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"
-            required
             style={{}}
           />
           {message !== "" ? (

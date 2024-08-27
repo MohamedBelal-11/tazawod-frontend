@@ -277,7 +277,7 @@ type responset =
   | {
       userType: "teacher" | "admin";
       is_accepted: false;
-      super_admins: { name: string; phone: string }[];
+      super_admins: { name: string; gmail: string }[];
     }
   | {
       userType: "teacher";
@@ -333,9 +333,9 @@ const feutures: { header: string; description: string }[] = [
       "يحصل الطالب على مراجعة مستمرة من المعلمين لتحسين الأداء وضمان التقدم.",
   },
   {
-    header: "تخصيص مواعد",
+    header: "تخصيص مواعيد",
     description:
-      "يمكن للطلاب تخصيص مواعيد في الوقت الذي يريدونه بشكل متنوع دون أي قود",
+      "يمكن للطلاب تخصيص مواعيد في الوقت الذي يريدونه بشكل متنوع دون أي قيود",
   },
 ];
 
@@ -734,7 +734,7 @@ export default function Content() {
                     >
                       <p className="text-2xl font-bold">المشرف: {admin.name}</p>
                       <p className="text-xl font-bold">
-                        رقم المشرف: <span dir="ltr">+{admin.phone}</span>
+                        عنوان بريد المشرف: <span dir="ltr">{admin.gmail}</span>
                       </p>
                     </motion.div>
                   );
@@ -824,7 +824,7 @@ export default function Content() {
         <main className={globalClasses.main}>
           <section className="flex justify-center">
             <div className="bg-white p-8 rounded-3xl">
-              <p className="text-2xl text-center">بادر بلإنضمام إلينا</p>
+              <p className="text-2xl text-center">بادر بالإنضمام إلينا</p>
               <div className="flex justify-center gap-4 mt-8">
                 <Link
                   className="p-2 rounded-xl block bg-gray-300"
@@ -836,7 +836,7 @@ export default function Content() {
                   className="p-2 rounded-xl block bg-green-600 border-green-600 text-white"
                   href="/ar/auth/register/student"
                 >
-                  تسجيل حساب
+                  إنشاء حساب
                 </Link>
               </div>
             </div>
@@ -851,7 +851,7 @@ export default function Content() {
               <p className="text-3xl text-center">
                 أكاديمية تزود لتعليم القرءان الكريم وعلومه
               </p>
-              <div className="flex gap-4 flex-wrap">
+              <div className="flex md:gap-4 justify-center flex-col lg:flex-row">
                 <div className="flex justify-center items-center">
                   <img src="/static/imgs/ahmed.jpg" className="my-6 min-w-64 max-w-64" />
                 </div>
@@ -861,7 +861,7 @@ export default function Content() {
                   </p>
                   <p className="text-2xl my-6 text-center">
                     المجاز بالقراءات العشر الصغرى والحاصل على ليسانس في أصول
-                    الدين والدعوة قسم التقسير وعلوم القرءان جامعة الأزهر
+                    الدين والدعوة قسم التفسير وعلوم القرءان جامعة الأزهر
                   </p>
                 </div>
                 <div className="flex justify-center items-center">

@@ -1,7 +1,6 @@
 "use client";
 import {
   DetailedHTMLProps,
-  HTMLAttributes,
   InputHTMLAttributes,
   useState,
 } from "react";
@@ -24,7 +23,7 @@ const PasswordInput = (props: PasswordInputProps) => {
   return (
     <div className={props.divclassname} style={props.divStyle}>
       <div
-        className={"absolute w-mi h-min p-2 rounded-full hover:bg-gray-200"}
+        className={"absolute w-min h-min p-2 rounded-full hover:bg-gray-200"}
         style={{
           transition: "0.3s",
           top: "50%",
@@ -41,6 +40,8 @@ const PasswordInput = (props: PasswordInputProps) => {
       </div>
       <input
         {...props}
+        dir="ltr"
+        className={props.className + " pl-12"}
         type={hidden ? "password" : "text"}
         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
         title={

@@ -25,7 +25,7 @@ const classes: { [key: string]: string } = {
 interface Admin {
   id: string;
   name: string;
-  phone: string;
+  gmail: string;
   is_accepted: boolean;
   description: string | null;
 }
@@ -142,7 +142,7 @@ const AdminDiv: React.FC<{
       </div>
       <p className="sm:text-3xl text-xl">{admin.name}</p>
       <p className="text-2xl my-4">
-        <span dir="ltr">+{admin.phone}</span>
+        <span dir="ltr">{admin.gmail}</span>
       </p>
       <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
 
@@ -233,11 +233,11 @@ const Content = () => {
   // create state for filters
   const [filters, setFilters] = useState<{
     name: string;
-    phone: string;
+    gmail: string;
     is_accepted: "both" | "false" | "true";
   }>({
     name: searchParams.get("name") || "",
-    phone: searchParams.get("phone") || "",
+    gmail: searchParams.get("gmail") || "",
     is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
       ? (searchParams.get("is_accepted") as "both" | "false" | "true")
       : "both",
@@ -246,7 +246,7 @@ const Content = () => {
   const refetch = useCallback(() => {
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      phone: filters.phone,
+      gmail: filters.gmail,
       is_accepted: filters.is_accepted,
       page: page.toString(),
     }).toString();
@@ -271,7 +271,7 @@ const Content = () => {
   useEffect(() => {
     setFilters({
       name: searchParams.get("name") || "",
-      phone: searchParams.get("phone") || "",
+      gmail: searchParams.get("gmail") || "",
       is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
         ? (searchParams.get("is_accepted") as "both" | "false" | "true")
         : "both",
@@ -293,7 +293,7 @@ const Content = () => {
     setPage(1);
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      phone: filters.phone,
+      gmail: filters.gmail,
       is_accepted: filters.is_accepted,
       page: "1",
     }).toString();
@@ -309,7 +309,7 @@ const Content = () => {
     if (page !== 1) {
       const query = new URLSearchParams({
         name: almightyTrim(filters.name),
-        phone: filters.phone,
+        gmail: filters.gmail,
         is_accepted: filters.is_accepted,
         page: page.toString(),
       }).toString();
@@ -384,21 +384,11 @@ const Content = () => {
                   />
                   <input
                     type="text"
-                    placeholder="رقم الهاتف"
-                    value={filters.phone}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      let alive = true;
-                      for (const c of value) {
-                        if (!numList.includes(c)) {
-                          alive = false;
-                          break;
-                        }
-                      }
-                      if (alive) {
-                        setFilters({ ...filters, phone: value });
-                      }
-                    }}
+                    placeholder="عنوان البريد الإلكتروني"
+                    value={filters.gmail}
+                    onChange={(e) =>
+                      setFilters({ ...filters, gmail: e.target.value })
+                    }
                     className={classes["inp"]}
                   />
                   <div
@@ -485,7 +475,7 @@ const Content = () => {
                 >
                   <p className="text-xl">{admin.name}</p>
                   <p className="text-lg my-2">
-                    <span dir="ltr">+{admin.phone}</span>
+                    <span dir="ltr">{admin.gmail}</span>
                   </p>
                   <p>{admin.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
                 </motion.div>

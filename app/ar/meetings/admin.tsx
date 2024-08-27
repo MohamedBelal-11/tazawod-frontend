@@ -27,7 +27,7 @@ const embValue = <T = any,>(value: T, arr: T[]) => {
 
 interface User {
   name: string;
-  phone: string;
+  gmail: string;
   id: string;
 }
 
@@ -73,8 +73,8 @@ type Responset =
 interface Filters {
   studentName: string;
   teacherName: string;
-  studentPhone: string;
-  teacherPhone: string;
+  studentGmail: string;
+  teacherGmail: string;
   status: Status[];
 }
 
@@ -83,8 +83,8 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
   const [filters, setFilters] = useState<Filters>({
     studentName: "",
     teacherName: "",
-    studentPhone: "",
-    teacherPhone: "",
+    studentGmail: "",
+    teacherGmail: "",
     status: ["didnt_start", "didnt_checked", "checked"],
   });
   const [popup, setPopup] = useState<number>();
@@ -120,7 +120,7 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
                 >
                   الطالب: {meeting.student.name}
                 </Link>
-                <p className="text-xl mb-4">الهاتف: {meeting.student.phone}</p>
+                <p className="text-xl mb-4">البريد الإلكتروني: {meeting.student.gmail}</p>
                 {meeting.teacher ? (
                   <>
                     <Link
@@ -130,7 +130,7 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
                       المعلم: {meeting.teacher.name}
                     </Link>
                     <p className="text-xl mb-4">
-                      الهاتف: {meeting.teacher.phone}
+                      البريد الإلكتروني: {meeting.teacher.gmail}
                     </p>
                   </>
                 ) : (
@@ -202,10 +202,10 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
                 }
               />
               <input
-                placeholder="هاتف الطالب"
+                placeholder="بريد الطالب"
                 type="text"
                 className={classes["inp"]}
-                value={filters.studentPhone}
+                value={filters.studentGmail}
                 onChange={(e) => {
                   const value = e.target.value;
                   let alive = true;
@@ -216,15 +216,15 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
                     }
                   }
                   if (alive) {
-                    setFilters((f) => ({ ...f, studentPhone: e.target.value }));
+                    setFilters((f) => ({ ...f, studentGmail: e.target.value }));
                   }
                 }}
               />
               <input
-                placeholder="هاتف المعلم"
+                placeholder="بريد المعلم"
                 type="text"
                 className={classes["inp"]}
-                value={filters.teacherPhone}
+                value={filters.teacherGmail}
                 onChange={(e) => {
                   const value = e.target.value;
                   let alive = true;
@@ -235,7 +235,7 @@ const SuccesContent: React.FC<{ meetings: Meet[] }> = ({ meetings }) => {
                     }
                   }
                   if (alive) {
-                    setFilters((f) => ({ ...f, teacherPhone: e.target.value }));
+                    setFilters((f) => ({ ...f, teacherGmail: e.target.value }));
                   }
                 }}
               />
@@ -353,7 +353,7 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: null,
@@ -366,12 +366,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -383,12 +383,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -400,12 +400,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -416,12 +416,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -433,12 +433,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -450,12 +450,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -467,12 +467,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -484,12 +484,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -501,12 +501,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -517,12 +517,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -534,12 +534,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -551,12 +551,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -568,12 +568,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -585,12 +585,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -602,12 +602,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -618,12 +618,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "didnt_start",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",
@@ -635,12 +635,12 @@ const AdminContent: React.FC<{ isSuper: boolean }> = ({ isSuper }) => {
           status: "checked",
           student: {
             name: "محمد بلال",
-            phone: "201283410254",
+            gmail: "201283410254",
             id: "abcd-efgh-ijkl-mnop",
           },
           teacher: {
             name: "محمد علي",
-            phone: "201234567890",
+            gmail: "201234567890",
             id: "abcd-efgh-ijkl-mnop",
           },
           started: "02:00",

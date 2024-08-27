@@ -9,7 +9,7 @@ export default function Test() {
     try {
       const data = {
         name: "hima hima",
-        phone_number: "200128410250",
+        email: "200128410250",
         gender: "male",
         password: "hamhama56787?",
         quraan_days: [{ day: "sunday", starts: "14:25:00", delay: "2:00:00" }],

@@ -1,21 +1,20 @@
 "use client";
+import Button from "@/app/components/button";
 import { fetchResponse } from "@/app/utils/response";
-import { bDate } from "@/app/utils/time";
-import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
-type Notificationt = {
-  title: string;
-  link: string;
-  external: boolean;
-  read: boolean;
-  dateCreated: string;
+type AdminOwe = {
+  name: string;
+  email: string;
+  id: string;
+  owes: number;
 };
 
 type Responset =
   | {
       succes: true;
-      notifications: Notificationt[];
+      currency: "EGP" | "USD";
+      adminOwes: AdminOwe[];
       has_more: boolean;
     }
   | {
@@ -23,6 +22,14 @@ type Responset =
       error: number;
     }
   | null;
+
+const paidAdmin = (id: string, refetch: () => void) => {
+  fetchResponse({
+    setResponse: () => undefined,
+    url: `/admin-paid/${id}/`,
+    onFinish: refetch,
+  });
+};
 
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
@@ -34,7 +41,7 @@ const Content: React.FC = () => {
     const query = new URLSearchParams({ page: "1" });
     fetchResponse({
       setResponse,
-      url: "/api/ar/notifications/",
+      url: "/api/admin-owes/",
       query: query.toString(),
     });
   }, []);
@@ -59,11 +66,21 @@ const Content: React.FC = () => {
       const query = new URLSearchParams({ page: page.toString() });
       fetchResponse({
         setResponse,
-        url: "/api/ar/notifications/",
+        url: "/api/admin-owes/",
         query: query.toString(),
         setLoading,
       });
     }
+  }, [page]);
+
+  const refetch = useCallback(() => {
+    const query = new URLSearchParams({ page: page.toString() });
+    fetchResponse({
+      setResponse,
+      url: "/api/admin-owes/",
+      query: query.toString(),
+      setLoading,
+    });
   }, [page]);
 
   if (response === null) {
@@ -87,14 +104,14 @@ const Content: React.FC = () => {
       <main
         style={
           response === undefined ||
-          (Boolean(response) && response?.notifications.length === 0)
+          (Boolean(response) && response?.adminOwes.length === 0)
             ? { minHeight: "calc(100vh - 110px)" }
             : undefined
         }
         className={
           "p-4 rounded-xl bg-white" +
           (response === undefined ||
-          (Boolean(response) && response?.notifications.length === 0)
+          (Boolean(response) && response?.adminOwes.length === 0)
             ? " flex items-center justify-center"
             : "")
         }
@@ -107,30 +124,49 @@ const Content: React.FC = () => {
             }
             style={{ borderWidth: "12px" }}
           ></div>
-        ) : response.notifications.length === 0 ? (
+        ) : response.adminOwes.length === 0 ? (
           <p className="text-xl text-gray-400">لا يوجد أي إشعارات بعد</p>
         ) : (
-          response.notifications.map(
-            ({ link, external, read, title, dateCreated }, i) => (
-              <Link
-                href={external ? link : "/ar" + link}
-                key={i}
-                target={external ? "_blank" : undefined}
-                className={
-                  "rounded-xl p-5 flex justify-between sm:text-lg text-sm mb-4 last:mb-0 " +
-                  (read ? "bg-slate-200" : "bg-sky-200")
-                }
-              >
-                <span className="block">{title}</span>
-                <span className="block text-md">
-                  {bDate.getFormedDate(dateCreated, {
-                    form: "arabic",
-                    time: true,
-                  })}
-                </span>
-              </Link>
-            )
-          )
+          response.adminOwes.map(({ email, name, owes, id }, i) => (
+            <div
+              key={i}
+              className={
+                "rounded-xl p-5 flex justify-between text-xs " +
+                "sm:text-lg mb-4 last:mb-0 border-gray-700 border-b-2 bg-white"
+              }
+            >
+              <div>
+                <p className="mb-4">{name}</p>
+                <a
+                  href={
+                    "https://mail.google.com/mail/?view=cm&fs=1&to=" +
+                    email +
+                    "&su=مراسلة+بشأن+إشتراكاتك &body="
+                  }
+                  target="_blank"
+                  className="hover:text-green-600 hover:underline"
+                >
+                  {email}
+                </a>
+              </div>
+              <div>
+                <p className="mb-4">
+                  {owes.toFixed(2) +
+                    (response.currency === "EGP"
+                      ? " جنيه مصري"
+                      : " دولار أمريكي")}
+                </p>
+                <Button
+                  padding={1}
+                  size="xs"
+                  className="sm:text-base sm:p-2"
+                  onClick={() => paidAdmin(id, refetch)}
+                >
+                  تم الدفع
+                </Button>
+              </div>
+            </div>
+          ))
         )}
       </main>
       {loading && (

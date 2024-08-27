@@ -38,7 +38,7 @@ type Teacher =
   | {
       id: string;
       name: string;
-      phone: string;
+      gmail: string;
       description: string | null;
       prefered_time: "morning" | "afternoon" | "night";
       is_accepted: true;
@@ -48,7 +48,7 @@ type Teacher =
   | {
       id: string;
       name: string;
-      phone: string;
+      gmail: string;
       description: string;
       prefered_time: "morning" | "afternoon" | "night";
       is_accepted: false;
@@ -104,7 +104,7 @@ const TeacherDiv: React.FC<{
         {teacher.name}
       </Link>
       <p className="text-2xl my-4">
-        <span dir="ltr">+{teacher.phone}</span>
+        <span dir="ltr">{teacher.gmail}</span>
       </p>
       <p>{teacher.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
 
@@ -203,12 +203,12 @@ const Content = () => {
   // create state for filters
   const [filters, setFilters] = useState<{
     name: string;
-    phone: string;
+    gmail: string;
     is_accepted: "both" | "false" | "true";
     prefered_times: ("morning" | "afternoon" | "night")[];
   }>({
     name: searchParams.get("name") || "",
-    phone: searchParams.get("phone") || "",
+    gmail: searchParams.get("gmail") || "",
     is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
       ? (searchParams.get("is_accepted") as "both" | "false" | "true")
       : "both",
@@ -261,7 +261,7 @@ const Content = () => {
   useEffect(() => {
     setFilters({
       name: searchParams.get("name") || "",
-      phone: searchParams.get("phone") || "",
+      gmail: searchParams.get("gmail") || "",
       is_accepted: boolValues.includes(searchParams.get("is_accepted") || "")
         ? (searchParams.get("is_accepted") as "both" | "false" | "true")
         : "both",
@@ -282,7 +282,7 @@ const Content = () => {
   useEffect(() => {
     const query = new URLSearchParams({
       is_accepted: filters.is_accepted,
-      phone: filters.phone,
+      gmail: filters.gmail,
       name: filters.name,
       sorted_by: sort[0],
       reversed: String(sort[1]),
@@ -298,7 +298,7 @@ const Content = () => {
     setPage(1);
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      phone: filters.phone,
+      gmail: filters.gmail,
       is_accepted: filters.is_accepted,
       sorted_by: sort[0],
       reversed: String(sort[1]),
@@ -324,7 +324,7 @@ const Content = () => {
     if (page !== 1) {
       const query = new URLSearchParams({
         name: almightyTrim(filters.name),
-        phone: filters.phone,
+        gmail: filters.gmail,
         is_accepted: filters.is_accepted,
         sorted_by: sort[0],
         reversed: String(sort[1]),
@@ -428,8 +428,8 @@ const Content = () => {
                   />
                   <input
                     type="text"
-                    placeholder="رقم الهاتف"
-                    value={filters.phone}
+                    placeholder="عنوان البريد الإلكتروني"
+                    value={filters.gmail}
                     onChange={(e) => {
                       const value = e.target.value;
                       let alive = true;
@@ -440,7 +440,7 @@ const Content = () => {
                         }
                       }
                       if (alive) {
-                        setFilters({ ...filters, phone: value });
+                        setFilters({ ...filters, gmail: value });
                       }
                     }}
                     className={classes["inp"]}
@@ -570,7 +570,7 @@ const Content = () => {
                 >
                   <p className="text-xl">{teacher.name}</p>
                   <p className="text-lg my-2">
-                    <span dir="ltr">+{teacher.phone}</span>
+                    <span dir="ltr">{teacher.gmail}</span>
                   </p>
                   <p>{teacher.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
                   <p>

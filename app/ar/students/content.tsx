@@ -28,7 +28,7 @@ const classes: { [key: string]: string } = {
 interface Student {
   id: string;
   name: string;
-  phone: string;
+  gmail: string;
   subscribed: boolean;
   teacher: { name: string; id: string } | null;
 }
@@ -82,7 +82,7 @@ const StudentDiv: React.FC<{
         {student.name}
       </Link>
       <p className="text-2xl my-4">
-        <span dir="ltr">+{student.phone}</span>
+        <span dir="ltr">+{student.gmail}</span>
       </p>
       <p className="text-xl my-4">
         المعلم:{" "}
@@ -131,11 +131,11 @@ const Content = () => {
   // create state for filters
   const [filters, setFilters] = useState<{
     name: string;
-    phone: string;
+    gmail: string;
     subscribed: "both" | "false" | "true";
   }>({
     name: searchParams.get("name") || "",
-    phone: searchParams.get("phone") || "",
+    gmail: searchParams.get("gmail") || "",
     subscribed: boolValues.includes(searchParams.get("subscribed") || "")
       ? (searchParams.get("subscribed") as "both" | "false" | "true")
       : "both",
@@ -154,7 +154,7 @@ const Content = () => {
   useEffect(() => {
     setFilters({
       name: searchParams.get("name") || "",
-      phone: searchParams.get("phone") || "",
+      gmail: searchParams.get("gmail") || "",
       subscribed: boolValues.includes(searchParams.get("subscribed") || "")
         ? (searchParams.get("subscribed") as "both" | "false" | "true")
         : "both",
@@ -177,7 +177,7 @@ const Content = () => {
     setPage(1);
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      phone: filters.phone,
+      gmail: filters.gmail,
       subscribed: filters.subscribed,
       page: "1",
     }).toString();
@@ -193,7 +193,7 @@ const Content = () => {
     if (page !== 1) {
       const query = new URLSearchParams({
         name: almightyTrim(filters.name),
-        phone: filters.phone,
+        gmail: filters.gmail,
         subscribed: filters.subscribed,
         page: page.toString(),
       }).toString();
@@ -267,8 +267,8 @@ const Content = () => {
                   />
                   <input
                     type="text"
-                    placeholder="رقم الهاتف"
-                    value={filters.phone}
+                    placeholder="عنوان البريد الإلكتروني"
+                    value={filters.gmail}
                     onChange={(e) => {
                       const value = e.target.value;
                       let alive = true;
@@ -279,7 +279,7 @@ const Content = () => {
                         }
                       }
                       if (alive) {
-                        setFilters({ ...filters, phone: value });
+                        setFilters({ ...filters, gmail: value });
                       }
                     }}
                     className={classes["inp"]}
@@ -368,7 +368,7 @@ const Content = () => {
                 >
                   <p className="text-xl">{student.name}</p>
                   <p className="text-lg my-2">
-                    <span dir="ltr">+{student.phone}</span>
+                    <span dir="ltr">{student.gmail}</span>
                   </p>
                   <p>{student.subscribed ? "مشترك" : "غير مشترك"}</p>
                   <p className="text-lg">

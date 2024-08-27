@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 @import url("./Rubik/rubkImport.css");
+
 * {
   position: relative;
   font-family: "Rubik";
@@ -10,10 +11,10 @@
 }
 
 body {
-  background-image: url("/static/imgs/pattern.jpg");
-  background-attachment: scroll;
-  background-repeat: repeat;
+  background-image: url("/static/imgs/Al-Azhar-Mosque.jpg");
+  background-attachment: fixed;
   background-size: cover;
+  background-position: bottom;
 }
 
 section {
