@@ -17,7 +17,6 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import EditDates from "./editDates";
-import MyPhoneInput from "@/app/components/phoneInput";
 import Button, { getClass } from "@/app/components/button";
 import "@/app/ar/auth/register/student/page.css";
 import P, { RegulerConfirm } from "@/app/components/popup";
@@ -36,7 +35,7 @@ interface Tdate extends Date {
 }
 
 const changefTeacher = ({
-  phone,
+  gmail,
   setResponse,
   id,
   change,
@@ -46,7 +45,7 @@ const changefTeacher = ({
   setResponse: React.Dispatch<
     React.SetStateAction<DefaultResponse | undefined>
   >;
-  phone: string;
+  gmail: string;
   id: string;
   change: boolean;
   onClose: () => void;
@@ -54,7 +53,7 @@ const changefTeacher = ({
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   fetchPost({
-    data: { phone },
+    data: { gmail },
     setResponse,
     url: `/users/${change ? "changeteacher" : "subscribeteacher"}/${id}/`,
     onFinish() {
@@ -73,7 +72,7 @@ const Subscribe: React.FC<{
   change?: boolean;
 }> = ({ id, onClose, change = false, refetch }) => {
   const [response, setResponse] = useState<DefaultResponse>();
-  const [phone, setPhone] = useState("20");
+  const [gmail, setGmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   return (
@@ -88,8 +87,18 @@ const Subscribe: React.FC<{
         {change ? "إختيار معلم" : "إشتراك للطالب"}
       </p>
       <div className="w-full flex flex-col items-center gap-2">
-        <p>رقم المعلم</p>
-        <MyPhoneInput onChange={setPhone} value={phone} />
+        <p>عنوان البريد المعلم</p>
+          <input
+            type="text"
+            value={gmail}
+            onChange={(e) => {
+              setGmail(e.target.value);
+            }}
+            dir="ltr"
+            placeholder="البريد الإلكتروني"
+            className={classes.inp}
+            autoComplete="email"
+          />
       </div>
       <div className="flex gap-4 justify-evenly">
         <Button color="red" onClick={onClose}>
@@ -102,7 +111,7 @@ const Subscribe: React.FC<{
               ? undefined
               : () =>
                   changefTeacher({
-                    phone,
+                    gmail,
                     change,
                     setResponse,
                     id,
@@ -194,7 +203,7 @@ type responset =
       succes: true;
       userType: "self" | "admin" | "superadmin";
       name: string;
-      phone: string;
+      gmail: string;
       subscribed: boolean;
       dates: Tdate[];
       note: {
@@ -287,7 +296,6 @@ const EditData: React.FC<{
           placeholder="الاسم"
           className={classes["inp"]}
           maxLength={30}
-          required
           autoComplete="name"
         />
         {message.name.length > 0 && (
@@ -637,9 +645,9 @@ const Content = () => {
               response.name
             )}
           </h1>
-          {/* display phone number */}
+          {/* display gmail */}
           <h2 className="sm:text-3xl text-xl mt-4 font-bold">
-            <span dir="ltr">+{response.phone}</span>
+            <span dir="ltr">{response.gmail}</span>
           </h2>
           {/* dispaly subscribing */}
           <div className="flex gap-8 items-center">

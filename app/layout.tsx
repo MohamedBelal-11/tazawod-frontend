@@ -6,9 +6,9 @@ export const metadata: Metadata = {
     name: "Moahemd Belal",
     url: "https://www.linkedin.com/in/mohamedbelal11/",
   },
-  applicationName: "Tazawod Academy",
+  applicationName: "Tazawad Academy",
   creator: "Moahemd Belal",
-  title: "Tazawod Academy",
+  title: "Tazawad Academy",
 };
 
 export default function RootLayout({

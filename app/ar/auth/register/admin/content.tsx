@@ -13,7 +13,6 @@ import "../student/page.css";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { backendUrl } from "@/app/utils/auth";
-import MyPhoneInput from "@/app/components/phoneInput";
 import { motion } from "framer-motion";
 
 const classes = {
@@ -26,7 +25,7 @@ const classes = {
 
 const Content = () => {
   const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("20");
+  const [gmail, setGmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const [gender, setGender] = useState<"male" | "female">();
@@ -40,7 +39,7 @@ const Content = () => {
     try {
       const data = {
         name: almightyTrim(name),
-        phone_number: phoneNumber.trim(),
+        email: gmail.trim(),
         gender: gender,
         password: password,
         about: about,
@@ -50,24 +49,17 @@ const Content = () => {
         data
       );
       if (response.status === 201) {
-        setMessage(["تم تسجيل حساب المشرف"]);
-
-        const token = response.data.token; // this to...
-        // Store the token in local storage or any other secure place
-        localStorage.setItem("token", token);
-        setMessage((m) => {
-          return [...m, "تم تسجيل الدخول"];
-        }); //                               here will be deleted later
+        setMessage(["تم إنشاء حساب المشرف"]);
         setLoading(false);
-        router.push("/");
+
         // Store the password temporarily (e.g., in state or context) until OTP verification
-        // sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, phone: phoneNumber}));
-        // // Redirect to OTP verification page
-        // router.push("/auth/verify-otp");
+        sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, gmail: gmail}));
+        // Redirect to OTP verification page
+        router.push("/ar/auth/verify-otp");
       }
     } catch (error) {
       console.error("Error registering student", error);
-      setMessage(["حدث خطأ أثناء تسجيل حساب المشرف: " + error]);
+      setMessage(["حدث خطأ أثناء إنشاء حساب المشرف: " + error]);
       setLoading(false);
     }
     setMessage;
@@ -111,10 +103,26 @@ const Content = () => {
       }
     }
 
-    if (phoneNumber.length < 9) {
+    if (gmail.length < 11) {
       alive = false;
       setMessage((m) => {
-        return [...m, "رجاءً قم بإدخال رقم الهاتف"];
+        return [...m, "رجاءً قم بإدخال عنوان البريد الإلكروني"];
+      });
+    }
+
+    for (const c of gmail.slice(0, gmail.length - 10)) {
+      if (![...numList, ...charsList, "-", ".", "_", "+"].includes(c)) {
+        alive = false;
+        setMessage((m) => {
+          return [...m, "عنوان البريد الإلكروني خاطئ"];
+        });
+      }
+    }
+
+    if (!gmail.endsWith("@gmail.com")) {
+      alive = false;
+      setMessage((m) => {
+        return [...m, "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)"];
       });
     }
 
@@ -124,7 +132,7 @@ const Content = () => {
         setMessage((m) => {
           return [
             ...m,
-            "يجب أن تحتوي كلمة المرور على حروف إنجليزية وبعض هذه الرموز !@#$%^&*_- و أرقام فقط (لا مسافات)",
+            "يجب أن تحتوي كلمة المرور على حروف إنجليزية وبعض هذه الرموز !@#$%^&*_-. و أرقام فقط (لا مسافات)",
           ];
         });
         break;
@@ -211,8 +219,9 @@ const Content = () => {
         <form
           onSubmit={submit}
           className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8"
+          noValidate
         >
-          <h1 className="text-4xl mb-4">تسجيل حساب مشرف</h1>
+          <h1 className="text-4xl mb-4">إنشاء حساب مشرف</h1>
           <input
             type="text"
             value={name}
@@ -225,26 +234,18 @@ const Content = () => {
             required
             autoComplete="name"
           />
-          <MyPhoneInput value={phoneNumber} onChange={setPhoneNumber} />
-          {phoneNumber.startsWith("970") && (
-            <motion.p
-              variants={{
-                hidden: { opacity: 0 },
-                visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-              }}
-              initial="hidden"
-              animate="visible"
-            >
-              {"دائمًا في القلب ❤".split("").map((c, i) => (
-                <motion.span
-                  key={i}
-                  variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                >
-                  {c}
-                </motion.span>
-              ))}
-            </motion.p>
-          )}
+          <input
+            type="text"
+            value={gmail}
+            onChange={(e) => {
+              setGmail(e.target.value);
+            }}
+            dir="ltr"
+            placeholder="البريد الإلكتروني"
+            className={classes.inp}
+            required
+            autoComplete="email"
+          />
           <PasswordInput
             value={password}
             onChange={(e) => {

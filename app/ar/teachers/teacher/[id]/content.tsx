@@ -25,7 +25,7 @@ type Response =
       succes: true;
       userType: "self" | "admin" | "superadmin";
       name: string;
-      phone: string;
+      gmail: string;
       prefered_time: "morning" | "afternoon" | "night";
       description: string;
       is_accepted: true;
@@ -53,7 +53,7 @@ type Response =
       succes: true;
       userType: "self" | "admin" | "superadmin";
       name: string;
-      phone: string;
+      gmail: string;
       gender: "male" | "female";
       prefered_time: "morning" | "afternoon" | "night";
       description: string;
@@ -191,7 +191,6 @@ const EditData: React.FC<{
           placeholder="الاسم"
           className={classes["inp"]}
           maxLength={30}
-          required
           autoComplete="name"
         />
         {message.name.length > 0 && (
@@ -424,9 +423,9 @@ const Content: React.FC = () => {
               response.name
             )}
           </h1>
-          {/* display phone number */}
+          {/* display gmail */}
           <h2 className="sm:text-3xl text-xl mt-4 font-bold">
-            <span dir="ltr">+{response.phone}</span>
+            <span dir="ltr">{response.gmail}</span>
           </h2>
           {/* display description */}
           <p className="sm:text-xl text-md ps-2">

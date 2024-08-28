@@ -3,6 +3,8 @@ import { numList } from "@/app/utils/string";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import "./page.modules.css";
 import axios from "axios";
+import { backendUrl } from "@/app/utils/auth";
+import { useRouter } from "next/navigation";
 
 const submit = (e: FormEvent<HTMLFormElement>) => {
   e.preventDefault;
@@ -37,17 +39,19 @@ const DigitInput = ({
 export default function Content() {
   const [otp, setOtp] = useState("");
   const [focused, setFocused] = useState(true);
+  const [message, setMessage] = useState<string>();
+  const router = useRouter()
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const verifyOTP = async () => {
       try {
-        const verify_temp: { password: string; phone: string } = JSON.parse(
-          sessionStorage.getItem("temp_password")!
+        const verify_temp: { password: string; gmail: string } = JSON.parse(
+          sessionStorage.getItem("temp_verfiy")!
         ); // Retrieve the temporary password
         const response = await axios.post(
-          "http://localhost:8000/students/verify-otp/",
+          backendUrl + "/users/verify-otp/",
           {
-            phone_number: verify_temp.phone,
+            email: verify_temp.gmail,
             otp: otp,
             password: verify_temp.password,
           }
@@ -56,25 +60,29 @@ export default function Content() {
           const token = response.data.token;
           // Store the token in local storage or any other secure place
           localStorage.setItem("token", token);
-          alert("OTP verified and user logged in");
+          setMessage("");
+          sessionStorage.removeItem("temp_verfiy");
+          router.replace("/");
         } else {
           console.error("OTP verification failed", response.data.message);
+          setMessage("حدث خطأ ما يرجى التأكد من الرمز");
         }
       } catch (error) {
         console.error("Error verifying OTP", error);
+        setMessage("حدث خطأ ما يرجى التأكد من الرمز");
       }
     };
     if (otp.length === 6) {
       verifyOTP();
     }
-  }, [otp, otp.length]);
+  }, [otp, router]);
 
   return (
     <>
       <div className="md:p-12 p-4 flex justify-center items-center h-screen">
         <form onSubmit={submit} className="bg-white p-8 rounded-4xl">
           <h1 className="text-center sm:text-4xl text-xl sm:m-4 mb-2">
-            أدخل الرمز المرسل عبر الواتساب
+            تم إرسال رمز الى بريدك الإلكتروني
           </h1>
           <div
             className="flex bg-white lg:p-8 md:p-6 rounded-2xl sm:gap-4 gap-2 justify-center"
@@ -90,7 +98,9 @@ export default function Content() {
             <DigitInput value={otp} index={4} focused={focused} />
             <DigitInput value={otp} index={5} focused={focused} />
           </div>
-
+          {message !== undefined && (
+            <p className="p-4 bg-blue-300 text-center rounded-lg border-2 border-blue-500">{message}</p>
+          )}
           <input
             type="text"
             value={otp}
@@ -110,12 +120,12 @@ export default function Content() {
               if (value.length <= 6) {
                 let alive = true;
                 for (let c of value) {
-                  if (![...numList, ""].includes(c)) {
+                  if (![...numList].includes(c)) {
                     alive = false;
                     break;
                   }
                 }
-                if (alive || value === otp.slice(-1)) {
+                if (alive) {
                   setOtp(value);
                 }
               }

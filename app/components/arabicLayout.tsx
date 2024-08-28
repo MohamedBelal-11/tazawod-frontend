@@ -14,6 +14,11 @@ import {
 import { stateScroll } from "../utils/docQuery";
 import { usePathname } from "next/navigation";
 import useHash from "../hooks/hash";
+import { fetchResponse } from "../utils/response";
+
+const markAllAsRead = () => {
+  fetchResponse({ setResponse: () => undefined, url: "/users/read-all/" });
+};
 
 const activateclass =
   "hidden bg-yellow-200 hover:bg-yellow-500 border-yellow-500 " +
@@ -28,6 +33,7 @@ const Body: React.FC<{
   const { scrollProperties } = useScrollContext()!;
   const [arms, setArms] = useState(true);
   const pathname = usePathname();
+  const [inNotifications, setInNotifications] = useState(false);
   const hash = useHash();
   useEffect(() => {
     setScrolled(false);
@@ -35,6 +41,15 @@ const Body: React.FC<{
 
   useEffect(() => {
     setArms(!pathname.startsWith("/ar/auth"));
+    if (pathname.endsWith("notifications")) {
+      setInNotifications(true);
+    } else {
+      if (inNotifications) {
+        markAllAsRead();
+        setInNotifications(false);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
   useEffect(
