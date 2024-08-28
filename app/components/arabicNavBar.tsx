@@ -476,17 +476,15 @@ export default function ArabicNavBar() {
                     </>
                   )}
                 </Disclosure>
-                {userType !== "student" && (
+                {userType !== "student" && userType !== "unloged" && (
                   <Link
-                    href={userType === "unloged" ? "#" : "/ar/meetings"}
+                    href="/ar/meetings"
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
-                    {userType !== "unloged"
-                      ? "المقابلات"
-                      : "ما هي أكاديمية تزود ؟"}
+                   المقابلات
                   </Link>
                 )}
-                {userType !== "superadmin" && (
+                {userType !== "unloged" && (
                   <Link
                     href={
                       userType === "student"
@@ -495,7 +493,7 @@ export default function ArabicNavBar() {
                         ? "#"
                         : userType === "admin"
                         ? "#"
-                        : "#"
+                        : "/owes"
                     }
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
@@ -505,7 +503,7 @@ export default function ArabicNavBar() {
                       ? "دليل المعلم"
                       : userType === "admin"
                       ? "دليل المشرف"
-                      : "لماذا أكاديمية تزود ؟"}
+                      : "إشتراكات المشرفين"}
                   </Link>
                 )}
                 <Link

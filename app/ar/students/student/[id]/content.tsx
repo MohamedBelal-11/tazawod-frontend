@@ -362,7 +362,7 @@ const EditData: React.FC<{
       </div>
       <div className="flex p-2 border-t-2 border-solid border-gray-600 justify-evenly">
         <div
-          onClick={onClose}
+          onClick={loading ? undefined : onClose}
           className={
             "p-2 border-2 border-red-500 bg-red-200 " +
             "hover:text-white hover:bg-red-500 border-solid " +
@@ -565,7 +565,11 @@ const Content = () => {
     return <LoadingDiv loading />;
   }
   if (response === null) {
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   if (!response.succes) {
@@ -582,7 +586,11 @@ const Content = () => {
     if (response.error === 3) {
       return <NotFound />;
     }
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   const dates: Tdate[] = response.dates

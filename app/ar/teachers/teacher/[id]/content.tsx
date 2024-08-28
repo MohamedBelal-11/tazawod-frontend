@@ -373,11 +373,19 @@ const Content: React.FC = () => {
   }
 
   if (response === null) {
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   if (!response.succes) {
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   return (

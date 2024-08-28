@@ -4,24 +4,6 @@ import { useEffect, useState } from "react";
 import { get } from "../utils/docQuery";
 import { DefaultResponse, fetchResponse } from "../utils/response";
 
-const dofetch = ({
-  setResponse,
-  url,
-  onConfirm
-}: {
-  setResponse: React.Dispatch<
-    React.SetStateAction<DefaultResponse | undefined>
-  >;
-  url: string;
-  onConfirm?: (success: boolean) => void;
-}) => {
-  fetchResponse({
-    setResponse,
-    url,
-    onFinish: onConfirm
-  });
-};
-
 export const RegulerConfirm = ({
   text,
   btns,
@@ -47,24 +29,42 @@ export const RegulerConfirm = ({
         { text: "تم", color: "green" },
         { text: "إلغاء", color: "red" },
       ];
-
+  const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<DefaultResponse>();
+
   return (
     <div className="h-full overflow-y-auto flex flex-col max-w-full gap-8 p-4 w-max">
       <p className="sm:text-3xl text-xl text-center p-4">{text}</p>
       <div className="flex gap-4 justify-evenly">
-        <Button color={btns[1].color} onClick={onClose}>
+        <Button
+          color={loading ? "gray" : btns[1].color}
+          onClick={loading ? undefined : onClose}
+        >
           {btns[1].text}
         </Button>
-        <Button
-          color={btns[0].color}
-          onClick={() => {
-            (url ? () => dofetch({ setResponse, url, onConfirm }) : () => {})();
-            (!url ? (onConfirm ? onConfirm : () => {}) : () => {})(true);
-          }}
-        >
-          {btns[0].text}
-        </Button>
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : (
+          <Button
+            color={btns[0].color}
+            onClick={() => {
+              (url
+                ? () =>
+                    fetchResponse({
+                      setResponse,
+                      url,
+                      onFinish: onConfirm,
+                      setLoading,
+                    })
+                : () => {})();
+              (!url ? (onConfirm ? onConfirm : () => {}) : () => {})(true);
+            }}
+          >
+            {btns[0].text}
+          </Button>
+        )}
       </div>
       {response !== undefined && (
         <p

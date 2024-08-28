@@ -2,6 +2,7 @@
 import LoadingDiv from "@/app/components/loadingDiv";
 import ScrollTopButton from "@/app/components/scrollTopButton";
 import { arCase, arDay } from "@/app/utils/arabic";
+import { fetchResponse } from "@/app/utils/response";
 import { almightyTrim } from "@/app/utils/string";
 import { Date, Weekday } from "@/app/utils/students";
 import {
@@ -24,11 +25,12 @@ export const classes: { [key: string]: string } = {
 
 type Responset =
   | {
-      is_accepted: true;
+      succes: true;
       meetings: Meet[];
     }
   | {
-      is_accepted: false;
+      succes: false;
+      error: number;
     }
   | null;
 
@@ -63,7 +65,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
         arCase(almightyTrim(filters.studentName.toLowerCase()))
       )
     );
-  const workDays = getWorkDays(meetings)
+  const workDays = getWorkDays(meetings);
 
   return (
     <>
@@ -136,7 +138,10 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
                       const convertedSum = sumStartAndDelay(starts, delay);
 
                       return (
-                        <div key={i} className="p-4 rounded-lg border-2 border-gray-700">
+                        <div
+                          key={i}
+                          className="p-4 rounded-lg border-2 border-gray-700"
+                        >
                           <p className="text-lg mb-2">الطالب {student}</p>
                           <p className="mb-2">
                             يبدأ الساعة {convertedStart}{" "}
@@ -150,7 +155,7 @@ const SuccesContent: React.FC<{ unfixedmeetings: Meet[] }> = ({
                                 : ""
                               : ""}
                           </p>
-                          <p className="pb-2">ينتهي الساعة {convertedSum}{" "}</p>
+                          <p className="pb-2">ينتهي الساعة {convertedSum} </p>
                         </div>
                       );
                     })}
@@ -169,41 +174,7 @@ const TeacherContent: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    setResponse({
-      is_accepted: true,
-      meetings: [
-        {
-          day: "friday",
-          delay: 1800,
-          starts: "00:30:00",
-          student: "محمد بلال",
-        },
-        {
-          day: "tuesday",
-          delay: 1800,
-          starts: "14:00:00",
-          student: "محمد بلال",
-        },
-        {
-          day: "thurusday",
-          delay: 1800,
-          starts: "14:00:00",
-          student: "محمد بلال",
-        },
-        {
-          day: "thurusday",
-          delay: 1800,
-          starts: "23:00:00",
-          student: "علي خالد علي",
-        },
-        {
-          day: "wednesday",
-          delay: 1800,
-          starts: "02:00:00",
-          student: "علي خالد علي",
-        },
-      ],
-    });
+    fetchResponse({ setResponse, url: "/api/teacher-meetings/" });
   }, []);
 
   if (response === undefined) {
@@ -214,13 +185,15 @@ const TeacherContent: React.FC = () => {
     return;
   }
 
-  if (!response.is_accepted || response.meetings.length === 0) {
+  if (!response.succes || response.meetings.length === 0) {
     return (
       <div className="p-4">
         <p className="p-6 bg-white rounded-lg text-gray-600">
-          {response.is_accepted
+          {response.succes
             ? "ليس لديك أي مقابلات بعد"
-            : "لم يتم الموافقة عليك بعد لذلك لا يوجد أي مقابلات"}
+            : response.error === 3
+            ? "لم يتم الموافقة عليك بعد لذلك لا يوجد أي مقابلات"
+            : "حدث خطأ ما"}
         </p>
       </div>
     );

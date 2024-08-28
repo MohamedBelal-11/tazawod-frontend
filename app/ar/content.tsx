@@ -58,176 +58,37 @@ const ADE = ({ copy }: { copy: string }) => {
   );
 };
 
-const MC1 = ({ onClick }: { onClick: () => any }) => {
-  const [clicked, setClicked] = useState(false);
-
-  const method1 = () => {
-    setClicked(true);
-    setTimeout(() => {
-      setClicked(false);
-    }, 400);
-    onClick();
-  };
-
-  return (
-    <motion.button
-      className="border-2 border-solid border-sky-500 px-4 py-3 rounded-xl"
-      onClick={method1}
-      variants={{
-        hov: {
-          backgroundColor: "#0ea5e9",
-          color: "white",
-        },
-        ini: {
-          backgroundColor: "#bae6fd",
-          color: "black",
-        },
-        tap: {
-          backgroundColor: "#0ea5e9",
-          color: "white",
-        },
-      }}
-      initial="ini"
-      whileHover="hov"
-      animate={clicked ? "hov" : "ini"}
-      whileFocus="hov"
-      whileTap="tap"
-    >
-      <motion.div
-        variants={{
-          ini: { rotate: 0 },
-          hov: { rotate: 90 },
-          tap: { rotate: 135 },
-        }}
-      >
-        <ArrowPathIcon width={20} />
-      </motion.div>
-    </motion.button>
-  );
-};
-
 const MC2 = ({
   url,
   student,
-  onSubmit = () => {},
 }: {
-  url: string | null;
+  url: string;
   student: string;
-  onSubmit?: () => any;
 }) => {
-  const [val, setVal] = useState(url ? url : "");
-  const [massage, setMessage] = useState<
-    { succes: boolean; text: string } | undefined
-  >();
-  const [loading, setLoading] = useState(false);
-
-  const fetchData = async () => {
-    setLoading(true);
-    // Retrieve the token from the local storage.
-    const token = localStorage.getItem("token");
-    try {
-      // Make an HTTP GET request to the server.
-      // The request includes an Authorization header with the token.
-      const respons = await axios.get(backendUrl + "/api/home/", {
-        headers: {
-          // Set the Authorization header to include the token.
-          Authorization: `Token ${token}`,
-        },
-      });
-      // If the request is successful, update the response state with the data received from the server.
-      setMessage({ succes: true, text: "تمت إضافة الرابط بنجاح" });
-      onSubmit();
-      setLoading(false);
-    } catch (error: any) {
-      // If there is an error, log the error to the console.
-      setMessage({
-        succes: false,
-        text:
-          "حدث خطأ أثناء إضافة الرابط رجاءالتأكد من الرابط أو إعادة نسخه  " +
-          String(error.message),
-      });
-      console.error(error);
-      setLoading(false);
-    }
-  };
-
   return (
     <section className="bg-white rounded-lg flex flex-col gap-4 items-center p-8 text-center">
       <p className="text-xl">لديك حصة مع الطالب {student}</p>
-      <input
-        type="text"
-        placeholder="رابط المقابلة"
-        value={val}
-        onChange={(e) => {
-          setVal(e.target.value);
-        }}
+      <p className="text-xl">رابط المقابلة</p>
+      <p
         dir="ltr"
         className={
-          "outline-0 border-gray-500 p-3 max-w-96 w-full border-solid border-2 rounded-lg" +
-          (val === url ? " bg-gray-300" : "")
+          "outline-0 border-gray-500 p-3 max-w-96 w-full " +
+          "border-solid border-2 rounded-lg bg-gray-300"
         }
-      />
+      >{url}</p>
       <div className="flex flex-row gap-4 justify-center">
-        {val === url ? (
-          <a
-            href={url}
-            target="_blank"
-            className={
-              "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
-              "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
-            }
-          >
-            دخول
-          </a>
-        ) : (
-          <button
-            className={
-              "bg-green-200 border-2 border-solid border-green-500 px-4 py-3 " +
-              "rounded-xl hover:text-white hover:bg-green-500 transition-all"
-            }
-            onClick={loading ? undefined : fetchData}
-          >
-            {loading ? (
-              <motion.div
-                animate={{ rotate: 360 }}
-                className="w-6 h-6 border-gray-300 border-solid border-4 border-t-sky-500 rounded-full"
-                transition={{ duration: 2, repeat: Infinity }}
-              ></motion.div>
-            ) : url === null ? (
-              "إنشاء"
-            ) : (
-              "تعديل"
-            )}
-          </button>
-        )}
-        {val === url ? (
-          <ADE copy={url} />
-        ) : url !== null ? (
-          <button
-            className={
-              "bg-red-200 border-2 border-solid border-red-500 px-4 py-3 " +
-              "rounded-xl hover:text-white hover:bg-red-500 transition-all"
-            }
-            onClick={() => {
-              setVal(url);
-            }}
-          >
-            إلغاء
-          </button>
-        ) : null}
-      </div>
-      {massage ? (
-        <p
+        <a
+          href={url}
+          target="_blank"
           className={
-            "border-2 border-solid px-6 py-4 rounded-xl text-center " +
-            (massage.succes
-              ? "bg-green-100 border-green-500"
-              : "bg-red-100 border-red-500")
+            "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
+            "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
           }
         >
-          {massage.text}
-        </p>
-      ) : null}
+          دخول
+        </a>
+        <ADE copy={url} />
+      </div>
     </section>
   );
 };
@@ -237,7 +98,7 @@ export const secondsToHrs = (seconds: number) => {
 };
 
 type adminMeeting = {
-  teacher: string;
+  teacher: string | null;
   starts: string;
   student: string;
   delay: number;
@@ -255,11 +116,11 @@ type responset =
       userType: "student";
       subscribed: true;
       quraan_days: Date[];
-      currentMeet: { url: string | null; teacher: string } | null;
+      currentMeet: { url: string; teacher: string | null } | null;
       notes: {
         teacher: string;
         rate: number;
-        discription: string;
+        description: string;
         date: string;
       }[];
     }
@@ -270,7 +131,7 @@ type responset =
       notes: {
         teacher: string;
         rate: number;
-        discription: string;
+        description: string;
         date: string;
       }[];
     }
@@ -284,11 +145,11 @@ type responset =
       is_accepted: true;
       today_meetings: meeting[];
       tomorrow_meetings: meeting[];
-      currentMeet: { url: string | null; student: string } | null;
+      currentMeet: { url: string; student: string } | null;
       notes: {
         student: string;
         rate: number;
-        discription: string;
+        description: string;
         date: string;
       }[];
     }
@@ -369,28 +230,6 @@ const CCV: Variants = {
 export default function Content() {
   const [response, setResponse] = useState<responset>();
 
-  const fetchData1 = async () => {
-    // Retrieve the token from the local storage.
-    const token = localStorage.getItem("token");
-
-    try {
-      // Make an HTTP GET request to the server.
-      // The request includes an Authorization header with the token.
-      const respons = await axios.get(backendUrl + "/api/home/", {
-        headers: {
-          // Set the Authorization header to include the token.
-          Authorization: `Token ${token}`,
-        },
-      });
-
-      // If the request is successful, update the response state with the data received from the server.
-      setResponse(respons.data);
-    } catch (error) {
-      // If there is an error, log the error to the console.
-      console.error(error);
-    }
-  };
-
   useEffect(() => {
     // Define an asynchronous function named fetchData.
     // This function will make an HTTP GET request to the server to retrieve data.
@@ -432,42 +271,35 @@ export default function Content() {
         <main className={globalClasses.main}>
           {response.userType === "student" ? (
             response.subscribed && response.currentMeet ? (
-              response.currentMeet.url ? (
-                <section className="bg-white rounded-lg flex flex-col gap-4 p-8 text-center">
-                  <p className="text-xl">
-                    المعلم: {response.currentMeet.teacher} ينتظرك في الغرفة
-                  </p>
-                  <div className="flex flex-row gap-4 justify-center">
-                    <a
-                      href={response.currentMeet.url}
-                      target="_blank"
-                      className={
-                        "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
-                        "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
-                      }
-                    >
-                      دخول
-                    </a>
-                    <ADE copy={response.currentMeet.url} />
-                  </div>
-                </section>
-              ) : (
-                <section className="bg-white rounded-lg flex flex-col items-center gap-4 p-8 text-center">
-                  <p className="text-xl">
-                    لم يقم المعلم بإنشاء غرفة بعد برجاء الإنتظار
-                  </p>
-                  <MC1 onClick={fetchData1} />
-                </section>
-              )
-            ) : null
+              <section className="bg-white rounded-lg flex flex-col gap-4 p-8 text-center">
+                <p className="text-xl">
+                  {response.currentMeet.teacher
+                    ? `المعلم: ${response.currentMeet.teacher} ينتظرك في الغرفة`
+                    : "ها هي المقابلة سيدخل معلم قريبًا"}
+                </p>
+                <div className="flex flex-row gap-4 justify-center">
+                  <a
+                    href={response.currentMeet.url}
+                    target="_blank"
+                    className={
+                      "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
+                      "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
+                    }
+                  >
+                    دخول
+                  </a>
+                  <ADE copy={response.currentMeet.url} />
+                </div>
+              </section>
+            ) : undefined
           ) : response.userType === "teacher" ? (
             response.is_accepted && response.currentMeet ? (
               <MC2
                 url={response.currentMeet.url}
                 student={response.currentMeet.student}
               />
-            ) : null
-          ) : null}
+            ) : undefined
+          ) : undefined}
 
           {response.userType === "student" ? (
             <section>
@@ -644,7 +476,7 @@ export default function Content() {
                       الطالب: {meeting.student}
                     </p>
                     <p className="text-3xl font-bold">
-                      المعلم: {meeting.teacher}
+                      المعلم: {meeting.teacher || "لا يوجد"}
                     </p>
                     <p className="text-2xl">
                       يبدأ الساعة{" "}
@@ -764,7 +596,7 @@ export default function Content() {
                         </span>
                       </h3>
                       <div className="my-6 text-xl font-reguler">
-                        {note.discription.split("\n").map((line, i) => {
+                        {note.description.split("\n").map((line, i) => {
                           return (
                             <p className="my-2" key={i}>
                               {line}
@@ -802,7 +634,7 @@ export default function Content() {
                         </span>
                       </h3>
                       <div className="my-6 text-xl font-reguler">
-                        {note.discription.split("\n").map((line, i) => {
+                        {note.description.split("\n").map((line, i) => {
                           return (
                             <p className="my-2" key={i}>
                               {line}
@@ -853,7 +685,10 @@ export default function Content() {
               </p>
               <div className="flex md:gap-4 justify-center flex-col lg:flex-row">
                 <div className="flex justify-center items-center">
-                  <img src="/static/imgs/ahmed.jpg" className="my-6 min-w-64 max-w-64" />
+                  <img
+                    src="/static/imgs/ahmed.jpg"
+                    className="my-6 min-w-64 max-w-64"
+                  />
                 </div>
                 <div className="flex-col flex justify-center min-h-80 px-6">
                   <p className="text-2xl my-6 text-center">
@@ -865,7 +700,10 @@ export default function Content() {
                   </p>
                 </div>
                 <div className="flex justify-center items-center">
-                  <img src="/static/imgs/ahmed2.jpg" className="my-6 min-w-72 max-w-72" />
+                  <img
+                    src="/static/imgs/ahmed2.jpg"
+                    className="my-6 min-w-72 max-w-72"
+                  />
                 </div>
               </div>
             </motion.div>

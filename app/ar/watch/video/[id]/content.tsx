@@ -1,8 +1,11 @@
 "use client";
 import { getClass } from "@/app/components/button";
+import LoadingDiv from "@/app/components/loadingDiv";
+import { fetchResponse } from "@/app/utils/response";
 import { bDate } from "@/app/utils/time";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 
 type Responset =
@@ -24,26 +27,35 @@ type Responset =
 
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
+  const { id }: { id: string } = useParams();
+
+  const refetch = useCallback(
+    () => fetchResponse({ setResponse, url: `/api/video/${id}/` }),
+    [id]
+  );
 
   useEffect(() => {
-    setResponse({
-      succes: true,
-      title: "السيرة النبوية - لماذا نتعلم السيرة",
-      link: "https://www.youtube.com/watch?v=kXAgFcu8SS0&t=77s",
-      next: 2,
-      previous: null,
-      playlist: { title: "دورة السيرة النبوية", id: 1 },
-      date: "2024/3/27 2:00",
-      description: "دورة السيرة النبوية\nكيف كان أهل قريش قبل البعثة",
-    });
-  }, []);
+    refetch();
+  }, [refetch]);
 
-  if (!response) {
-    return <></>;
+  if (response === undefined){
+    return <LoadingDiv loading />
   }
 
-  if (response.succes === false) {
-    return <>{response.error}</>;
+  if (response === null) {
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
+  }
+
+  if (!response.succes) {
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   return (
