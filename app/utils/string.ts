@@ -27,9 +27,7 @@ export const LCcharsList: string[] = [
   'z',
 ];
 export const UCcharsList: string[] = [
-  ...LCcharsList.map((char) => {
-    return char.toUpperCase();
-  }),
+  ...LCcharsList.map((char) => char.toUpperCase()),
 ];
 
 export const charsList: string[] = [...LCcharsList, ...UCcharsList];

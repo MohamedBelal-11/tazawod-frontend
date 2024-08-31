@@ -1,16 +1,11 @@
 "use client";
 import {
-  Dispatch,
-  SetStateAction,
   useCallback,
   useEffect,
   useState,
 } from "react";
-import { backendUrl } from "../../utils/auth";
-import axios from "axios";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import ArabicLayout from "../../components/arabicLayout";
 import { ChevronDoubleLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";

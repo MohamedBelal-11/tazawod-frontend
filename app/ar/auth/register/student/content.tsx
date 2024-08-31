@@ -333,7 +333,10 @@ export default function Content() {
         setLoading(false);
 
         // Store the password temporarily (e.g., in state or context) until OTP verification
-        sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, gmail: gmail}));
+        sessionStorage.setItem(
+          "temp_verfiy",
+          JSON.stringify({ password: password, gmail: gmail })
+        );
         // Redirect to OTP verification page
         router.push("/ar/auth/verify-otp");
       }
@@ -354,45 +357,38 @@ export default function Content() {
     let tmpList: [string, string, Weekday][] = [];
     if (name.trim() === "") {
       alive = false;
-      setMessage((m) => {
-        return [...m, "رجاءً قم بملء خانة الإسم"];
-      });
+      setMessage((m) => [...m, "رجاءً قم بملء خانة الإسم"]);
     }
 
     for (let c of almightyTrim(name)) {
       if (![...arCharsList, ...charsList, " "].includes(c)) {
         alive = false;
-        setMessage((m) => {
-          return [
+        setMessage((m) => [
             ...m,
             "يجب أن يحتوي الاسم على حروف إنجليزية أو عربية فقط (لا تشكيل)",
-          ];
-        });
+          ]);
         break;
       }
     }
 
-    if (gmail.length < 11) {
+    if (gmail.trim().length < 11) {
       alive = false;
-      setMessage((m) => {
-        return [...m, "رجاءً قم بإدخال عنوان البريد الإلكروني"];
-      });
+      setMessage((m) => [...m, "رجاءً قم بإدخال عنوان البريد الإلكروني"]);
     }
 
-    for (const c of gmail.slice(0, gmail.length - 10)) {
+    for (const c of gmail.trim().slice(0, gmail.trim().length - 10)) {
       if (![...numList, ...charsList, "-", ".", "_", "+"].includes(c)) {
         alive = false;
-        setMessage((m) => {
-          return [...m, "عنوان البريد الإلكروني خاطئ"];
-        });
+        setMessage((m) => [...m, "عنوان البريد الإلكروني خاطئ"]);
       }
     }
 
-    if (!gmail.endsWith("@gmail.com")) {
+    if (!gmail.trim().endsWith("@gmail.com")) {
       alive = false;
-      setMessage((m) => {
-        return [...m, "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)"];
-      });
+      setMessage((m) => [
+        ...m,
+        "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)",
+      ]);
     }
 
     for (let c of password) {
@@ -586,7 +582,9 @@ export default function Content() {
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
             titled="arabic"
           />
           <PasswordInput
@@ -601,7 +599,9 @@ export default function Content() {
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"
             required
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
             autoComplete="new-password"
           />
           <h2 className="text-xl">حدد جنسك</h2>

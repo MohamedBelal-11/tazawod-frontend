@@ -5,9 +5,14 @@ import Checker from "@/app/components/Checker";
 import LoadingDiv from "@/app/components/loadingDiv";
 import Popup, { RegulerConfirm } from "@/app/components/popup";
 import globalClasses from "@/app/utils/globalClasses";
+import {
+  DefaultResponse,
+  fetchPost,
+  fetchResponse,
+} from "@/app/utils/response";
 import { motion, Variants } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 
 export const parentVariants: Variants = {
@@ -20,23 +25,28 @@ export const childsVariants: Variants = {
   visible: { scale: 1, transition: { duration: 0.5 } },
 };
 
+interface Allows {
+  unloged: boolean;
+  subscribed: boolean;
+  unsubscribed: boolean;
+  allowedTeacher: boolean;
+  notAllowedTeacher: boolean;
+  allowedAdmin: boolean;
+  notAllowedAdmin: boolean;
+}
+
 type Playlist = {
   title: string;
   id: number;
   videos_count: number;
 };
 
-const AddPlaylist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+const AddPlaylist: React.FC<{ onClose: () => void; refetch: () => void }> = ({
+  onClose,
+  refetch,
+}) => {
   const [title, setTitle] = useState("");
-  const [allow, setAllow] = useState<{
-    unloged: boolean;
-    subscribed: boolean;
-    unsubscribed: boolean;
-    allowedTeacher: boolean;
-    notAllowedTeacher: boolean;
-    allowedAdmin: boolean;
-    notAllowedAdmin: boolean;
-  }>({
+  const [allow, setAllow] = useState<Allows>({
     allowedAdmin: false,
     allowedTeacher: false,
     notAllowedAdmin: false,
@@ -49,6 +59,8 @@ const AddPlaylist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     title: false,
     allows: false,
   });
+  const [response, setResponse] = useState<DefaultResponse>();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setFaults((f) => ({
@@ -173,25 +185,68 @@ const AddPlaylist: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <p className="text-red-500">يجب عليك إدخال فئة واحدة على الأقل</p>
       )}
       <div className="flex gap-4 mt-4 justify-evenly">
-        <Button onClick={onClose} color="red">
+        <Button
+          color={loading ? "gray" : "red"}
+          onClick={loading ? undefined : onClose}
+        >
           إلغاء
         </Button>
-        <Button>إضافة</Button>
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : (
+          <Button
+            onClick={() =>
+              fetchPost({
+                data: { title: title.trim(), allow },
+                setResponse,
+                url: "/videos/add-playlist/",
+                setLoading,
+                onFinish() {
+                  setTimeout(() => {
+                    refetch();
+                    onClose();
+                  }, 1000);
+                },
+              })
+            }
+          >
+            إضافة
+          </Button>
+        )}
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl mt-4`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم إضافة قائمة التشغيل"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </div>
   );
 };
 
-const AddVideo: React.FC<{ onClose: () => void; playlists: Playlist[] }> = ({
-  onClose,
-  playlists,
-}) => {
+const AddVideo: React.FC<{
+  onClose: () => void;
+  playlists: Playlist[];
+}> = ({ onClose, playlists }) => {
   const [inputs, setInputs] = useState<{
     link: string;
     title: string;
     description: string;
     playlistID?: number;
   }>({ description: "", link: "", title: "" });
+  const [response, setResponse] = useState<DefaultResponse>();
+  const [loading, setLoading] = useState(false);
 
   return (
     <div
@@ -272,11 +327,55 @@ const AddVideo: React.FC<{ onClose: () => void; playlists: Playlist[] }> = ({
         ))}
       </select>
       <div className="flex gap-4 mt-2 justify-evenly">
-        <Button onClick={onClose} color="red">
+        <Button
+          color={loading ? "gray" : "red"}
+          onClick={loading ? undefined : onClose}
+        >
           إلغاء
         </Button>
-        <Button>إضافة</Button>
+        {loading ? (
+          <Button type="div">
+            <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
+          </Button>
+        ) : (
+          <Button
+            onClick={() =>
+              fetchPost({
+                data: {
+                  ...inputs,
+                  title: inputs.title.trim(),
+                  link: inputs.link.trim(),
+                },
+                setResponse,
+                url: "/videos/add-video/",
+                setLoading,
+                onFinish() {
+                  setTimeout(() => {
+                    onClose();
+                  }, 1000);
+                },
+              })
+            }
+          >
+            إضافة
+          </Button>
+        )}
       </div>
+      {response !== undefined && (
+        <p
+          className={`p-6 bg-${
+            response && response.succes ? "green" : "red"
+          }-300 border-2 border-${
+            response && response.succes ? "green" : "red"
+          }-500 rounded-xl mt-4`}
+        >
+          {response === null
+            ? "حدث خطأٌ ما"
+            : response.succes
+            ? "تم إضافة الفيديو"
+            : "حدث خطأٌ ما"}
+        </p>
+      )}
     </div>
   );
 };
@@ -309,20 +408,12 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Response>();
   const [popup, setPopup] = useState<PopupData>({});
 
-  const closePopup = useMemo(() => () => setPopup({}), []);
+  const closePopup = () => setPopup({});
+
+  const refetch = () => fetchResponse({ setResponse, url: "/api/playlists/" });
 
   useEffect(() => {
-    setResponse({
-      succes: true,
-      playlists: [
-        { title: "دورة السيرة النبوية", id: 1, videos_count: 5 },
-        { title: "الإخلاص", id: 2, videos_count: 6 },
-        { title: "الدعوة", id: 3, videos_count: 6 },
-        { title: "قصص الأنبياء", id: 4, videos_count: 5 },
-        { title: "التوبة", id: 5, videos_count: 8 },
-      ],
-      super: true,
-    });
+    refetch();
   }, []);
 
   if (response === undefined) {
@@ -330,11 +421,19 @@ const Content: React.FC = () => {
   }
 
   if (response === null) {
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   if (!response.succes) {
-    return;
+    return (
+      <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+        حدث خطأٌ ما
+      </div>
+    );
   }
 
   return (
@@ -342,17 +441,25 @@ const Content: React.FC = () => {
       {response.super && (
         <Popup visible={popup.state !== undefined} onClose={closePopup}>
           {popup.state === "add playlist" ? (
-            <AddPlaylist onClose={closePopup} />
+            <AddPlaylist refetch={refetch} onClose={closePopup} />
           ) : popup.state === "delete" ? (
-            RegulerConfirm({
-              onClose: closePopup,
-              onConfirm: () => {},
-              text: "هل أنت متأكد من أنك تريد حذف قائمة التشغيل هذه",
-              btns: [
-                { text: "حذف", color: "red" },
-                { text: "إلغاء", color: "green" },
-              ],
-            })
+            <RegulerConfirm
+              {...{
+                onClose: closePopup,
+                url: `/videos/${popup.id}/playlist-delete/`,
+                onConfirm() {
+                  setTimeout(() => {
+                    refetch();
+                    closePopup();
+                  }, 1000);
+                },
+                text: "هل أنت متأكد من أنك تريد حذف قائمة التشغيل هذه",
+                btns: [
+                  { text: "حذف", color: "red" },
+                  { text: "إلغاء", color: "green" },
+                ],
+              }}
+            />
           ) : (
             <AddVideo onClose={closePopup} playlists={response.playlists} />
           )}
@@ -386,41 +493,47 @@ const Content: React.FC = () => {
           animate="visible"
           variants={parentVariants}
         >
-          {response.playlists.map(({ title, id, videos_count }, i) => (
-            <motion.div
-              key={i}
-              variants={childsVariants}
-              className={
-                "bg-white border-b-2 border-solid border-gray-400 " +
-                "last:border-b-0"
-              }
-            >
-              <Link
-                href={`/ar/watch/playlists/playlist/${id}`}
-                className="block sm:p-6 p-3"
+          {response.playlists.length === 0 ? (
+            <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
+              ليس هناك أي قوائم تشغيل بعد
+            </div>
+          ) : (
+            response.playlists.map(({ title, id, videos_count }, i) => (
+              <motion.div
+                key={i}
+                variants={childsVariants}
+                className={
+                  "bg-white border-b-2 border-solid border-gray-400 " +
+                  "last:border-b-0"
+                }
               >
-                <p className="font-semibold sm:text-2xl text-xl">{title}</p>
-                <p className="mt-4 text-gray">
-                  {videos_count === 1
-                    ? "فيديو واحد"
-                    : videos_count === 2
-                    ? "فيديوهان"
-                    : videos_count > 2 && videos_count < 11
-                    ? `${videos_count} فيديوهات`
-                    : `${videos_count} فيديو`}
-                </p>
-              </Link>
-              {response.super && (
-                <Button
-                  onClick={() => setPopup({ state: "delete", id })}
-                  color="red"
-                  className="w-full"
+                <Link
+                  href={`/ar/watch/playlists/playlist/${id}`}
+                  className="block sm:p-6 p-3"
                 >
-                  حذف
-                </Button>
-              )}
-            </motion.div>
-          ))}
+                  <p className="font-semibold sm:text-2xl text-xl">{title}</p>
+                  <p className="mt-4 text-gray">
+                    {videos_count === 1
+                      ? "فيديو واحد"
+                      : videos_count === 2
+                      ? "فيديوهان"
+                      : videos_count > 2 && videos_count < 11
+                      ? `${videos_count} فيديوهات`
+                      : `${videos_count} فيديو`}
+                  </p>
+                </Link>
+                {response.super && (
+                  <Button
+                    onClick={() => setPopup({ state: "delete", id })}
+                    color="red"
+                    className="w-full"
+                  >
+                    حذف
+                  </Button>
+                )}
+              </motion.div>
+            ))
+          )}
         </motion.div>
       </main>
     </>

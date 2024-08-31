@@ -125,7 +125,9 @@ const Content: React.FC = () => {
             style={{ borderWidth: "12px" }}
           ></div>
         ) : response.adminOwes.length === 0 ? (
-          <p className="text-xl text-gray-400">لا يوجد أي إشعارات بعد</p>
+          <p className="text-xl text-gray-400">
+            لا يوجد أي إشتراكات لم يتم دفعها
+          </p>
         ) : (
           response.adminOwes.map(({ email, name, owes, id }, i) => (
             <div
@@ -144,6 +146,7 @@ const Content: React.FC = () => {
                     "&su=مراسلة+بشأن+إشتراكاتك &body="
                   }
                   target="_blank"
+                  dir="ltr"
                   className="hover:text-green-600 hover:underline"
                 >
                   {email}

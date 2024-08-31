@@ -1,6 +1,5 @@
 "use client";
 import Button, { getClass } from "@/app/components/button";
-import { get } from "@/app/utils/docQuery";
 import { fetchResponse } from "@/app/utils/response";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -26,7 +25,7 @@ const Content: React.FC = () => {
     fetchResponse({
       setResponse,
       url: "api/subscribe-page/",
-    })
+    });
   }, []);
 
   return (
@@ -47,11 +46,14 @@ const Content: React.FC = () => {
             </div>
           ) : (
             <div className="flex gap-3 flex-wrap justify-center">
-              <Button className="w-56 text-xl" color="sky">
+              <Link
+                href="/ar/admin"
+                className={getClass({ color: "sky" }) + " w-56 text-xl"}
+              >
                 الإشتراك عن طريق التواصل مع مشرف
-              </Button>
+              </Link>
               <Button className="w-56 text-xl" color="green">
-                الإشتراك عن طريق المحفظة أو البطاقة المصرفية
+                الإشتراك عن طريق البطاقة المصرفية
               </Button>
               {Boolean(response && !response.freeTierUsed) && (
                 <Button className="w-56 text-xl" color="amber">
@@ -74,6 +76,9 @@ const Content: React.FC = () => {
               >
                 تغيير المواعيد
               </Link>
+              <p className="text-xl">
+                الغير قادر تحمل التكلف يمكنه التواصل مع مشرف لتخفيض السعر
+              </p>
             </div>
           )}
         </main>
