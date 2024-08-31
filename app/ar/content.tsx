@@ -442,7 +442,7 @@ export default function Content() {
                 </h2>
                 <div className="mt-4 flex justify-center">
                   <Link
-                    href="#"
+                    href="/ar/teachers/guide"
                     className={
                       "px-6 py-4 bg-sky-100 rounded-2xl border-2 border-sky-400 border-solid " +
                       "hover:bg-sky-400 hover:text-white transition-all"
@@ -510,7 +510,7 @@ export default function Content() {
               </h2>
               <div className="mt-4 flex justify-center">
                 <Link
-                  href="#"
+                  href="/ar/admins/guide"
                   className={
                     "px-6 py-4 bg-sky-100 rounded-2xl border-2 border-sky-500 border-solid " +
                     "hover:bg-sky-500 hover:text-white transition-all"

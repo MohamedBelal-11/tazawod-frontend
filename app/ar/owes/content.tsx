@@ -146,6 +146,7 @@ const Content: React.FC = () => {
                     "&su=مراسلة+بشأن+إشتراكاتك &body="
                   }
                   target="_blank"
+                  dir="ltr"
                   className="hover:text-green-600 hover:underline"
                 >
                   {email}

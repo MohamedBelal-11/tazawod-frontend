@@ -103,14 +103,14 @@ const Content = () => {
       }
     }
 
-    if (gmail.length < 11) {
+    if (gmail.trim().length < 11) {
       alive = false;
       setMessage((m) => {
         return [...m, "رجاءً قم بإدخال عنوان البريد الإلكروني"];
       });
     }
 
-    for (const c of gmail.slice(0, gmail.length - 10)) {
+    for (const c of gmail.trim().slice(0, gmail.trim().length - 10)) {
       if (![...numList, ...charsList, "-", ".", "_", "+"].includes(c)) {
         alive = false;
         setMessage((m) => {
@@ -119,7 +119,7 @@ const Content = () => {
       }
     }
 
-    if (!gmail.endsWith("@gmail.com")) {
+    if (!gmail.trim().endsWith("@gmail.com")) {
       alive = false;
       setMessage((m) => {
         return [...m, "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)"];

@@ -353,24 +353,21 @@ export default function ArabicNavBar() {
             </Transition>
           </Popover>
 
-          {userType !== "student" && (
-            <Link
-              href={userType === "unloged" ? "#" : "/ar/meetings"}
-              className={classes[0]}
-            >
-              {userType !== "unloged" ? "المقابلات" : "ما هي أكاديمية تزود ؟"}
+          {userType !== "student" && userType !== "unloged" && (
+            <Link href="/ar/meetings" className={classes[0]}>
+              المقابلات
             </Link>
           )}
-          {userType !== "superadmin" && (
+          {userType !== "superadmin" && userType != "unloged" && (
             <Link
               href={
                 userType === "student"
-                  ? "#"
+                  ? "/ar/students/guide"
                   : userType === "teacher"
-                  ? "#"
+                  ? "/ar/teachers/guide"
                   : userType === "admin"
-                  ? "#"
-                  : "#"
+                  ? "/ar/admins/guide"
+                  : "/ar/owes"
               }
               className={classes[0]}
             >
@@ -380,7 +377,7 @@ export default function ArabicNavBar() {
                 ? "دليل المعلم"
                 : userType === "admin"
                 ? "دليل المشرف"
-                : "لماذا أكاديمية تزود ؟"}
+                : "إشتراكات المشرفين"}
             </Link>
           )}
           {userType !== "unloged" ? (
@@ -427,7 +424,7 @@ export default function ArabicNavBar() {
           }
         >
           <div className="flex items-center justify-between">
-            <Link href="#" className="-m-1.5 p-1.5">
+            <Link href="/ar" className="-m-1.5 p-1.5">
               <img className="h-12 w-auto" src="/static/imgs/quran.gif" />
             </Link>
             <button
@@ -481,19 +478,19 @@ export default function ArabicNavBar() {
                     href="/ar/meetings"
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
-                   المقابلات
+                    المقابلات
                   </Link>
                 )}
                 {userType !== "unloged" && (
                   <Link
                     href={
                       userType === "student"
-                        ? "#"
+                        ? "/ar/students/guide"
                         : userType === "teacher"
-                        ? "#"
+                        ? "/ar/teachers/guide"
                         : userType === "admin"
-                        ? "#"
-                        : "/owes"
+                        ? "/ar/admins/guide"
+                        : "/ar/owes"
                     }
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
