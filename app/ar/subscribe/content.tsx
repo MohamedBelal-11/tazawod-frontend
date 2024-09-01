@@ -2,6 +2,7 @@
 import Button, { getClass } from "@/app/components/button";
 import { fetchResponse } from "@/app/utils/response";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type Responset =
@@ -20,6 +21,8 @@ type Responset =
 
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     fetchResponse({
@@ -56,8 +59,35 @@ const Content: React.FC = () => {
                 الإشتراك عن طريق البطاقة المصرفية
               </Button>
               {Boolean(response && !response.freeTierUsed) && (
-                <Button className="w-56 text-xl" color="amber">
-                  الإسبوع المجاني
+                <Button
+                  className="w-56 text-xl"
+                  color="amber"
+                  onClick={
+                    loading
+                      ? undefined
+                      : () =>
+                          fetchResponse({
+                            setResponse: () => {},
+                            url: "/users/use-free/",
+                            onFinish(succes) {
+                              if (succes) {
+                                router.push("/ar");
+                              }
+                            },
+                            setLoading,
+                          })
+                  }
+                >
+                  {loading ? (
+                    <div
+                      className={
+                        "rounded-full border-[12px] border-gray-300 " +
+                        "border-t-gray-500 animate-spin"
+                      }
+                    ></div>
+                  ) : (
+                    "الإسبوع المجاني"
+                  )}
                 </Button>
               )}
             </div>
@@ -77,7 +107,7 @@ const Content: React.FC = () => {
                 تغيير المواعيد
               </Link>
               <p className="text-xl">
-                الغير قادر تحمل التكلف يمكنه التواصل مع مشرف لتخفيض السعر
+                الغير قادر تحمل التكلفة يمكنه التواصل مع مشرف لتخفيض السعر
               </p>
             </div>
           )}

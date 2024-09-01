@@ -18,10 +18,7 @@ import { arDay } from "../utils/arabic";
 import axios from "axios";
 import { backendUrl } from "../utils/auth";
 import { motion, Variants } from "framer-motion";
-import {
-  ArrowPathIcon,
-  DocumentDuplicateIcon,
-} from "@heroicons/react/24/outline";
+import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 
 const ADE = ({ copy }: { copy: string }) => {
   return (

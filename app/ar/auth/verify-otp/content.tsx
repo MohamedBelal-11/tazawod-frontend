@@ -40,7 +40,7 @@ export default function Content() {
   const [otp, setOtp] = useState("");
   const [focused, setFocused] = useState(true);
   const [message, setMessage] = useState<string>();
-  const router = useRouter()
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     const verifyOTP = async () => {
@@ -48,19 +48,16 @@ export default function Content() {
         const verify_temp: { password: string; gmail: string } = JSON.parse(
           sessionStorage.getItem("temp_verfiy")!
         ); // Retrieve the temporary password
-        const response = await axios.post(
-          backendUrl + "/users/verify-otp/",
-          {
-            email: verify_temp.gmail,
-            otp: otp,
-            password: verify_temp.password,
-          }
-        );
+        const response = await axios.post(backendUrl + "/users/verify-otp/", {
+          email: verify_temp.gmail,
+          otp: otp,
+          password: verify_temp.password,
+        });
         if (response.data.success) {
           const token = response.data.token;
           // Store the token in local storage or any other secure place
           localStorage.setItem("token", token);
-          setMessage("");
+          setMessage("تم تسجيل الدخول");
           sessionStorage.removeItem("temp_verfiy");
           router.replace("/");
         } else {
@@ -99,7 +96,9 @@ export default function Content() {
             <DigitInput value={otp} index={5} focused={focused} />
           </div>
           {message !== undefined && (
-            <p className="p-4 bg-blue-300 text-center rounded-lg border-2 border-blue-500">{message}</p>
+            <p className="p-4 bg-blue-300 text-center rounded-lg border-2 border-blue-500">
+              {message}
+            </p>
           )}
           <input
             type="text"

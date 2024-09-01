@@ -21,7 +21,7 @@ const Content: React.FC = () => {
   useEffect(() => {
     fetchResponse({
       setResponse,
-      url: "api/subscribe-page/",
+      url: "/api/random-admin/",
     });
   }, []);
 
@@ -38,7 +38,7 @@ const Content: React.FC = () => {
   }
 
   if (!response.succes) {
-    if (response.error === 3) {
+    if (response.error === 5) {
       return (
         <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
           لا يوجد أي مشرفين بعد
@@ -64,7 +64,7 @@ const Content: React.FC = () => {
           href={
             "https://mail.google.com/mail/?view=cm&fs=1&to=" +
             response.email +
-            "&su=مراسلة+بشأن+إشتراكاتك &body="
+            "&su=أود+الإشتراك+في+أكاديمية+تزود&body="
           }
           target="_blank"
           dir="ltr"
