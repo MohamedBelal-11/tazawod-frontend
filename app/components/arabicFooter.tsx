@@ -27,7 +27,6 @@ const arabicFooter = (
         <li>
           <a href="" className="text-green-500 hover:underline">الشروط والأحكام</a>
         </li>
-        <li></li>
       </ul>
     </div>
   </footer>

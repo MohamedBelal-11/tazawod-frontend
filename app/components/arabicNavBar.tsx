@@ -30,6 +30,7 @@ import Link from "next/link";
 import { backendUrl } from "../utils/auth";
 import axios from "axios";
 import { motion, Variants } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const classes = [
   "text-sm font-semibold leading-6 text-gray-900 hover:text-green-500",
@@ -84,11 +85,6 @@ const adminOptionList: option[] = [
     href: "/ar/students",
   },
   {
-    name: "الدروس والمقابلات",
-    description: "عرض جميع الدروس والمقابلات المباشرة وغير المباشرة",
-    href: "/ar/meetings",
-  },
-  {
     name: "الدروس المقطعية",
     description: "شاهد دروس مقطية في أي وقت",
     href: "/ar/watch/playlists",
@@ -99,7 +95,7 @@ const superAdminOptionList: option[] = [
   ...adminOptionList,
   {
     name: "المشرفين",
-    description: "قائمة المشرفين الموافقين عليهم و قائمة دروسهم",
+    description: "قائمة المشرفين الموافقين عليهم و وغير الموافقين عليهم",
     href: "/ar/admins",
   },
 ];
@@ -136,7 +132,7 @@ const studentOptionList: option[] = [
   },
   {
     name: "الإشتراك",
-    description: "إشترك لنفسك أو لغيرك",
+    description: "إشترك لتبدأ مع أول موعد",
     href: "/ar/subscribe",
   },
   {
@@ -189,6 +185,7 @@ function classNames(...classes: any) {
 export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
+  const pathname = usePathname(); 
   let userType = response ? response.usertype : "unloged";
 
   useEffect(() => {
@@ -242,7 +239,7 @@ export default function ArabicNavBar() {
         className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8"
         aria-label="Global"
       >
-        <div className="flex lg:flex-1 gap-4">
+        <div className="flex lg:flex-1 gap-4 items-center">
           <Link href="/ar">
             <img className="h-12 min-w-12" src="/static/imgs/quraan.png" />
           </Link>
@@ -279,6 +276,7 @@ export default function ArabicNavBar() {
               </motion.div>
             </Link>
           ) : null}
+          <Link href={pathname.replace("/ar", "/en")}>en</Link>
         </div>
         <div className="flex lg:hidden sm:gap-4 gap-2">
           {response ? (

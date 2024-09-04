@@ -16,7 +16,7 @@ import { backendUrl } from "@/app/utils/auth";
 import { motion } from "framer-motion";
 
 const classes = {
-  inp: "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl",
+  inp: "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-xl",
   genderCard:
     "flex flex-col items-center gap-3 md:p-6 p-2 rounded-xl border-4 border-solid cursor-pointer ",
   genderImg: "w-48",
@@ -57,7 +57,10 @@ const Content = () => {
         setLoading(false);
 
         // Store the password temporarily (e.g., in state or context) until OTP verification
-        sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, gmail: gmail}));
+        sessionStorage.setItem(
+          "temp_verfiy",
+          JSON.stringify({ password: password, gmail: gmail })
+        );
         // Redirect to OTP verification page
         router.push("/ar/auth/verify-otp");
       }
@@ -71,7 +74,20 @@ const Content = () => {
   const submit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setMessage([]);
-    const marksList = ["!", "@", "#", "$", "%", "^", "&", "*", "?", "_", "-"];
+    const marksList = [
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "?",
+      "_",
+      "-",
+      ".",
+    ];
     let alive = true;
     if (name.trim() === "") {
       alive = false;
@@ -112,7 +128,10 @@ const Content = () => {
     if (!gmail.trim().endsWith("@gmail.com")) {
       alive = false;
       setMessage((m) => {
-        return [...m, "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)"];
+        return [
+          ...m,
+          "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)",
+        ];
       });
     }
 
@@ -122,7 +141,7 @@ const Content = () => {
         setMessage((m) => {
           return [
             ...m,
-            "يجب أن تحتوي كلمة المرور على حروف إنجليزية وبعض هذه الرموز !@#$%^&*_- و أرقام فقط (لا مسافات)",
+            "يجب أن تحتوي كلمة المرور على حروف إنجليزية وبعض هذه الرموز !@#$%^&*_-. و أرقام فقط (لا مسافات)",
           ];
         });
         break;
@@ -172,7 +191,7 @@ const Content = () => {
       setMessage((m) => {
         return [
           ...m,
-          "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^?&*_-",
+          "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^?&*_-.",
         ];
       });
     }
@@ -249,14 +268,16 @@ const Content = () => {
               setPassword(e.target.value);
             }}
             className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-3xl pl-12"
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"
             required
             autoComplete="new-password"
             titled="arabic"
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
           />
           <PasswordInput
             value={password2}
@@ -264,13 +285,15 @@ const Content = () => {
               setPassword2(e.target.value);
             }}
             className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-3xl pl-12"
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"
             autoComplete="new-password"
             required
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
           />
           <h2 className="text-xl">حدد جنسك</h2>
           <div className="flex justify-evenly">
@@ -373,7 +396,7 @@ const Content = () => {
           </div>
           <textarea
             cols={30}
-            className="p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid outline-0 shadow-3xl"
+            className="p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid outline-0 shadow-xl"
             rows={10}
             value={about}
             onChange={(e) => setAbout(e.target.value)}

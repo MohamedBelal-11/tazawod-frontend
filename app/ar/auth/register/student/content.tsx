@@ -30,14 +30,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Weekday } from "@/app/utils/students";
 import { get } from "@/app/utils/docQuery";
 import "./page.css";
-import { useArabicLayoutContext } from "@/app/contexts/arabicLayoutContext";
+import { useLayoutContext } from "@/app/contexts/arabicLayoutContext";
 
 export type MetaInfo = { day: Weekday; starts: string; delay: string };
 
 const classes = {
   inp:
     "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
-    "rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl",
+    "rounded-xl border-solid max-w-96 w-full outline-0 shadow-xl",
   genderCard:
     "flex flex-col items-center gap-3 md:p-6 p-2 rounded-xl border-4 border-solid cursor-pointer ",
   genderImg: "w-48",
@@ -289,7 +289,7 @@ export default function Content() {
   }>();
   const [message, setMessage] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const { setLayoutProperties } = useArabicLayoutContext()!;
+  const { setLayoutProperties } = useLayoutContext()!;
 
   useEffect(() => {
     setLayoutProperties({ className: "pt-4" });
@@ -352,7 +352,20 @@ export default function Content() {
     setMessage(() => {
       return [];
     });
-    const marksList = ["!", "@", "#", "$", "%", "^", "&", "*", "?", "_", "-"];
+    const marksList = [
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "^",
+      "&",
+      "*",
+      "?",
+      "_",
+      "-",
+      ".",
+    ];
     let alive = true;
     let tmpList: [string, string, Weekday][] = [];
     if (name.trim() === "") {
@@ -364,9 +377,9 @@ export default function Content() {
       if (![...arCharsList, ...charsList, " "].includes(c)) {
         alive = false;
         setMessage((m) => [
-            ...m,
-            "يجب أن يحتوي الاسم على حروف إنجليزية أو عربية فقط (لا تشكيل)",
-          ]);
+          ...m,
+          "يجب أن يحتوي الاسم على حروف إنجليزية أو عربية فقط (لا تشكيل)",
+        ]);
         break;
       }
     }
@@ -398,7 +411,7 @@ export default function Content() {
           return [
             ...m,
             "يجب أن تحتوي كلمة المرور على حروف" +
-              " إنجليزية وبعض هذه الرموز !@#$%^?&*_- و أرقام فقط (لا مسافات)",
+              " إنجليزية وبعض هذه الرموز !@#$%^?&*_-. و أرقام فقط (لا مسافات)",
           ];
         });
         break;
@@ -446,7 +459,7 @@ export default function Content() {
     if (!alive1) {
       alive = false;
       setMessage((m) => {
-        return [...m, "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^&*_-"];
+        return [...m, "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^&*_-."];
       });
     }
 
@@ -477,7 +490,7 @@ export default function Content() {
         setMessage((m) => {
           return [
             ...m,
-            "خانة المواعيد فارغة رجاءً ضع  فيها موعد واحد على الأقل",
+            "خانة المواعيد فارغة رجاءً ضع فيها موعد واحد على الأقل",
           ];
         });
         alive = false;
@@ -576,7 +589,7 @@ export default function Content() {
             }}
             className={
               "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full " +
-              "rounded-xl border-solid outline-0 shadow-3xl"
+              "rounded-xl border-solid outline-0 shadow-xl"
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"
@@ -594,7 +607,7 @@ export default function Content() {
             }}
             className={
               "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
-              "w-full rounded-xl border-solid outline-0 shadow-3xl"
+              "w-full rounded-xl border-solid outline-0 shadow-xl"
             }
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"

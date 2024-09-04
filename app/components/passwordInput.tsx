@@ -29,8 +29,7 @@ const PasswordInput = (props: PasswordInputProps) => {
           top: "50%",
           translate: "0 -50%",
           zIndex: "1",
-          right: props.dir === "ltr" ? "10px" : undefined,
-          left: props.dir !== "ltr" ? "10px" : undefined,
+          insetInlineEnd: "10px",
         }}
         onClick={() => {
           setHidden(!hidden);
@@ -41,7 +40,6 @@ const PasswordInput = (props: PasswordInputProps) => {
       <input
         {...props}
         dir="ltr"
-        className={props.className + " pl-12"}
         type={hidden ? "password" : "text"}
         pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
         title={

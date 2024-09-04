@@ -4,8 +4,8 @@ import arabicFooter from "./arabicFooter";
 import ArabicNavBar from "./arabicNavBar";
 import LoadingDiv from "./loadingDiv";
 import {
-  ArabicLayoutContextProvider,
-  useArabicLayoutContext,
+  LayoutContextProvider,
+  useLayoutContext,
 } from "../contexts/arabicLayoutContext";
 import {
   ScrollContextProvider,
@@ -29,7 +29,7 @@ const Body: React.FC<{
   children: React.ReactNode;
 }> = ({ loading, children }) => {
   const [scrolled, setScrolled] = useState(false);
-  const { layoutProperties } = useArabicLayoutContext()!;
+  const { layoutProperties } = useLayoutContext()!;
   const { scrollProperties } = useScrollContext()!;
   const [arms, setArms] = useState(true);
   const pathname = usePathname();
@@ -98,11 +98,11 @@ export default function ArabicLayout({
         />
         <link rel="preload" href="/static/imgs/quran.gif" type="image/GIF" />
       </head>
-      <ArabicLayoutContextProvider>
+      <LayoutContextProvider>
         <ScrollContextProvider>
           <Body loading={loading}>{children}</Body>
         </ScrollContextProvider>
-      </ArabicLayoutContextProvider>
+      </LayoutContextProvider>
     </html>
   );
 }
