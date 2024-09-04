@@ -7,6 +7,7 @@ import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
 import { Date, Weekday } from "@/app/utils/students";
 import {
+  bDate,
   convertEgyptTimeToLocalTime,
   convertEgyptWeekdayToLocal,
   days,
@@ -195,7 +196,7 @@ const classes: { [key: string]: string } = {
   section: "rounded-xl bg-white border-4 border-solid border-gray-500 ",
   inp:
     "p-2 text-lg border-2 border-gray-300 focus:border-sky-500 " +
-    "rounded-lg border-solid max-w-96 w-full outline-0 shadow-3xl",
+    "rounded-lg border-solid max-w-96 w-full outline-0 shadow-xl",
 };
 // declare response type
 type responset =
@@ -210,7 +211,6 @@ type responset =
         teacher: { name: string; id: string };
         rate: number;
         discription: string | null;
-        day: Weekday;
         date: string;
       } | null;
       gender: "male" | "female";
@@ -498,7 +498,7 @@ const Popup: React.FC<{
                   url: `/users/user/${popupData.id}/delete/`,
                   onConfirm: (succes) => {
                     if (succes) {
-                      router.replace("/");
+                      router.push("/");
                     }
                   },
                 }
@@ -815,7 +815,7 @@ const Content = () => {
               <div className="p-4">
                 <div className="flex justify-between">
                   <p className="sm:text-2xl">
-                    {`${arDay(response.note.day)}  ${response.note.date}`}
+                    {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: false})}`}
                   </p>
                   <p className="sm:text-2xl">
                     {response.note.rate}\

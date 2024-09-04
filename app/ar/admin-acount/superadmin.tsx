@@ -24,7 +24,7 @@ const classes: { [key: string]: string } = {
   section: "rounded-xl bg-white border-4 border-solid border-gray-500 ",
   inp:
     "p-2 text-lg border-2 border-gray-300 focus:border-sky-500 " +
-    "rounded-lg border-solid max-w-96 w-full outline-0 shadow-3xl ",
+    "rounded-lg border-solid max-w-96 w-full outline-0 shadow-xl ",
 };
 
 type DataEdit = {

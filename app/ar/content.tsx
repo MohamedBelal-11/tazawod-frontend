@@ -434,7 +434,7 @@ export default function Content() {
             ) : (
               <section className="md:m-8 rounded-xl bg-white p-6">
                 <h2 className="text-xl font-bold text-center">
-                  لم يتم الموفقة عليك بعد أرجو أن تقوم بقراة دليل المعلم حتى يتم
+                  لم يتم الموافقة عليك بعد أرجو أن تقوم بقراءة دليل المعلم حتى يتم
                   الموافقة عليك
                 </h2>
                 <div className="mt-4 flex justify-center">
@@ -453,7 +453,7 @@ export default function Content() {
           ) : (response.userType === "admin" && response.is_accepted) ||
             response.userType === "superadmin" ? (
             <section>
-              <h2 className={globalClasses.sectionHeader}>دروس اليوم</h2>
+              <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
               <motion.div
                 className={classes.cardsContainer}
                 variants={cCV}
@@ -502,7 +502,7 @@ export default function Content() {
           ) : (
             <section className="md:m-8 rounded-xl bg-white p-6">
               <h2 className="text-xl font-bold text-center">
-                لم يتم الموفقة عليك بعد أرجو أن تقوم بقراة دليل المشرف حتى يتم
+                لم يتم الموافقة عليك بعد أرجو أن تقوم بقراءة دليل المشرف حتى يتم
                 الموافقة عليك
               </h2>
               <div className="mt-4 flex justify-center">

@@ -21,7 +21,7 @@ const Content = () => {
     try {
       // Prepare data to be sent to the server
       const data = {
-        email: gmail, // Gmail number entered by the user
+        email: gmail.trim(), // Gmail number entered by the user
         password: password, // Password entered by the user
       };
 
@@ -56,7 +56,7 @@ const Content = () => {
       // If there was an error during the login process, log the error and display an error message
       console.error("Error registering student", error);
       setLoading(false);
-      setMessage("حدث خطأ أثناء تسجيل الدخول: " + String(error));
+      setMessage("كلمة المرور أو عنوان البريد الإلكتروني خاطئ");
     }
   };
 
@@ -76,7 +76,9 @@ const Content = () => {
             }}
             dir="ltr"
             placeholder="البريد الإلكتروني"
-            className={"p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl"}
+            className={
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-xl"
+            }
             autoComplete="email"
           />
           <PasswordInput
@@ -85,7 +87,8 @@ const Content = () => {
               setPassword(e.target.value);
             }}
             className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-3xl"
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
+              "w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"

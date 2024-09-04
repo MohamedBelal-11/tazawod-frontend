@@ -16,7 +16,7 @@ import { backendUrl } from "@/app/utils/auth";
 import { motion } from "framer-motion";
 
 const classes = {
-  inp: "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-3xl",
+  inp: "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid max-w-96 w-full outline-0 shadow-xl",
   genderCard:
     "flex flex-col items-center gap-3 md:p-6 p-2 rounded-xl border-4 border-solid cursor-pointer ",
   genderImg: "w-48",
@@ -182,7 +182,7 @@ const Content = () => {
       setMessage((m) => {
         return [
           ...m,
-          "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^?&*_-",
+          "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^?&*_-.",
         ];
       });
     }
@@ -252,7 +252,7 @@ const Content = () => {
               setPassword(e.target.value);
             }}
             className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-3xl pl-12"
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"
@@ -267,7 +267,7 @@ const Content = () => {
               setPassword2(e.target.value);
             }}
             className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-3xl pl-12"
+              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"
@@ -308,7 +308,7 @@ const Content = () => {
           </div>
           <textarea
             cols={30}
-            className="p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid outline-0 shadow-3xl"
+            className="p-3 text-xl border-2 border-gray-300 focus:border-sky-500 rounded-xl border-solid outline-0 shadow-xl"
             rows={10}
             value={about}
             onChange={(e) => setAbout(e.target.value)}

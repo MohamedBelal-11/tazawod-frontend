@@ -286,7 +286,7 @@ const Content = () => {
   // Update query parameters when inputs change
   useEffect(() => {
     const query = new URLSearchParams(filters);
-    router.replace(`?${query.toString()}`);
+    router.push(`?${query.toString()}`);
   }, [filters, router]);
 
   useEffect(() => {
@@ -468,7 +468,7 @@ const Content = () => {
                   variants={childVariantsforfilters}
                   className={
                     "border-4 border-solid border-gray-300 sm:w-64 " +
-                    "p-4 w-40 rounded-xl my-4 cursor-pointer"
+                    "p-4 w-40 rounded-xl my-4 cursor-pointer overflow-hidden"
                   }
                   style={{ minHeight: 200 }}
                   onClick={() => setOpenedSudent(i)}

@@ -5,12 +5,12 @@ interface LayoutProperties {
   style?: React.CSSProperties;
 }
 
-const ArabicLayoutContext = createContext<{
+const LayoutContext = createContext<{
   layoutProperties: LayoutProperties;
   setLayoutProperties: React.Dispatch<React.SetStateAction<LayoutProperties>>;
 } | null>(null);
 
-export const ArabicLayoutContextProvider: React.FC<{
+export const LayoutContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [layoutProperties, setLayoutProperties] = useState<LayoutProperties>(
@@ -18,12 +18,12 @@ export const ArabicLayoutContextProvider: React.FC<{
   );
 
   return (
-    <ArabicLayoutContext.Provider
+    <LayoutContext.Provider
       value={{ layoutProperties, setLayoutProperties }}
     >
       {children}
-    </ArabicLayoutContext.Provider>
+    </LayoutContext.Provider>
   );
 };
 
-export const useArabicLayoutContext = () => useContext(ArabicLayoutContext);
+export const useLayoutContext = () => useContext(LayoutContext);

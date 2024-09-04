@@ -201,7 +201,7 @@ const MeetingDiv: React.FC<{
                         })
                 }
               >
-                هناك خطأ في الرابط
+                هناك خطأ في المقابلة
               </Button>
             )}
           </div>
@@ -420,7 +420,7 @@ const SuccesContent: React.FC<{
                   onChange={() => {
                     setFilters((f) => ({
                       ...f,
-                      status: embValue("didnt_start", f.statuses),
+                      statuses: embValue("didnt_start", f.statuses),
                     }));
                   }}
                 />
@@ -432,7 +432,7 @@ const SuccesContent: React.FC<{
                   onChange={() => {
                     setFilters((f) => ({
                       ...f,
-                      status: embValue("didnt_checked", f.statuses),
+                      statuses: embValue("didnt_checked", f.statuses),
                     }));
                   }}
                 />
@@ -444,7 +444,7 @@ const SuccesContent: React.FC<{
                   onChange={() => {
                     setFilters((f) => ({
                       ...f,
-                      status: embValue("checked", f.statuses),
+                      statuses: embValue("checked", f.statuses),
                     }));
                   }}
                 />
