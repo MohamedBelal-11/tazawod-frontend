@@ -53,7 +53,10 @@ const Content = () => {
         setLoading(false);
 
         // Store the password temporarily (e.g., in state or context) until OTP verification
-        sessionStorage.setItem("temp_verfiy", JSON.stringify({password: password, gmail: gmail}));
+        sessionStorage.setItem(
+          "temp_verfiy",
+          JSON.stringify({ password: password, gmail: gmail.trim() })
+        );
         // Redirect to OTP verification page
         router.push("/ar/auth/verify-otp");
       }
@@ -122,7 +125,10 @@ const Content = () => {
     if (!gmail.trim().endsWith("@gmail.com")) {
       alive = false;
       setMessage((m) => {
-        return [...m, "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)"];
+        return [
+          ...m,
+          "يجب أن يكون عنوان البريد الإلكروني عنوان جيميل (ينتهي بـ @gmail.com)",
+        ];
       });
     }
 
@@ -259,7 +265,9 @@ const Content = () => {
             required
             autoComplete="new-password"
             titled="arabic"
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
           />
           <PasswordInput
             value={password2}
@@ -273,7 +281,9 @@ const Content = () => {
             divclassname="max-w-96 w-full"
             autoComplete="new-password"
             required
-            onPaste={(e) => {e.preventDefault()}}
+            onPaste={(e) => {
+              e.preventDefault();
+            }}
           />
           <h2 className="text-xl">حدد جنسك</h2>
           <div className="flex justify-evenly">
