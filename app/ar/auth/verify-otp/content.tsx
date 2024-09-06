@@ -50,7 +50,7 @@ export default function Content() {
         ); // Retrieve the temporary password
         const response = await axios.post(backendUrl + "/users/verify-otp/", {
           email: verify_temp.gmail,
-          otp: otp,
+          otp: otp.trim().slice(0, 6),
           password: verify_temp.password,
         });
         if (response.data.success) {
