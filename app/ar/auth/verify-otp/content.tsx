@@ -66,7 +66,7 @@ export default function Content() {
         }
       } catch (error) {
         console.error("Error verifying OTP", error);
-        setMessage("حدث خطأ ما يرجى التأكد من الرمز");
+        setMessage("حدث خطأ ما يرجى التأكد من الرمز" + JSON.stringify(error));
       }
     };
     if (otp.length === 6) {
