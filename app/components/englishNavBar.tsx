@@ -462,6 +462,7 @@ export default function ArabicNavBar() {
                                 ? item.href.join(`/${response?.id}/`)
                                 : item.href
                             }
+                            onClick={() => setMobileMenuOpen(false)}
                             className={`block rounded-lg py-2 pl-6 pr-3 text-sm ${classes[1]}`}
                           >
                             {item.name}
@@ -475,6 +476,7 @@ export default function ArabicNavBar() {
                   <Link
                     href="/en/meetings"
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
+                    onClick={() => setMobileMenuOpen(false)}
                   >
                     Meetings
                   </Link>
@@ -490,6 +492,7 @@ export default function ArabicNavBar() {
                         ? "/en/admins/guide"
                         : "/en/owes"
                     }
+                    onClick={() => setMobileMenuOpen(false)}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
                     {userType === "student"
@@ -507,6 +510,7 @@ export default function ArabicNavBar() {
                       ? "/en/admin-acount"
                       : `/en/${userType}s/${userType}/${response?.id}`
                   }
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                 >
                   the account

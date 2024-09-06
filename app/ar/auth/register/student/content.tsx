@@ -589,7 +589,7 @@ export default function Content() {
             }}
             className={
               "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full " +
-              "rounded-xl border-solid outline-0 shadow-xl"
+              "rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="كلمة المرور"
             divclassname="max-w-96 w-full"
@@ -607,7 +607,7 @@ export default function Content() {
             }}
             className={
               "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
-              "w-full rounded-xl border-solid outline-0 shadow-xl"
+              "w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
             }
             placeholder="تأكيد كلمة المرور"
             divclassname="max-w-96 w-full"

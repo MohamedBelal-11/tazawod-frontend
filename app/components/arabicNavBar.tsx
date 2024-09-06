@@ -185,7 +185,7 @@ function classNames(...classes: any) {
 export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
-  const pathname = usePathname(); 
+  const pathname = usePathname();
   let userType = response ? response.usertype : "unloged";
 
   useEffect(() => {
@@ -462,6 +462,7 @@ export default function ArabicNavBar() {
                                 ? item.href.join(`/${response?.id}/`)
                                 : item.href
                             }
+                            onClick={() => setMobileMenuOpen(false)}
                             className={`block rounded-lg py-2 pl-6 pr-3 text-sm ${classes[1]}`}
                           >
                             {item.name}
@@ -474,6 +475,7 @@ export default function ArabicNavBar() {
                 {userType !== "student" && userType !== "unloged" && (
                   <Link
                     href="/ar/meetings"
+                    onClick={() => setMobileMenuOpen(false)}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
                     المقابلات
@@ -490,6 +492,7 @@ export default function ArabicNavBar() {
                         ? "/ar/admins/guide"
                         : "/ar/owes"
                     }
+                    onClick={() => setMobileMenuOpen(false)}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
                     {userType === "student"
@@ -507,6 +510,7 @@ export default function ArabicNavBar() {
                       ? "/ar/admin-acount"
                       : `/ar/${userType}s/${userType}/${response?.id}`
                   }
+                  onClick={() => setMobileMenuOpen(false)}
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                 >
                   الحساب
