@@ -59,7 +59,7 @@ const Content = () => {
         // Store the password temporarily (e.g., in state or context) until OTP verification
         sessionStorage.setItem(
           "temp_verfiy",
-          JSON.stringify({ password: password, gmail: gmail })
+          JSON.stringify({ password: password, gmail: gmail.trim() })
         );
         // Redirect to OTP verification page
         router.push("/ar/auth/verify-otp");
