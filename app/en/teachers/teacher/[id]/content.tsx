@@ -19,6 +19,7 @@ import {
   fetchPost,
   fetchResponse,
 } from "@/app/utils/response";
+import Copier from "@/app/components/copier";
 
 type Response =
   | {
@@ -435,6 +436,9 @@ const Content: React.FC = () => {
           <h2 className="sm:text-3xl text-xl mt-4 font-bold">
             <span dir="ltr">{response.gmail}</span>
           </h2>
+          <div>
+            <Copier copy={response.gmail} />
+          </div>
           {/* display description */}
           <p className="sm:text-xl text-md ps-2">
             {response.description.split("\n").map((line, i) => (
@@ -499,7 +503,7 @@ const Content: React.FC = () => {
                             student.name
                           ) : (
                             <Link
-                              href={`/ar/students/student/${student.id}`}
+                              href={`//students/student/${student.id}`}
                               className="hover:underline hover:text-green-500"
                             >
                               {student.name}

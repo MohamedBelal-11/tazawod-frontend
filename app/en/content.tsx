@@ -442,7 +442,7 @@ export default function Content() {
                 </h2>
                 <div className="mt-4 flex justify-center">
                   <Link
-                    href="/ar/teachers/guide"
+                    href="/en/teachers/guide"
                     className={
                       "px-6 py-4 bg-sky-100 rounded-2xl border-2 border-sky-400 border-solid " +
                       "hover:bg-sky-400 hover:text-white transition-all"
@@ -510,7 +510,7 @@ export default function Content() {
               </h2>
               <div className="mt-4 flex justify-center">
                 <Link
-                  href="/ar/admins/guide"
+                  href="/en/admins/guide"
                   className={
                     "px-6 py-4 bg-sky-100 rounded-2xl border-2 border-sky-500 border-solid " +
                     "hover:bg-sky-500 hover:text-white transition-all"
@@ -529,7 +529,7 @@ export default function Content() {
               </h2>
               <div className="mt-4 flex justify-evenly">
                 <Link
-                  href="/ar/subscribe"
+                  href="/en/subscribe"
                   className={
                     "p-8 bg-yellow-100 rounded-2xl border-2 border-yellow-400 " +
                     "border-solid hover:bg-yellow-400 transition-all"
@@ -662,13 +662,13 @@ export default function Content() {
               <div className="flex justify-center gap-4 mt-8">
                 <Link
                   className="p-2 rounded-xl block bg-gray-300"
-                  href="/ar/auth/login"
+                  href="/en/auth/login"
                 >
                   Login
                 </Link>
                 <Link
                   className="p-2 rounded-xl block bg-green-600 border-green-600 text-white"
-                  href="/ar/auth/register/student"
+                  href="/en/auth/register/student"
                 >
                   Sign up
                 </Link>

@@ -50,7 +50,7 @@ const Content: React.FC = () => {
           ) : (
             <div className="flex gap-3 flex-wrap justify-center">
               <Link
-                href="/ar/admin"
+                href="/ar/subscribe/get-admin"
                 className={getClass({ color: "sky" }) + " w-56 text-xl"}
               >
                 الإشتراك عن طريق التواصل مع مشرف

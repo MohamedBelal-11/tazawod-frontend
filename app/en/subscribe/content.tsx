@@ -50,7 +50,7 @@ const Content: React.FC = () => {
           ) : (
             <div className="flex gap-3 flex-wrap justify-center">
               <Link
-                href="/ar/admin"
+                href="/en/subscribe/get-admin"
                 className={getClass({ color: "sky" }) + " w-56 text-xl"}
               >
                 الإشتراك عن طريق التواصل مع مشرف
@@ -71,7 +71,7 @@ const Content: React.FC = () => {
                             url: "/users/use-free/",
                             onFinish(succes) {
                               if (succes) {
-                                router.push("/ar");
+                                router.push("/");
                               }
                             },
                             setLoading,
@@ -100,7 +100,7 @@ const Content: React.FC = () => {
               </p>
               <Link
                 href={
-                  "/ar/students/student/" + response?.ID + "#edit-dates-button"
+                  "//students/student/" + response?.ID + "#edit-dates-button"
                 }
                 className={getClass({ color: "emerald" })}
               >
