@@ -100,7 +100,7 @@ const Content: React.FC = () => {
               </p>
               <Link
                 href={
-                  "//students/student/" + response?.ID + "#edit-dates-button"
+                  "/en/students/student/" + response?.ID + "#edit-dates-button"
                 }
                 className={getClass({ color: "emerald" })}
               >

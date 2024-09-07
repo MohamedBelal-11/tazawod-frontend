@@ -58,7 +58,7 @@ const Content = () => {
           JSON.stringify({ password: password, gmail: gmail.trim() })
         );
         // Redirect to OTP verification page
-        router.push("//auth/verify-otp");
+        router.push("/en/auth/verify-otp");
       }
     } catch (error) {
       console.error("Error registering student", error);

@@ -74,21 +74,21 @@ const Content: React.FC = () => {
         <div className="flex justify-between sm:px-2">
           {Boolean(response.previous) && (
             <Link
-              href={"//watch/video/" + response.previous}
+              href={"/en/watch/video/" + response.previous}
               className={getClass({ color: "green" })}
             >
               السابق
             </Link>
           )}
           <Link
-            href={"//watch/playlists/playlist/" + response.playlist.id}
+            href={"/en/watch/playlists/playlist/" + response.playlist.id}
             className={getClass({ color: "green" })}
           >
             {response.playlist.title}
           </Link>
           {Boolean(response.next) && (
             <Link
-              href={"//watch/video/" + response.next}
+              href={"/en/watch/video/" + response.next}
               className={getClass({ color: "green" })}
             >
               التالي
