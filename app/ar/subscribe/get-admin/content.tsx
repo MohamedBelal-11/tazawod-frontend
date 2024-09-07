@@ -19,9 +19,14 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    fetchResponse({
-      setResponse,
-      url: "/api/random-admin/",
+    // fetchResponse({
+    //   setResponse,
+    //   url: "/api/random-admin/",
+    // });
+    setResponse({
+      succes: true,
+      email: "nbgruhuiri",
+      name: "ferjirhir",
     });
   }, []);
 
@@ -56,22 +61,27 @@ const Content: React.FC = () => {
     <>
       <div className="h-px"></div>
       <div
-        className="sm:p-4 p-1.5 flex-col gap-4 justify-center"
+        className="flex items-center justify-center"
         style={{ minHeight: "calc(100vh - 140px)" }}
       >
-        <p className="text-xl">{response.name}</p>
-        <a
-          href={
-            "https://mail.google.com/mail/?view=cm&fs=1&to=" +
-            response.email +
-            "&su=أود+الإشتراك+في+أكاديمية+تزود&body="
-          }
-          target="_blank"
-          dir="ltr"
-          className="hover:text-green-600 hover:underline text-xl"
-        >
-          {response.email}
-        </a>
+        <div className="sm:p-6 p-2 m-6 flex-col gap-4 items-center justify-center bg-white">
+          <p className="text-xl sm:text-3xl">الاسم: {response.name}</p>
+          <p className="text-xl sm:text-3xl">
+            البريد الإلكتروني:{" "}
+            <a
+              href={
+                "https://mail.google.com/mail/?view=cm&fs=1&to=" +
+                response.email +
+                "&su=أود+الإشتراك+في+أكاديمية+تزود&body="
+              }
+              target="_blank"
+              dir="ltr"
+              className="hover:text-green-600 hover:underline"
+            >
+              {response.email}
+            </a>
+          </p>
+        </div>
       </div>
     </>
   );
