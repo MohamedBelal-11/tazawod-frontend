@@ -19,14 +19,9 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    // fetchResponse({
-    //   setResponse,
-    //   url: "/api/random-admin/",
-    // });
-    setResponse({
-      succes: true,
-      email: "nbgruhuiri",
-      name: "ferjirhir",
+    fetchResponse({
+      setResponse,
+      url: "/api/random-admin/",
     });
   }, []);
 
