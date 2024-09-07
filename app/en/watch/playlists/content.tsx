@@ -508,7 +508,7 @@ const Content: React.FC = () => {
                 }
               >
                 <Link
-                  href={`/ar/watch/playlists/playlist/${id}`}
+                  href={`//watch/playlists/playlist/${id}`}
                   className="block sm:p-6 p-3"
                 >
                   <p className="font-semibold sm:text-2xl text-xl">{title}</p>

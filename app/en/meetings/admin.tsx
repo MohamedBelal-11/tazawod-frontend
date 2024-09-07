@@ -114,7 +114,7 @@ const MeetingDiv: React.FC<{
       >
         <div className="h-12"></div>
         <Link
-          href={`/ar/students/student/${meeting.student.id}`}
+          href={`//students/student/${meeting.student.id}`}
           className="text-xl mb-4 text-green-500 hover:underline block"
         >
           Student: {meeting.student.name}
@@ -123,7 +123,7 @@ const MeetingDiv: React.FC<{
         {meeting.teacher ? (
           <>
             <Link
-              href={`/ar/teachers/teacher/${meeting.teacher.id}`}
+              href={`//teachers/teacher/${meeting.teacher.id}`}
               className="text-xl mb-4 text-green-500 hover:underline block"
             >
               Teacher: {meeting.teacher.name}

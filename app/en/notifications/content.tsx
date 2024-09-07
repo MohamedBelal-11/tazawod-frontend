@@ -34,7 +34,7 @@ const Content: React.FC = () => {
     const query = new URLSearchParams({ page: "1" });
     fetchResponse({
       setResponse,
-      url: "/api/ar/notifications/",
+      url: "/api//notifications/",
       query: query.toString(),
     });
   }, []);
@@ -113,7 +113,7 @@ const Content: React.FC = () => {
           response.notifications.map(
             ({ link, external, read, title, dateCreated }, i) => (
               <Link
-                href={external ? link : "/ar" + link}
+                href={external ? link : "/" + link}
                 key={i}
                 target={external ? "_blank" : undefined}
                 className={

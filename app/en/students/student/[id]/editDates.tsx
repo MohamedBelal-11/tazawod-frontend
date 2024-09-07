@@ -1,5 +1,5 @@
 "use client";
-import { MetaInfo } from "@/app/ar/auth/register/student/content";
+import { MetaInfo } from "@/app//auth/register/student/content";
 import Button from "@/app/components/button";
 import { arDay } from "@/app/utils/arabic";
 import { objCompare } from "@/app/utils/object";

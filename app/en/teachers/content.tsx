@@ -21,6 +21,7 @@ import {
 } from "../admins/content";
 import { fetchResponse } from "@/app/utils/response";
 import LoadingDiv from "@/app/components/loadingDiv";
+import Copier from "@/app/components/copier";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -93,7 +94,7 @@ const TeacherDiv: React.FC<{
         </div>
       </div>
       <Link
-        href={`/ar/teachers/teacher/${teacher.id}`}
+        href={`//teachers/teacher/${teacher.id}`}
         className="sm:text-3xl text-xl text-green-400 hover:underline block"
       >
         {teacher.name}
@@ -101,6 +102,9 @@ const TeacherDiv: React.FC<{
       <p className="text-2xl my-4">
         <span dir="ltr">{teacher.gmail}</span>
       </p>
+      <div>
+        <Copier copy={teacher.gmail} />
+      </div>
       <p>{teacher.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
 
       <p>
@@ -136,7 +140,7 @@ const TeacherDiv: React.FC<{
               {teacher.students.map((student, i) => (
                 <li key={i}>
                   <Link
-                    href={`/ar/students/student/${student.id}`}
+                    href={`//students/student/${student.id}`}
                     className="hover:text-green-600"
                   >
                     {student.name}
@@ -149,7 +153,7 @@ const TeacherDiv: React.FC<{
       )}
 
       <Link
-        href={`/ar/teachers/teacher/${teacher.id}`}
+        href={`//teachers/teacher/${teacher.id}`}
         className={
           "p-4 rounded-lg bg-green-200 hover:bg-green-500 border-2 " +
           "border-solid border-green-500 transition-all w-full my-4 block"
@@ -615,7 +619,7 @@ const Content = () => {
               <span>غير مسموح</span>
             </p>
             <div className="*:py-2 *:px-4 *:rounded-xl *:bg-green-600 *:text-white flex sm:flex-nowrap md:gap-8 sm:gap-4 gap-2">
-              <Link href="/ar/">الصفحة الرئيسية</Link>
+              <Link href="//">الصفحة الرئيسية</Link>
             </div>
           </div>
         </div>

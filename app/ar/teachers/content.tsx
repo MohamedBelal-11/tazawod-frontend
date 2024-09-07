@@ -21,6 +21,7 @@ import {
 } from "../admins/content";
 import { fetchResponse } from "@/app/utils/response";
 import LoadingDiv from "@/app/components/loadingDiv";
+import Copier from "@/app/components/copier";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -101,6 +102,9 @@ const TeacherDiv: React.FC<{
       <p className="text-2xl my-4">
         <span dir="ltr">{teacher.gmail}</span>
       </p>
+      <div>
+        <Copier copy={teacher.gmail} arabic />
+      </div>
       <p>{teacher.is_accepted ? "موافق عليه" : "غير موافق عليه"}</p>
 
       <p>
