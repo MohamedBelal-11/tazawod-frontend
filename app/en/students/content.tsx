@@ -76,7 +76,7 @@ const StudentDiv: React.FC<{
         </div>
       </div>
       <Link
-        href={`//students/student/${student.id}`}
+        href={`/en/students/student/${student.id}`}
         className="sm:text-3xl text-xl text-green-400 hover:underline block"
       >
         {student.name}
@@ -88,7 +88,7 @@ const StudentDiv: React.FC<{
         المعلم:{" "}
         {student.teacher ? (
           <Link
-            href={`//teachers/teacher/${student.teacher.id}`}
+            href={`/en/teachers/teacher/${student.teacher.id}`}
             className="hover:underline hover:text-green-500"
           >
             {student.teacher.name}
@@ -106,7 +106,7 @@ const StudentDiv: React.FC<{
       <p>{student.subscribed ? "مشترك" : "غير مشترك"}</p>
 
       <Link
-        href={`//students/student/${student.id}`}
+        href={`/en/students/student/${student.id}`}
         className={
           "p-4 rounded-lg bg-green-200 hover:bg-green-500 border-2 " +
           "border-solid border-green-500 transition-all w-full my-4 block"
@@ -411,7 +411,7 @@ const Content = () => {
               <span>غير مسموح</span>
             </p>
             <div className="*:py-2 *:px-4 *:rounded-xl *:bg-green-600 *:text-white flex sm:flex-nowrap md:gap-8 sm:gap-4 gap-2">
-              <Link href="//">الصفحة الرئيسية</Link>
+              <Link href="/en/">الصفحة الرئيسية</Link>
             </div>
           </div>
         </div>

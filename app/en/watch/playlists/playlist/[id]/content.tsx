@@ -105,7 +105,7 @@ const Content: React.FC = () => {
               }
             >
               <Link
-                href={`//watch/video/${id}`}
+                href={`/en/watch/video/${id}`}
                 className="flex p-3 items-center w-full"
               >
                 <div className="w-34 p-4">{i + 1}</div>

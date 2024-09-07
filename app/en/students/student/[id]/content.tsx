@@ -1,10 +1,10 @@
 "use client";
-import { secondsToHrs } from "@/app//content";
+import { secondsToHrs } from "@/app/en/content";
 import { get } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, capitelize, charsList } from "@/app/utils/string";
-import { Date, Weekday } from "@/app/utils/students";
+import { Date } from "@/app/utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
@@ -18,7 +18,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import EditDates from "./editDates";
 import Button, { getClass } from "@/app/components/button";
-import "@/app//auth/register/student/page.css";
+import "@/app/en/auth/register/student/page.css";
 import P, { RegulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
 import LoadingDiv from "@/app/components/loadingDiv";
@@ -674,7 +674,7 @@ const Content = () => {
               )
             ) : response.userType === "self" ? (
               // if self display the link to subscribe page
-              <Link href="//subscribe" className={getClass({})}>
+              <Link href="/en/subscribe" className={getClass({})}>
                 subscribe
               </Link>
             ) : (
@@ -698,7 +698,7 @@ const Content = () => {
             teacher:{" "}
             {response.teacher ? (
               <Link
-                href={`//teachers/teacher/${response.teacher.id}`}
+                href={`/en/teachers/teacher/${response.teacher.id}`}
                 className="hover:underline hover:text-green-500"
               >
                 {response.teacher.name}

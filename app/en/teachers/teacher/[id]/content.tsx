@@ -503,7 +503,7 @@ const Content: React.FC = () => {
                             student.name
                           ) : (
                             <Link
-                              href={`//students/student/${student.id}`}
+                              href={`/en/students/student/${student.id}`}
                               className="hover:underline hover:text-green-500"
                             >
                               {student.name}
