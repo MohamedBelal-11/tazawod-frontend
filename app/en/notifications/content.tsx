@@ -34,7 +34,7 @@ const Content: React.FC = () => {
     const query = new URLSearchParams({ page: "1" });
     fetchResponse({
       setResponse,
-      url: "/api//notifications/",
+      url: "/api/en/notifications/",
       query: query.toString(),
     });
   }, []);

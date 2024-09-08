@@ -72,6 +72,7 @@ const Content = () => {
       get<HTMLTitleElement>(
         "title"
       )[0].innerHTML = `مذكرات الطالب ${response.student}`;
+    if (response && response.succes) console.log(response.notes[0].date);
   }, [response]);
 
   return (

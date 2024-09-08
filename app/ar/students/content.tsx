@@ -177,7 +177,7 @@ const Content = () => {
     setPage(1);
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      gmail: filters.gmail,
+      gmail: filters.gmail.trim(),
       subscribed: filters.subscribed,
       page: "1",
     }).toString();
@@ -193,7 +193,7 @@ const Content = () => {
     if (page !== 1) {
       const query = new URLSearchParams({
         name: almightyTrim(filters.name),
-        gmail: filters.gmail,
+        gmail: filters.gmail.trim(),
         subscribed: filters.subscribed,
         page: page.toString(),
       }).toString();
@@ -270,17 +270,7 @@ const Content = () => {
                     placeholder="عنوان البريد الإلكتروني"
                     value={filters.gmail}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      let alive = true;
-                      for (const c of value) {
-                        if (!numList.includes(c)) {
-                          alive = false;
-                          break;
-                        }
-                      }
-                      if (alive) {
-                        setFilters({ ...filters, gmail: value });
-                      }
+                      setFilters({ ...filters, gmail: e.target.value });
                     }}
                     className={classes["inp"]}
                   />

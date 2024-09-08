@@ -2,11 +2,9 @@
 import Button from "@/app/components/button";
 import Popup, { RegulerConfirm } from "@/app/components/popup";
 import { secondsToHrs } from "@/app/ar/content";
-import { arDay } from "@/app/utils/arabic";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
-import { Weekday } from "@/app/utils/students";
 import { bDate, hrNumber } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
@@ -527,7 +525,7 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${bDate.getFormedDate(response.note.date)}`}
+                        {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
                       </p>
                       <p className="sm:text-2xl">
                         {response.note.rate}\
@@ -556,7 +554,7 @@ const Content: React.FC = () => {
                     </p>
                   </div>
                   <Link
-                    href={`/teachers/teacher/${id}/notes`}
+                    href={`/ar/teachers/teacher/${id}/notes`}
                     className={
                       "border-t-2 border-solid border-gray-600 block " +
                       "p-4 text-center hover:bg-gray-200 transition-all duration-300"
@@ -570,7 +568,7 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${bDate.getFormedDate(response.note.date)}`}
+                        {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
                       </p>
                       <p className="sm:text-2xl">
                         -\
@@ -593,7 +591,7 @@ const Content: React.FC = () => {
                     </p>
                   </div>
                   <Link
-                    href={`/teachers/teacher/${id}/notes`}
+                    href={`/ar/teachers/teacher/${id}/notes`}
                     className={
                       "border-t-2 border-solid border-gray-600 block " +
                       "p-4 text-center hover:bg-gray-200 transition-all duration-300"

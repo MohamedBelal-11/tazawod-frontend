@@ -29,7 +29,15 @@ export type TeacherHome =
       is_accepted: true;
       today_meetings: meeting[];
       tomorrow_meetings: meeting[];
-      currentMeet: { url: string; student: string } | null;
+      currentMeet: {
+        meet: { url: string; student: string };
+        last_note: {
+          teacher: string;
+          rate: number;
+          description: string;
+          date: string;
+        } | null;
+      } | null;
       notes: TeacherNoteSelf[];
     };
 
@@ -39,24 +47,54 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
   return (
     <>
       {teacher.is_accepted && teacher.currentMeet ? (
-        <section className="bg-white rounded-lg flex flex-col gap-4 p-8 text-center">
-          <p className="text-xl">
-            لديك حصة مع الطالب {teacher.currentMeet.student}
-          </p>
-          <div className="flex flex-row gap-4 justify-center">
-            <a
-              href={teacher.currentMeet.url}
-              target="_blank"
-              className={
-                "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
-                "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
-              }
-            >
-              دخول
-            </a>
-            <ADE copy={teacher.currentMeet.url} />
-          </div>
-        </section>
+        <>
+          <section className="bg-white rounded-lg flex flex-col gap-4 p-8 text-center">
+            <p className="text-xl">
+              لديك حصة مع الطالب {teacher.currentMeet.meet.student}
+            </p>
+            <div className="flex flex-row gap-4 justify-center">
+              <a
+                href={teacher.currentMeet.meet.url}
+                target="_blank"
+                className={
+                  "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
+                  "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
+                }
+              >
+                دخول
+              </a>
+              <ADE copy={teacher.currentMeet.meet.url} />
+            </div>
+          </section>
+          {teacher.currentMeet.last_note && (
+            <section>
+              <div className="p-8 bg-white rounded-3xl my-6">
+                <h3 className="flex justify-between text-2xl font-semibold">
+                  <span>
+                    {bDate.getFormedDate(teacher.currentMeet.last_note.date, {
+                      form: "arabic",
+                    })}
+                  </span>
+                  <span>
+                    {teacher.currentMeet.last_note.rate}/<span className="text-sm">10</span>
+                  </span>
+                </h3>
+                <div className="my-6 text-xl font-reguler">
+                  {teacher.currentMeet.last_note.description.split("\n").map((line, i) => {
+                    return (
+                      <p className="my-2" key={i}>
+                        {line}
+                      </p>
+                    );
+                  })}
+                </div>
+                <p className="flex justify-end text-3xl font-reguler">
+                  المعلم: {teacher.currentMeet.last_note.teacher}
+                </p>
+              </div>
+            </section>
+          )}
+        </>
       ) : undefined}
       {teacher.is_accepted ? (
         <section>

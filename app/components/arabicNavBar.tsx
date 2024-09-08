@@ -31,6 +31,7 @@ import { backendUrl } from "../utils/auth";
 import axios from "axios";
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { fetchResponse } from "../utils/response";
 
 const classes = [
   "text-sm font-semibold leading-6 text-gray-900 hover:text-green-500",
@@ -182,10 +183,15 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
+const markAllAsRead = () => {
+  fetchResponse({ setResponse: () => undefined, url: "/users/read-all/" });
+};
+
 export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
   const pathname = usePathname();
+  const [inNotifications, setInNotifications] = useState(false);
   let userType = response ? response.usertype : "unloged";
 
   useEffect(() => {
@@ -218,6 +224,40 @@ export default function ArabicNavBar() {
       fetchData();
     }
   }, [response]);
+
+  useEffect(() => {
+    if (pathname.endsWith("notifications")) {
+      setInNotifications(true);
+    } else {
+      if (inNotifications) {
+        markAllAsRead();
+        setInNotifications(false);
+        const fetchData = async () => {
+          // Retrieve the token from the local storage.
+          const token = localStorage.getItem("token");
+
+          try {
+            // Make an HTTP GET request to the server.
+            // The request includes an Authorization header with the token.
+            const respons = await axios.get(backendUrl + "/api/nav/", {
+              headers: {
+                // Set the Authorization header to include the token.
+                Authorization: `Token ${token}`,
+              },
+            });
+
+            // If the request is successful, update the response state with the data received from the server.
+            setResponse(respons.data);
+          } catch (error) {
+            // If there is an error, log the error to the console.
+            console.error(error);
+          }
+        };
+        fetchData();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   const list =
     userType === "student"
@@ -454,9 +494,8 @@ export default function ArabicNavBar() {
                       </DisclosureButton>
                       <DisclosurePanel className="mt-2 space-y-2">
                         {[...list, ...callsToAction].map((item) => (
-                          <DisclosureButton
+                          <Link
                             key={item.name}
-                            as="a"
                             href={
                               item.useID
                                 ? item.href.join(`/${response?.id}/`)
@@ -466,7 +505,7 @@ export default function ArabicNavBar() {
                             className={`block rounded-lg py-2 pl-6 pr-3 text-sm ${classes[1]}`}
                           >
                             {item.name}
-                          </DisclosureButton>
+                          </Link>
                         ))}
                       </DisclosurePanel>
                     </>
