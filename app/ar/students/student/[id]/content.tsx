@@ -811,7 +811,7 @@ const Content = () => {
               <div className="p-4">
                 <div className="flex justify-between">
                   <p className="sm:text-2xl">
-                    {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: false})}`}
+                    {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
                   </p>
                   <p className="sm:text-2xl">
                     {response.note.written ? response.note.rate : "-"}\
@@ -842,7 +842,7 @@ const Content = () => {
                 </p>
               </div>
               <Link
-                href={`/students/student/${id}/notes`}
+                href={`/ar/students/student/${id}/notes`}
                 className={
                   "border-t-2 border-solid border-gray-600 block " +
                   "p-4 text-center hover:bg-gray-200 transition-all duration-300"

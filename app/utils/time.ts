@@ -205,8 +205,8 @@ export const days: Weekday[] = [
 export { convertEgyptTimeToLocalTime, convertLocalTimeToEgyptTime };
 
 export const bDate = {
-  getDate(value?: number | string | MeetDate) {
-    return value ? new MeetDate(value) : new MeetDate();
+  getDate(value?: number | string | Date) {
+    return value ? new Date(value) : new Date();
   },
   getDay(
     {
@@ -214,7 +214,7 @@ export const bDate = {
       date,
     }: {
       form?: "arabic" | "english" | "number";
-      date?: number | string | MeetDate;
+      date?: number | string | Date;
     } = { form: "english" }
   ) {
     const dayNum = this.getDate(date).getDay();
@@ -229,7 +229,7 @@ export const bDate = {
       date,
     }: {
       form?: "arabic" | "english" | "number";
-      date?: number | string | MeetDate;
+      date?: number | string | Date;
     } = { form: "number" }
   ) {
     const num = this.getDate(date).getMonth();
@@ -239,17 +239,18 @@ export const bDate = {
       ? months[num]
       : num + 1;
   },
-  getDateDay(date?: number | string | MeetDate) {
+  getDateDay(date?: number | string | Date) {
     return this.getDate(date).getDate();
   },
-  getTime(date?: number | string | MeetDate) {
-    const tdate = this.getDate(date);
-    return `${tdate.getHours() < 10 ? "0" : ""}${tdate.getHours()}:${
-      tdate.getMinutes() < 10 ? "0" : ""
-    }${tdate.getMinutes()}`;
+  getTime(date?: number | string | Date) {
+    const tdate = this.getDate(date)
+    const hours = tdate.getHours().toString().padStart(2, "0"); // Ensure 2 digits
+    const minutes = tdate.getMinutes().toString().padStart(2, "0"); // Ensure 2 digits
+
+    return `${hours}:${minutes}`;
   },
   getFormedDate(
-    date?: number | string | MeetDate,
+    date?: number | string | Date,
     {
       day = true,
       time = true,
@@ -263,8 +264,8 @@ export const bDate = {
     const tdate = this.getDate(date);
     return (
       `${tdate.getFullYear()}/${this.getMonth()}/${tdate.getDate()} ${
-        day ? this.getDay({ form }) : ""
-      }` + (time ? " " + convertEgyptTimeToLocalTime(this.getTime()) : "")
+        day ? this.getDay({ form, date: tdate }) : ""
+      }` + (time ? " " + convertEgyptTimeToLocalTime(this.getTime(tdate)) : "")
     );
   },
 };

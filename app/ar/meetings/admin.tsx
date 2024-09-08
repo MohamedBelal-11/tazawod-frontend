@@ -499,9 +499,9 @@ const SuccesContent: React.FC<{
                     ? "لم يتم التحقق منه"
                     : "تم التحقق منه"}
                 </p>
-                <p>بدء {convertEgyptTimeToLocalTime(meeting.started)}</p>
+                <p>بدء {convertEgyptTimeToLocalTime(meeting.started.slice(0, -3))}</p>
                 <p className="mb-0">
-                  ينتهي {convertEgyptTimeToLocalTime(meeting.ends)}
+                  ينتهي {convertEgyptTimeToLocalTime(meeting.ends.slice(0, -3))}
                 </p>
               </motion.div>
             ))}

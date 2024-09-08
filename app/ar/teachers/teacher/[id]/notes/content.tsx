@@ -24,7 +24,7 @@ type Note =
       id: string;
       student: { name: string; id: string };
       rate: number;
-      discription: string;
+      description: string;
       date: string;
     }
   | {
@@ -55,7 +55,7 @@ const EditNote: React.FC<{
   refetch: () => void;
 }> = ({ note, onClose, refetch }) => {
   const [description, setDescription] = useState(
-    note ? (note.written ? note.discription : "") : ""
+    note ? (note.written ? note.description : "") : ""
   );
   const [rate, setRate] = useState<number | undefined>(
     note ? (note.written ? note.rate : undefined) : undefined
@@ -156,7 +156,7 @@ const EditNote: React.FC<{
         ) : objCompare(
             { description: description.trim(), rate },
             {
-              description: note.written ? note.discription : "",
+              description: note.written ? note.description : "",
               rate: note.written ? note.rate : undefined,
             }
           ) ||
@@ -296,7 +296,7 @@ const Content = () => {
                     </div>
                     <div className="p-4">
                       {note.written
-                        ? note.discription.split("\n").map((line, i) => (
+                        ? note.description.split("\n").map((line, i) => (
                             <p key={i} className="sm:text-xl my-2">
                               {line.trim()}
                             </p>

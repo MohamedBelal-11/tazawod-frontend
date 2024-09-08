@@ -141,7 +141,7 @@ export default function Content() {
 
   useEffect(() => {
     fetchResponse({ setResponse, url: "/api/home/" });
-  }, [response]);
+  }, []);
 
   return (
     <>
@@ -149,135 +149,139 @@ export default function Content() {
         <img src="/static/imgs/logo-green.png" className="max-w-lg w-3/5" />
         <img src="/static/imgs/quraan.png" className="max-w-48 w-1/6" />
       </header>
-      {!(response && response.succes) ? (
-        <main className={globalClasses.main}>
-          <section className="flex justify-center">
-            <div className="bg-white p-8 rounded-3xl">
-              <p className="text-2xl text-center">بادر بالإنضمام إلينا</p>
-              <div className="flex justify-center gap-4 mt-8">
-                <Link
-                  className="p-2 rounded-xl block bg-gray-300"
-                  href="/ar/auth/login"
-                >
-                  تسجيل دخول
-                </Link>
-                <Link
-                  className="p-2 rounded-xl block bg-green-600 border-green-600 text-white"
-                  href="/ar/auth/register/student"
-                >
-                  إنشاء حساب
-                </Link>
-              </div>
-            </div>
-          </section>
-          <article>
-            <motion.div
-              className="bg-white rounded-lg my-4 p-4"
-              initial={{ scale: 0.5 }}
-              whileInView={{ scale: 1 }}
-              transition={{ type: "spring", mass: "0.5" }}
-            >
-              <p className="text-3xl text-center">
-                أكاديمية تزود لتعليم القرءان الكريم وعلومه
-              </p>
-              <div className="flex md:gap-4 justify-center flex-col lg:flex-row">
-                <div className="flex justify-center items-center">
-                  <img
-                    src="/static/imgs/ahmed.jpg"
-                    className="my-6 min-w-64 max-w-64"
-                  />
-                </div>
-                <div className="flex-col flex justify-center min-h-80 px-6">
-                  <p className="text-2xl my-6 text-center">
-                    تحت إشراف فضيلة الشيخ أحمد البيومي الأزهري
-                  </p>
-                  <p className="text-2xl my-6 text-center">
-                    المجاز بالقراءات العشر الصغرى والحاصل على ليسانس في أصول
-                    الدين والدعوة قسم التفسير وعلوم القرءان جامعة الأزهر
-                  </p>
-                </div>
-                <div className="flex justify-center items-center">
-                  <img
-                    src="/static/imgs/ahmed2.jpg"
-                    className="my-6 min-w-72 max-w-72"
-                  />
+      <main className={globalClasses.main}>
+        {!(response && response.succes) ? (
+          <>
+            <section className="flex justify-center">
+              <div className="bg-white p-8 rounded-3xl">
+                <p className="text-2xl text-center">بادر بالإنضمام إلينا</p>
+                <div className="flex justify-center gap-4 mt-8">
+                  <Link
+                    className="p-2 rounded-xl block bg-gray-300"
+                    href="/ar/auth/login"
+                  >
+                    تسجيل دخول
+                  </Link>
+                  <Link
+                    className="p-2 rounded-xl block bg-green-600 border-green-600 text-white"
+                    href="/ar/auth/register/student"
+                  >
+                    إنشاء حساب
+                  </Link>
                 </div>
               </div>
-            </motion.div>
-            {feutures.map((feuture, i) => (
+            </section>
+            <article>
               <motion.div
-                key={i}
                 className="bg-white rounded-lg my-4 p-4"
-                initial={{ x: "45%", scale: 0.7 }}
-                whileInView={{ x: 0, scale: 1 }}
-                viewport={{ amount: 0.5 }}
+                initial={{ scale: 0.5 }}
+                whileInView={{ scale: 1 }}
                 transition={{ type: "spring", mass: "0.5" }}
               >
-                <p className="text-3xl text-center">{feuture.header}</p>
-                <div className="flex-col flex justify-center min-h-80 px-6">
-                  {feuture.description.split("\n").map((line, i) => (
-                    <p key={i} className="text-2xl my-6 text-center">
-                      {line}
+                <p className="text-3xl text-center">
+                  أكاديمية تزود لتعليم القرءان الكريم وعلومه
+                </p>
+                <div className="flex md:gap-4 justify-center flex-col lg:flex-row">
+                  <div className="flex justify-center items-center">
+                    <img
+                      src="/static/imgs/ahmed.jpg"
+                      className="my-6 min-w-64 max-w-64"
+                    />
+                  </div>
+                  <div className="flex-col flex justify-center min-h-80 px-6">
+                    <p className="text-2xl my-6 text-center">
+                      تحت إشراف فضيلة الشيخ أحمد البيومي الأزهري
                     </p>
-                  ))}
+                    <p className="text-2xl my-6 text-center">
+                      المجاز بالقراءات العشر الصغرى والحاصل على ليسانس في أصول
+                      الدين والدعوة قسم التفسير وعلوم القرءان جامعة الأزهر
+                    </p>
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <img
+                      src="/static/imgs/ahmed2.jpg"
+                      className="my-6 min-w-72 max-w-72"
+                    />
+                  </div>
                 </div>
               </motion.div>
-            ))}
-          </article>
-        </main>
-      ) : response.userType === "student" ? (
-        <StudentHomeContent student={response} />
-      ) : response.userType === "teacher" ? (
-        <TeacherHomeContent teacher={response} />
-      ) : response.userType === "admin" ? (
-        <AdminHomeContent admin={response} />
-      ) : (
-        <section>
-          <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
-          <motion.div
-            className={homeclasses.cardsContainer}
-            variants={cCV}
-            initial="hidden"
-            animate="visible"
-          >
-            {response.live_meetings.map((meeting, i) => (
-              <motion.div
-                key={i}
-                className={
-                  "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
-                  "transition-all duration-300 w-max *:w-max"
-                }
-                variants={CCV}
-              >
-                <p className="text-3xl font-bold">الطالب: {meeting.student}</p>
-                <p className="text-3xl font-bold">
-                  المعلم: {meeting.teacher || "لا يوجد"}
-                </p>
-                <p className="text-2xl">
-                  يبدأ الساعة{" "}
-                  {convertEgyptTimeToLocalTime(meeting.starts.slice(0, -3))}
-                </p>
-                <p>
-                  ينتهي الساعة{" "}
-                  {convertEgyptTimeToLocalTime(
-                    sumStartAndDelay(meeting.starts, meeting.delay)
-                  )}
-                </p>
-                <a
-                  href={meeting.url}
-                  target="_blank"
-                  className={
-                    "px-6 py-4 bg-orange-100 rounded-2xl border-2 border-orange-400 " +
-                    "border-solid hover:bg-orange-400 hover:text-white transition-all"
-                  }
+              {feutures.map((feuture, i) => (
+                <motion.div
+                  key={i}
+                  className="bg-white rounded-lg my-4 p-4"
+                  initial={{ x: "45%", scale: 0.7 }}
+                  whileInView={{ x: 0, scale: 1 }}
+                  viewport={{ amount: 0.5 }}
+                  transition={{ type: "spring", mass: "0.5" }}
                 >
-                  دخول المقابلة
-                </a>
-              </motion.div>
-            ))}
-          </motion.div>
-        </section>
-      )}
+                  <p className="text-3xl text-center">{feuture.header}</p>
+                  <div className="flex-col flex justify-center min-h-80 px-6">
+                    {feuture.description.split("\n").map((line, i) => (
+                      <p key={i} className="text-2xl my-6 text-center">
+                        {line}
+                      </p>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </article>
+          </>
+        ) : response.userType === "student" ? (
+          <StudentHomeContent student={response} />
+        ) : response.userType === "teacher" ? (
+          <TeacherHomeContent teacher={response} />
+        ) : response.userType === "admin" ? (
+          <AdminHomeContent admin={response} />
+        ) : (
+          <section>
+            <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
+            <motion.div
+              className={homeclasses.cardsContainer}
+              variants={cCV}
+              initial="hidden"
+              animate="visible"
+            >
+              {response.live_meetings.map((meeting, i) => (
+                <motion.div
+                  key={i}
+                  className={
+                    "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
+                    "transition-all duration-300 w-max *:w-max"
+                  }
+                  variants={CCV}
+                >
+                  <p className="text-3xl font-bold">
+                    الطالب: {meeting.student}
+                  </p>
+                  <p className="text-3xl font-bold">
+                    المعلم: {meeting.teacher || "لا يوجد"}
+                  </p>
+                  <p className="text-2xl">
+                    يبدأ الساعة{" "}
+                    {convertEgyptTimeToLocalTime(meeting.starts.slice(0, -3))}
+                  </p>
+                  <p>
+                    ينتهي الساعة{" "}
+                    {convertEgyptTimeToLocalTime(
+                      sumStartAndDelay(meeting.starts, meeting.delay)
+                    )}
+                  </p>
+                  <a
+                    href={meeting.url}
+                    target="_blank"
+                    className={
+                      "px-6 py-4 bg-orange-100 rounded-2xl border-2 border-orange-400 " +
+                      "border-solid hover:bg-orange-400 hover:text-white transition-all"
+                    }
+                  >
+                    دخول المقابلة
+                  </a>
+                </motion.div>
+              ))}
+            </motion.div>
+          </section>
+        )}
+      </main>
     </>
   );
 }
