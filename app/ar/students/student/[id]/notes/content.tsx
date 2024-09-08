@@ -2,33 +2,19 @@
 import LoadingDiv from "@/app/components/loadingDiv";
 import { get } from "@/app/utils/docQuery";
 import globalClasses from "@/app/utils/globalClasses";
+import { StudentNoteAdmin } from "@/app/utils/note";
 import { fetchResponse } from "@/app/utils/response";
 import { bDate } from "@/app/utils/time";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
-// decalare note type
-type Note =
-  | {
-      written: true;
-      teacher: { name: string; id: string };
-      rate: number;
-      description: string;
-      date: string;
-    }
-  | {
-      written: false;
-      teacher: { name: string; id: string };
-      date: string;
-    };
-
 // declare response type
 type Response =
   | {
       userType: "admin" | "self";
       succes: true;
-      notes: Note[];
+      notes: StudentNoteAdmin[];
       has_more: boolean;
       student: string;
     }
