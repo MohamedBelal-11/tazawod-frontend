@@ -4,7 +4,7 @@ import { get } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, capitelize, charsList } from "@/app/utils/string";
-import { Date } from "@/app/utils/students";
+import { MeetDate } from "@/app/utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
@@ -30,7 +30,7 @@ import {
 import Forbidden from "@/app/forbidden";
 import NotFound from "@/app/not-found";
 
-interface Tdate extends Date {
+interface Tdate extends MeetDate {
   price: number;
 }
 
@@ -439,7 +439,7 @@ type PopupData =
     }
   | {
       state: "dates edit";
-      dates: Date[];
+      dates: MeetDate[];
       defaultData?: undefined;
       id?: undefined;
     }

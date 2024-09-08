@@ -4,7 +4,7 @@ import ScrollTopButton from "@/app/components/scrollTopButton";
 import { arCase } from "@/app/utils/arabic";
 import { fetchResponse } from "@/app/utils/response";
 import { almightyTrim, capitelize } from "@/app/utils/string";
-import { Date, Weekday } from "@/app/utils/students";
+import { MeetDate, Weekday } from "@/app/utils/students";
 import {
   bDate,
   convertEgyptWeekdayToLocal,
@@ -15,7 +15,7 @@ import {
 import { ChevronDoubleLeftIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 
-interface Meet extends Date {
+interface Meet extends MeetDate {
   student: string;
 }
 

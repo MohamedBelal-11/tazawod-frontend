@@ -5,7 +5,7 @@ import { get } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
-import { Date, Weekday } from "@/app/utils/students";
+import { MeetDate, Weekday } from "@/app/utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
@@ -30,8 +30,9 @@ import {
 } from "@/app/utils/response";
 import Forbidden from "@/app/forbidden";
 import NotFound from "@/app/not-found";
+import { StudentNoteAdmin } from "@/app/utils/note";
 
-interface Tdate extends Date {
+interface Tdate extends MeetDate {
   price: number;
 }
 
@@ -207,12 +208,7 @@ type responset =
       gmail: string;
       subscribed: boolean;
       dates: Tdate[];
-      note: {
-        teacher: { name: string; id: string };
-        rate: number;
-        discription: string | null;
-        date: string;
-      } | null;
+      note: StudentNoteAdmin | null;
       gender: "male" | "female";
       teacher: { name: string; id: string } | null;
       currency: "EGP" | "USD";
@@ -440,7 +436,7 @@ type PopupData =
     }
   | {
       state: "dates edit";
-      dates: Date[];
+      dates: MeetDate[];
       defaultData?: undefined;
       id?: undefined;
     }
@@ -818,13 +814,13 @@ const Content = () => {
                     {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: false})}`}
                   </p>
                   <p className="sm:text-2xl">
-                    {response.note.rate}\
+                    {response.note.written ? response.note.rate : "-"}\
                     <span className="sm:text-lg text-sm">10</span>
                   </p>
                 </div>
                 <div className="p-4">
-                  {response.note.discription
-                    ? response.note.discription.split("\n").map((line, i) => (
+                  {response.note.written
+                    ? response.note.description.split("\n").map((line, i) => (
                         <p key={i} className="sm:text-xl my-2">
                           {line.trim()}
                         </p>

@@ -205,8 +205,8 @@ export const days: Weekday[] = [
 export { convertEgyptTimeToLocalTime, convertLocalTimeToEgyptTime };
 
 export const bDate = {
-  getDate(value?: number | string | Date) {
-    return value ? new Date(value) : new Date();
+  getDate(value?: number | string | MeetDate) {
+    return value ? new MeetDate(value) : new MeetDate();
   },
   getDay(
     {
@@ -214,7 +214,7 @@ export const bDate = {
       date,
     }: {
       form?: "arabic" | "english" | "number";
-      date?: number | string | Date;
+      date?: number | string | MeetDate;
     } = { form: "english" }
   ) {
     const dayNum = this.getDate(date).getDay();
@@ -229,7 +229,7 @@ export const bDate = {
       date,
     }: {
       form?: "arabic" | "english" | "number";
-      date?: number | string | Date;
+      date?: number | string | MeetDate;
     } = { form: "number" }
   ) {
     const num = this.getDate(date).getMonth();
@@ -239,17 +239,17 @@ export const bDate = {
       ? months[num]
       : num + 1;
   },
-  getDateDay(date?: number | string | Date) {
+  getDateDay(date?: number | string | MeetDate) {
     return this.getDate(date).getDate();
   },
-  getTime(date?: number | string | Date) {
+  getTime(date?: number | string | MeetDate) {
     const tdate = this.getDate(date);
     return `${tdate.getHours() < 10 ? "0" : ""}${tdate.getHours()}:${
       tdate.getMinutes() < 10 ? "0" : ""
     }${tdate.getMinutes()}`;
   },
   getFormedDate(
-    date?: number | string | Date,
+    date?: number | string | MeetDate,
     {
       day = true,
       time = true,

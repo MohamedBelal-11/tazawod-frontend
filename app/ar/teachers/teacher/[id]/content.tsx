@@ -7,7 +7,7 @@ import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
 import { Weekday } from "@/app/utils/students";
-import { hrNumber } from "@/app/utils/time";
+import { bDate, hrNumber } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -20,6 +20,7 @@ import {
   fetchResponse,
 } from "@/app/utils/response";
 import Copier from "@/app/components/copier";
+import { TeacherNoteAdmin } from "@/app/utils/note";
 
 type Response =
   | {
@@ -32,22 +33,7 @@ type Response =
       is_accepted: true;
       currency: "EGP" | "USD";
       gender: "male" | "female";
-      note:
-        | {
-            written: true;
-            student: { name: string; id: string };
-            rate: number;
-            discription: string;
-            day: Weekday;
-            date: string;
-          }
-        | {
-            written: false;
-            student: { name: string; id: string };
-            day: Weekday;
-            date: string;
-          }
-        | null;
+      note: TeacherNoteAdmin | null;
       students: { name: string; delay: number; id: string }[];
     }
   | {
@@ -541,7 +527,7 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                        {`${bDate.getFormedDate(response.note.date)}`}
                       </p>
                       <p className="sm:text-2xl">
                         {response.note.rate}\
@@ -549,15 +535,11 @@ const Content: React.FC = () => {
                       </p>
                     </div>
                     <div className="p-4">
-                      {response.note.discription
-                        ? response.note.discription
-                            .split("\n")
-                            .map((line, i) => (
-                              <p key={i} className="sm:text-xl my-2">
-                                {line.trim()}
-                              </p>
-                            ))
-                        : "لم يتم كتابة تقرير"}
+                      {response.note.description.split("\n").map((line, i) => (
+                        <p key={i} className="sm:text-xl my-2">
+                          {line.trim()}
+                        </p>
+                      ))}
                     </div>
                     <p className="sm:text-2xl text-lg">
                       الطالب:{" "}
@@ -588,7 +570,7 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                        {`${bDate.getFormedDate(response.note.date)}`}
                       </p>
                       <p className="sm:text-2xl">
                         -\

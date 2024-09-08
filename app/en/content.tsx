@@ -4,7 +4,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import globalClasses from "../utils/globalClasses";
-import { Date, Weekday } from "../utils/students";
+import { MeetDate, Weekday } from "../utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
@@ -108,7 +108,7 @@ type responset =
   | {
       userType: "student";
       subscribed: true;
-      quraan_days: Date[];
+      quraan_days: MeetDate[];
       currentMeet: { url: string; teacher: string | null } | null;
       notes: {
         teacher: string;
@@ -120,7 +120,7 @@ type responset =
   | {
       userType: "student";
       subscribed: false;
-      quraan_days: Date[];
+      quraan_days: MeetDate[];
       notes: {
         teacher: string;
         rate: number;
