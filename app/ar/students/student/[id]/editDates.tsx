@@ -5,7 +5,7 @@ import { arDay } from "@/app/utils/arabic";
 import { objCompare } from "@/app/utils/object";
 import { DefaultResponse, fetchPost } from "@/app/utils/response";
 import { Weekday } from "@/app/utils/students";
-import { days } from "@/app/utils/time";
+import { convertLocalWeekdayToEgypt, days } from "@/app/utils/time";
 import React, { useState } from "react";
 
 const classes = {
@@ -227,7 +227,7 @@ const sendDates = ({
   setResponse,
   dates,
   onClose,
-  refresh
+  refresh,
 }: {
   setResponse: React.Dispatch<
     React.SetStateAction<DefaultResponse | undefined>
@@ -241,13 +241,23 @@ const sendDates = ({
     setResponse,
     setLoading,
     url: `/users/student/editdates/`,
-    data: { dates },
+    data: {
+      dates: dates.map((date) => {
+        const [day, starts] = convertLocalWeekdayToEgypt(date.day, date.starts);
+
+        return {
+          delay: date.delay,
+          starts,
+          day,
+        };
+      }),
+    },
     onFinish() {
       setTimeout(() => {
         onClose();
-        refresh()
+        refresh();
       }, 1500);
-    }
+    },
   });
 };
 
