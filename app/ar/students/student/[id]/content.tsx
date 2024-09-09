@@ -31,6 +31,7 @@ import {
 import Forbidden from "@/app/forbidden";
 import NotFound from "@/app/not-found";
 import { StudentNoteAdmin } from "@/app/utils/note";
+import LogoutButton from "@/app/components/logout";
 
 interface Tdate extends MeetDate {
   price: number;
@@ -727,6 +728,9 @@ const Content = () => {
               )}
             </div>
           )}
+          <div>
+            <LogoutButton />
+          </div>
         </section>
         <section className={classes["section"] + "p-4 my-2 w-auto"}>
           <p className="text-3xl mb-4">المواعيد</p>

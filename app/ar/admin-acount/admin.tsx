@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import Button from "@/app/components/button";
+import LogoutButton from "@/app/components/logout";
 import Popup from "@/app/components/popup";
 import { objCompare } from "@/app/utils/object";
 import { DefaultResponse, fetchPost } from "@/app/utils/response";
@@ -294,6 +295,9 @@ const AdminContent: React.FC<{ user: Admin; refetch: () => void }> = ({
           <p className="text-2xl my-4">
             {user.is_accepted ? "موافق عليه" : "غير موافق عليه"}
           </p>
+          <div>
+            <LogoutButton />
+          </div>
         </section>
       </main>
       <Popup onClose={closePopup} visible={popup}>

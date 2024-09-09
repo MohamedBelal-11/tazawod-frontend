@@ -231,7 +231,6 @@ export default function ArabicNavBar() {
     } else {
       if (inNotifications) {
         markAllAsRead();
-        setInNotifications(false);
         const fetchData = async () => {
           // Retrieve the token from the local storage.
           const token = localStorage.getItem("token");
@@ -254,6 +253,7 @@ export default function ArabicNavBar() {
           }
         };
         fetchData();
+        setInNotifications(false);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
