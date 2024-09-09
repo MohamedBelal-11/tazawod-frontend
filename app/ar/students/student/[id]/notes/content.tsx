@@ -131,7 +131,7 @@ const Content = () => {
                       note.teacher.name
                     ) : (
                       <Link
-                        href={`/teachers/teacher/${note.teacher.id}`}
+                        href={`/ar/teachers/teacher/${note.teacher.id}`}
                         className="hover:underline hover:text-green-500"
                       >
                         {note.teacher.name}
