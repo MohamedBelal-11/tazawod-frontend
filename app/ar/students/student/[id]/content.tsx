@@ -91,17 +91,17 @@ const Subscribe: React.FC<{
       </p>
       <div className="w-full flex flex-col items-center gap-2">
         <p>عنوان البريد المعلم</p>
-          <input
-            type="text"
-            value={gmail}
-            onChange={(e) => {
-              setGmail(e.target.value);
-            }}
-            dir="ltr"
-            placeholder="البريد الإلكتروني"
-            className={classes.inp}
-            autoComplete="email"
-          />
+        <input
+          type="text"
+          value={gmail}
+          onChange={(e) => {
+            setGmail(e.target.value);
+          }}
+          dir="ltr"
+          placeholder="البريد الإلكتروني"
+          className={classes.inp}
+          autoComplete="email"
+        />
       </div>
       <div className="flex gap-4 justify-evenly">
         <Button color="red" onClick={onClose}>
@@ -728,9 +728,11 @@ const Content = () => {
               )}
             </div>
           )}
-          <div>
-            <LogoutButton />
-          </div>
+          {response.userType === "self" && (
+            <div className="mt-4">
+              <LogoutButton />
+            </div>
+          )}
         </section>
         <section className={classes["section"] + "p-4 my-2 w-auto"}>
           <p className="text-3xl mb-4">المواعيد</p>
@@ -815,7 +817,11 @@ const Content = () => {
               <div className="p-4">
                 <div className="flex justify-between">
                   <p className="sm:text-2xl">
-                    {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
+                    {`${bDate.getFormedDate(response.note.date, {
+                      form: "arabic",
+                      day: true,
+                      time: true,
+                    })}`}
                   </p>
                   <p className="sm:text-2xl">
                     {response.note.written ? response.note.rate : "-"}\
