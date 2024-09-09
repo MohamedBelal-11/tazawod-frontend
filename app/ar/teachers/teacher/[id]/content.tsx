@@ -19,6 +19,7 @@ import {
 } from "@/app/utils/response";
 import Copier from "@/app/components/copier";
 import { TeacherNoteAdmin } from "@/app/utils/note";
+import LogoutButton from "@/app/components/logout";
 
 type Response =
   | {
@@ -457,6 +458,9 @@ const Content: React.FC = () => {
               ? "بعد الظهيرة"
               : "مساءُ"}
           </p>
+        <div>
+          <LogoutButton />
+        </div>
         </section>
         {response.is_accepted && (
           <section className={classes["section"] + "p-4 my-2 w-auto"}>

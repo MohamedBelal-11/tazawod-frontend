@@ -82,7 +82,7 @@ const StudentDiv: React.FC<{
         {student.name}
       </Link>
       <p className="text-2xl my-4">
-        <span dir="ltr">+{student.gmail}</span>
+        <span dir="ltr">{student.gmail}</span>
       </p>
       <p className="text-xl my-4">
         المعلم:{" "}

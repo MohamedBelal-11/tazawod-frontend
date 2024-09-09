@@ -1,6 +1,7 @@
 "use client";
 import Button from "@/app/components/button";
 import Checker from "@/app/components/Checker";
+import LogoutButton from "@/app/components/logout";
 import Popup from "@/app/components/popup";
 import { objCompare } from "@/app/utils/object";
 import { DefaultResponse, fetchPost } from "@/app/utils/response";
@@ -429,6 +430,9 @@ const SuperadminContent: React.FC<{
           <h2 className="sm:text-3xl text-xl mt-4 font-bold">
             <span dir="ltr">{user.gmail}</span>
           </h2>
+          <div>
+            <LogoutButton />
+          </div>
         </section>
         <EditSuperData
           defaultData={{
