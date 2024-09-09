@@ -458,9 +458,11 @@ const Content: React.FC = () => {
               ? "بعد الظهيرة"
               : "مساءُ"}
           </p>
-        <div>
-          <LogoutButton />
-        </div>
+          {response.userType === "self" && (
+            <div className="mt-4">
+              <LogoutButton />
+            </div>
+          )}
         </section>
         {response.is_accepted && (
           <section className={classes["section"] + "p-4 my-2 w-auto"}>
@@ -529,7 +531,11 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
+                        {`${bDate.getFormedDate(response.note.date, {
+                          form: "arabic",
+                          day: true,
+                          time: true,
+                        })}`}
                       </p>
                       <p className="sm:text-2xl">
                         {response.note.rate}\
@@ -572,7 +578,11 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: true})}`}
+                        {`${bDate.getFormedDate(response.note.date, {
+                          form: "arabic",
+                          day: true,
+                          time: true,
+                        })}`}
                       </p>
                       <p className="sm:text-2xl">
                         -\
