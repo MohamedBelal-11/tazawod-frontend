@@ -14,6 +14,7 @@ import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
+import { convertToIframeLink } from "../video/[id]/content";
 
 export const parentVariants: Variants = {
   hidden: {},
@@ -274,13 +275,23 @@ const AddVideo: React.FC<{
         return (
           <>
             <p className="mt-4">التأكد من الرابط</p>
-            <ReactPlayer
-              allow="autoplay; fullscreen"
-              allowFullScreen
-              url={trimed}
-              width={"100%"}
-              className="aspect-video"
-            />
+            {trimed.startsWith("https://drive.google.com") ? (
+              <iframe
+                src={convertToIframeLink(trimed)}
+                width={"100%"}
+                className="aspect-video"
+                allow="autoplay; fullscreen"
+              ></iframe>
+            ) : (
+              <ReactPlayer
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                height="unset"
+                url={trimed}
+                width={"100%"}
+                className="aspect-video"
+              />
+            )}
           </>
         );
       })()}
