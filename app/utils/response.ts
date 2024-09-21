@@ -1,6 +1,7 @@
 import axios from "axios";
 import { backendUrl } from "./auth";
 import React from "react";
+import { objCompare } from "./object";
 
 export type DefaultResponse =
   | {
@@ -36,25 +37,52 @@ export const fetchResponse = async <T = any>({
   (setLoading ? setLoading : () => {})(true);
   const token = localStorage.getItem("token");
   axiosInstance
-    .get(backendUrl + url + "?" + query, {
-      headers: {
-        // Set the Authorization header to include the token.
-        Authorization: `Token ${token}`,
-      },
-    })
-    .then((response) => {
+    .get(
+      backendUrl + url + "?" + query,
+      token
+        ? {
+            headers: {
+              // Set the Authorization header to include the token.
+              Authorization: `Token ${token}`,
+            },
+          }
+        : undefined
+    )
+    .then((res) => {
+      if (objCompare(res.data, { detail: "Invalid token." })) {
+        localStorage.removeItem("token");
+        axiosInstance
+          .get(backendUrl + url + "?" + query)
+          .then((response) => {
+            console.log(response);
+
+            setResponse((s) =>
+              response.data.succes === undefined
+                ? s !== undefined
+                  ? s
+                  : null
+                : response.data
+            );
+            (setLoading ? setLoading : () => {})(false);
+            (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
+          })
+          .catch((error) => {
+            // If there is an error, log the error to the console
+            setResponse((s) => (s !== undefined ? s : null));
+            console.error(error);
+            (setLoading ? setLoading : () => {})(false);
+            (onFinish ? onFinish : () => {})(false);
+          });
+        return;
+      }
       // If the request is successful, update the response state with the data received from the server.
-      console.log(response);
+      console.log(res);
 
       setResponse((s) =>
-        response.data.succes === undefined
-          ? s !== undefined
-            ? s
-            : null
-          : response.data
+        res.data.succes === undefined ? (s !== undefined ? s : null) : res.data
       );
       (setLoading ? setLoading : () => {})(false);
-      (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
+      (onFinish ? onFinish : () => {})(Boolean(res.data.succes));
     })
     .catch((error) => {
       // If there is an error, log the error to the console
@@ -82,26 +110,57 @@ export const fetchPost = async <T = any>({
   (setLoading ? setLoading : () => {})(true);
   const token = localStorage.getItem("token");
   axiosInstance
-    .post(backendUrl + url, data, {
-      headers: {
-        // Set the Authorization header to include the token.
-        Authorization: `Token ${token}`,
-      },
-    })
-    .then((response) => {
+    .post(
+      backendUrl + url,
+      data,
+      token
+        ? {
+            headers: {
+              // Set the Authorization header to include the token.
+              Authorization: `Token ${token}`,
+            },
+          }
+        : undefined
+    )
+    .then((res) => {
+      if (objCompare(res.data, { detail: "Invalid token." })) {
+        localStorage.removeItem("token");
+        axiosInstance
+          .post(backendUrl + url, data)
+          .then((response) => {
+            console.log(data);
+            console.log(response);
+
+            setResponse((s) =>
+              response.data.succes === undefined
+                ? s !== undefined
+                  ? s
+                  : null
+                : response.data
+            );
+            (setLoading ? setLoading : () => {})(false);
+            (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
+          })
+          .catch((error) => {
+            console.log(data);
+            // If there is an error, log the error to the console
+            setResponse((s) => (s !== undefined ? s : null));
+            console.error(error);
+            (setLoading ? setLoading : () => {})(false);
+            (onFinish ? onFinish : () => {})(false);
+          });
+        return;
+      }
+
       // If the request is successful, update the response state with the data received from the server.
       console.log(data);
-      console.log(response);
+      console.log(res);
 
       setResponse((s) =>
-        response.data.succes === undefined
-          ? s !== undefined
-            ? s
-            : null
-          : response.data
+        res.data.succes === undefined ? (s !== undefined ? s : null) : res.data
       );
       (setLoading ? setLoading : () => {})(false);
-      (onFinish ? onFinish : () => {})(Boolean(response.data.succes));
+      (onFinish ? onFinish : () => {})(Boolean(res.data.succes));
     })
     .catch((error) => {
       console.log(data);
