@@ -15,8 +15,8 @@ import { fetchResponse } from "@/app/utils/response";
 import LoadingDiv from "@/app/components/loadingDiv";
 import {
   childVariantsforfilters,
-  parentVariantsforfilters,
 } from "../admins/content";
+import { parentVariantsforfilters } from "@/app/ar/admins/content";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -82,7 +82,7 @@ const StudentDiv: React.FC<{
         {student.name}
       </Link>
       <p className="text-2xl my-4">
-        <span dir="ltr">+{student.gmail}</span>
+        <span dir="ltr">{student.gmail}</span>
       </p>
       <p className="text-xl my-4">
         المعلم:{" "}
@@ -177,7 +177,7 @@ const Content = () => {
     setPage(1);
     const query = new URLSearchParams({
       name: almightyTrim(filters.name),
-      gmail: filters.gmail,
+      gmail: filters.gmail.trim(),
       subscribed: filters.subscribed,
       page: "1",
     }).toString();
@@ -193,7 +193,7 @@ const Content = () => {
     if (page !== 1) {
       const query = new URLSearchParams({
         name: almightyTrim(filters.name),
-        gmail: filters.gmail,
+        gmail: filters.gmail.trim(),
         subscribed: filters.subscribed,
         page: page.toString(),
       }).toString();
@@ -270,17 +270,7 @@ const Content = () => {
                     placeholder="عنوان البريد الإلكتروني"
                     value={filters.gmail}
                     onChange={(e) => {
-                      const value = e.target.value;
-                      let alive = true;
-                      for (const c of value) {
-                        if (!numList.includes(c)) {
-                          alive = false;
-                          break;
-                        }
-                      }
-                      if (alive) {
-                        setFilters({ ...filters, gmail: value });
-                      }
+                      setFilters({ ...filters, gmail: e.target.value });
                     }}
                     className={classes["inp"]}
                   />
@@ -411,7 +401,7 @@ const Content = () => {
               <span>غير مسموح</span>
             </p>
             <div className="*:py-2 *:px-4 *:rounded-xl *:bg-green-600 *:text-white flex sm:flex-nowrap md:gap-8 sm:gap-4 gap-2">
-              <Link href="/en/">الصفحة الرئيسية</Link>
+              <Link href="/ar/">الصفحة الرئيسية</Link>
             </div>
           </div>
         </div>

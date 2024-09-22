@@ -14,6 +14,7 @@ import Button from "@/app/components/button";
 import ScrollTopButton from "@/app/components/scrollTopButton";
 import { DefaultResponse, fetchResponse } from "@/app/utils/response";
 import LoadingDiv from "@/app/components/loadingDiv";
+import { parentVariantsforfilters } from "@/app/ar/admins/content";
 
 // creating page classes
 const classes: { [key: string]: string } = {
@@ -38,12 +39,6 @@ export const childVariantsforfilters: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-  },
-};
-
-export const parentVariantsforfilters: Variants = {
-  visible: {
-    transition: { staggerChildren: 0.2 },
   },
 };
 

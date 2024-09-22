@@ -1,5 +1,4 @@
 import globalClasses from "../utils/globalClasses";
-import { StudentNoteSelf } from "../utils/note";
 import { Weekday } from "../utils/students";
 import {
   bDate,
@@ -9,20 +8,12 @@ import {
   numHours,
   sortDaysFromToday,
 } from "../utils/time";
-import { ADE, cCV, CCV, homeclasses, secondsToHrs } from "./content";
-import { MeetDate } from "../utils/students";
+import { ADE, CCV } from "./content";
+import { cCV, homeclasses, secondsToHrs } from "../ar/content";
 import { motion } from "framer-motion";
-import { arDay } from "../utils/arabic";
 import Link from "next/link";
-
-export type StudentHome = {
-  succes: true;
-  userType: "student";
-  quraan_days: MeetDate[];
-  subscribed: boolean;
-  currentMeet: { url: string; teacher: string | null } | null;
-  notes: StudentNoteSelf[];
-};
+import { StudentHome } from "../ar/studentHomeContent";
+import { capitelize } from "../utils/string";
 
 const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
   student,
@@ -33,8 +24,8 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
         <section className="bg-white rounded-lg flex flex-col gap-4 p-8 text-center">
           <p className="text-xl">
             {student.currentMeet.teacher
-              ? `المعلم: ${student.currentMeet.teacher} ينتظرك في الغرفة`
-              : "ها هي المقابلة سيدخل معلم قريبًا"}
+              ? `Teacher: ${student.currentMeet.teacher} wait you in the room`
+              : "Here is the meeting a teacher will be coming in soon"}
           </p>
           <div className="flex flex-row gap-4 justify-center">
             <a
@@ -45,7 +36,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
                 "rounded-xl hover:text-white hover:bg-sky-500 transition-all"
               }
             >
-              دخول
+              enter
             </a>
             <ADE copy={student.currentMeet.url} />
           </div>
@@ -53,7 +44,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
       ) : undefined}
       <section>
         <h2>
-          <span className={globalClasses.sectionHeader}>دروسك</span>
+          <span className={globalClasses.sectionHeader}>Your lessons</span>
         </h2>
         <motion.div
           className={homeclasses.cardsContainer}
@@ -80,14 +71,14 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
                   }
                   variants={CCV}
                 >
-                  <p className="text-3xl font-bold">{arDay(date.day)}</p>
+                  <p className="text-3xl font-bold">{capitelize(date.day)}</p>
                   <p className="text-2xl">
-                    يبدأ الساعة{" "}
+                    Starts at{" "}
                     {convertEgyptTimeToLocalTime(date.starts.slice(0, -3))}
                   </p>
 
                   <p>
-                    ينتهي الساعة{" "}
+                    Ends at{" "}
                     {convertEgyptTimeToLocalTime(
                       hrNumber(numHours(date.starts) + secondsToHrs(date.delay))
                     )}
@@ -100,17 +91,17 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
       {!student.subscribed && (
         <section className="p-8 rounded-3xl bg-white">
           <h2 className="text-3xl font-bold text-center">
-            أنت لم تشترك حتى الآن
+            You have not subscribed yet.
           </h2>
           <div className="mt-4 flex justify-evenly">
             <Link
-              href="/ar/subscribe"
+              href="/en/subscribe"
               className={
                 "p-8 bg-yellow-100 rounded-2xl border-2 border-yellow-400 " +
                 "border-solid hover:bg-yellow-400 transition-all"
               }
             >
-              إشتراك
+              Subscribe
             </Link>
           </div>
         </section>
@@ -118,7 +109,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
       {student.notes.length !== 0 ? (
         <section>
           <h2>
-            <span className={globalClasses.sectionHeader}>آخر التقارير</span>
+            <span className={globalClasses.sectionHeader}>Last reports</span>
           </h2>
           <div>
             {student.notes.map((note, i) => {
@@ -126,7 +117,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
                 <div key={i} className="p-8 bg-white rounded-3xl my-6">
                   <h3 className="flex justify-between text-2xl font-semibold">
                     <span>
-                      {bDate.getFormedDate(note.date, { form: "arabic" })}
+                      {bDate.getFormedDate(note.date, { form: "english" })}
                     </span>
                     <span>
                       {note.written ? note.rate : "-"}/
@@ -142,10 +133,10 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
                             </p>
                           );
                         })
-                      : "لم يكتب بعد"}
+                      : "Not written yet"}
                   </div>
                   <p className="flex justify-end text-3xl font-reguler">
-                    المعلم: {note.teacher}
+                    Teacher: {note.teacher}
                   </p>
                 </div>
               );

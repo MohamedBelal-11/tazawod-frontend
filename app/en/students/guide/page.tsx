@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "Student Guide - Tazawad Academy",
+  title: "دليل الطالب - أكاديمية تزود",
 };
 
 const Page: React.FC = () => {
@@ -11,10 +11,10 @@ const Page: React.FC = () => {
       <div className="h-px"></div>
       <main className="sm:m-12 m-4 sm:p-8 p-3 ps-8 rounded-lg bg-white">
         <ul className="*:list-disc flex-col gap-2">
-          <li>Attend all appointments without delay.</li>
-          <li>Make sure you select your correct gender before subscribing.</li>
-          <li>If you miss a class, the platform is not responsible.</li>
-          <li>Not talking to the teacher about outside lessons.</li>
+          <li>حضور كل المواعيد دون تأخير.</li>
+          <li>تأكد من إختيار جنسك الصحيح قبل الإشتراك</li>
+          <li>إذا تغيبت عن حصة فالمنصة غير مسئولة.</li>
+          <li>عدم التحدث مع المعلم بشأن دروس خارجية.</li>
         </ul>
       </main>
     </>

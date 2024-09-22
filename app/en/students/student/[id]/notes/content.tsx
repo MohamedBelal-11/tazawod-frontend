@@ -72,6 +72,7 @@ const Content = () => {
       get<HTMLTitleElement>(
         "title"
       )[0].innerHTML = `مذكرات الطالب ${response.student}`;
+    if (response && response.succes) console.log(response.notes[0].date);
   }, [response]);
 
   return (
@@ -130,7 +131,7 @@ const Content = () => {
                       note.teacher.name
                     ) : (
                       <Link
-                        href={`/teachers/teacher/${note.teacher.id}`}
+                        href={`/ar/teachers/teacher/${note.teacher.id}`}
                         className="hover:underline hover:text-green-500"
                       >
                         {note.teacher.name}

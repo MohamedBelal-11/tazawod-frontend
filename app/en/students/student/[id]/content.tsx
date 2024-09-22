@@ -1,10 +1,11 @@
 "use client";
-import { secondsToHrs } from "@/app/en/content";
+import { secondsToHrs } from "@/app/ar/content";
+import { arDay } from "@/app/utils/arabic";
 import { get } from "@/app/utils/docQuery";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
-import { almightyTrim, arCharsList, capitelize, charsList } from "@/app/utils/string";
-import { MeetDate } from "@/app/utils/students";
+import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
+import { MeetDate, Weekday } from "@/app/utils/students";
 import {
   bDate,
   convertEgyptTimeToLocalTime,
@@ -18,7 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import EditDates from "./editDates";
 import Button, { getClass } from "@/app/components/button";
-import "@/app/en/auth/register/student/page.css";
+import "@/app/ar/auth/register/student/page.css";
 import P, { RegulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
 import LoadingDiv from "@/app/components/loadingDiv";
@@ -29,6 +30,8 @@ import {
 } from "@/app/utils/response";
 import Forbidden from "@/app/forbidden";
 import NotFound from "@/app/not-found";
+import { StudentNoteAdmin } from "@/app/utils/note";
+import LogoutButton from "@/app/components/logout";
 
 interface Tdate extends MeetDate {
   price: number;
@@ -84,10 +87,10 @@ const Subscribe: React.FC<{
       style={{ maxWidth: "30rem" }}
     >
       <p className="sm:text-3xl text-xl">
-        {change ? "Choose teacher" : "Subscribe to the student"}
+        {change ? "إختيار معلم" : "إشتراك للطالب"}
       </p>
       <div className="w-full flex flex-col items-center gap-2">
-        <p>Teacher{"'"}s email</p>
+        <p>عنوان البريد المعلم</p>
         <input
           type="text"
           value={gmail}
@@ -95,14 +98,14 @@ const Subscribe: React.FC<{
             setGmail(e.target.value);
           }}
           dir="ltr"
-          placeholder="Email"
+          placeholder="البريد الإلكتروني"
           className={classes.inp}
           autoComplete="email"
         />
       </div>
       <div className="flex gap-4 justify-evenly">
         <Button color="red" onClick={onClose}>
-          cancel
+          إلغاء
         </Button>
         <Button
           color="green"
@@ -124,9 +127,9 @@ const Subscribe: React.FC<{
           {loading ? (
             <div className="animate-spin border-8 border-gray-400 border-t-gray-600 rounded-full w-5 h-5"></div>
           ) : change ? (
-            "done"
+            "تم"
           ) : (
-            "subscribe"
+            "إشتراك"
           )}
         </Button>
       </div>
@@ -139,16 +142,16 @@ const Subscribe: React.FC<{
           }-500 rounded-xl`}
         >
           {response === null
-            ? "Something went wrong."
+            ? "حدث خطأٌ ما"
             : response.succes
-            ? "Successfully done."
+            ? "تم بنجاح"
             : response.error === 4
-            ? "Teacher not found."
+            ? "لم يتم إيجاد المعلم"
             : response.error === 5
-            ? "This teacher is not accepted."
+            ? "لم يتم قبول هذا المعلم"
             : response.error === 7
-            ? "The student's and this teacher's schedules overlap."
-            : "Something went wrong."}
+            ? "مواعيد الطالب وهذا المعلم متداخلة"
+            : "حدث خطأٌ ما"}
         </p>
       )}
     </div>
@@ -206,12 +209,7 @@ type responset =
       gmail: string;
       subscribed: boolean;
       dates: Tdate[];
-      note: {
-        teacher: { name: string; id: string };
-        rate: number;
-        discription: string | null;
-        date: string;
-      } | null;
+      note: StudentNoteAdmin | null;
       gender: "male" | "female";
       teacher: { name: string; id: string } | null;
       currency: "EGP" | "USD";
@@ -247,7 +245,7 @@ const EditData: React.FC<{
     if (name.trim() === "") {
       alive = false;
       setName((m) => {
-        return [...m, "Please fill in the name field."];
+        return [...m, "رجاءً قم بملء خانة الإسم"];
       });
     }
 
@@ -257,7 +255,7 @@ const EditData: React.FC<{
         setName((m) => {
           return [
             ...m,
-            "The name must contain only English or Arabic letters.",
+            "يجب أن يحتوي الاسم على حروف إنجليزية أو عربية فقط (لا تشكيل)",
           ];
         });
         break;
@@ -305,11 +303,11 @@ const EditData: React.FC<{
           </div>
         )}
         <p className="mt-6 text-lg">
-          {subscribed ? "You cannot change your gender after subscribing." : "gender"}
+          {subscribed ? "لا يمكنك تغيير جنسك بعد الإشتراك" : "الجنس"}
         </p>
         <div className={classes["inp"] + "flex flex-wrap"}>
           <div>
-            <label htmlFor="male">Male</label>
+            <label htmlFor="male">ذكر</label>
             <input
               type="radio"
               id="male"
@@ -321,7 +319,7 @@ const EditData: React.FC<{
             />
           </div>
           <div>
-            <label htmlFor="female">Female</label>
+            <label htmlFor="female">أنثى</label>
             <input
               type="radio"
               id="female"
@@ -333,10 +331,10 @@ const EditData: React.FC<{
             />
           </div>
         </div>
-        <p className="mt-6 text-lg">currency</p>
+        <p className="mt-6 text-lg">العملة</p>
         <div className={classes["inp"] + "flex flex-wrap"}>
           <div>
-            <label htmlFor="EGP">EGP</label>
+            <label htmlFor="EGP">جنيه مصري</label>
             <input
               type="radio"
               id="EGP"
@@ -347,7 +345,7 @@ const EditData: React.FC<{
             />
           </div>
           <div>
-            <label htmlFor="USD">USD</label>
+            <label htmlFor="USD">دولار أمريكي</label>
             <input
               type="radio"
               id="USD"
@@ -368,7 +366,7 @@ const EditData: React.FC<{
             "rounded-lg transition-all duration-300 cursor-pointer"
           }
         >
-          cancel
+          إلغاء
         </div>
         {loading ? (
           <Button type="div">
@@ -384,7 +382,7 @@ const EditData: React.FC<{
               "border-solid rounded-lg transition-all duration-300"
             }
           >
-            edit
+            تعديل
           </div>
         ) : (
           <button
@@ -395,7 +393,7 @@ const EditData: React.FC<{
             }
             type="submit"
           >
-            edit
+            تعديل
           </button>
         )}
       </div>
@@ -408,10 +406,10 @@ const EditData: React.FC<{
           }-500 rounded-xl mt-4`}
         >
           {response === null
-            ? "Something went wrong."
+            ? "حدث خطأٌ ما"
             : response.succes
-            ? "Successfully done"
-            : "Something went wrong."}
+            ? "تم بنجاح"
+            : "حدث خطأٌ ما"}
         </p>
       )}
     </form>
@@ -492,8 +490,8 @@ const Popup: React.FC<{
           {...{
             ...(popupData.state === "delete"
               ? {
-                  text: "Are you sure you want to delete this student?",
-                  btns: [{ text: "delete", color: "red" }, {text: "cancel" , color: "green" }],
+                  text: "هل أنت متأكد من أنك تريد حذف هذا الطالب ؟",
+                  btns: [{ text: "حذف", color: "red" }, { color: "green" }],
                   url: `/users/user/${popupData.id}/delete/`,
                   onConfirm: (succes) => {
                     if (succes) {
@@ -503,10 +501,10 @@ const Popup: React.FC<{
                 }
               : popupData.state === "subscribe"
               ? {
-                  text: "Are you sure you want to subscribe to this student?",
-                  btns: [{ text: "subscribe" }, { text: "cancel" }],
+                  text: "هل أنت متأكد من الإشتراك لهذا الطالب ؟",
+                  btns: [{ text: "إشتراك" }, {}],
                   url: `/users/student/${popupData.id}/subscribe/`,
-                  onConfirm() {
+                  onConfirm: () => {
                     setTimeout(() => {
                       onClose();
                       refetch();
@@ -514,10 +512,10 @@ const Popup: React.FC<{
                   },
                 }
               : {
-                  text: "Are you sure you want to unsubscribe this student?",
-                  btns: [{ text: "unsubscribe" }, { text: "cancel" }],
+                  text: "هل أنت متأكد من أنك تريد إلغاء إشتراك هذا الطالب ؟",
+                  btns: [{ text: "إلغاء الإشتراك" }, {}],
                   url: `/users/student/${popupData.id}/desubscribe/`,
-                  onConfirm() {
+                  onConfirm: () => {
                     setTimeout(() => {
                       onClose();
                       refetch();
@@ -555,19 +553,18 @@ const Content = () => {
   useEffect(() => {
     if (response && response.succes) {
       get<HTMLTitleElement>("title", 0, 0).forEach((title) => {
-        title.innerHTML = `Student ${response.name} - Tazawad Academy`;
+        title.innerHTML = `الطالب ${response.name} - أكاديمية تزود`;
       });
     }
   }, [response]);
 
   if (response === undefined) {
-    return <LoadingDiv english loading />;
+    return <LoadingDiv loading />;
   }
-
   if (response === null) {
     return (
       <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
-        Something went wrong.
+        حدث خطأٌ ما
       </div>
     );
   }
@@ -588,7 +585,7 @@ const Content = () => {
     }
     return (
       <div className="m-6 p-6 justify-center items-center flex bg-white rounded-lg">
-        Something went wrong.
+        حدث خطأٌ ما
       </div>
     );
   }
@@ -625,7 +622,7 @@ const Content = () => {
                         : "hover:bg-red-600 hover:border-red-600"
                     }`
                   }
-                  title={response.userType === "self" ? "edit" : "delete"}
+                  title={response.userType === "self" ? "تعديل" : "حذف"}
                   onClick={() =>
                     setPopup(
                       response.userType === "self"
@@ -660,7 +657,7 @@ const Content = () => {
           {/* dispaly subscribing */}
           <div className="flex gap-8 items-center">
             <p className="text-2xl my-4">
-              {response.subscribed ? "subscribed" : "unsubscribed"}
+              {response.subscribed ? "مشترك" : "غير مشترك"}
             </p>
             {/* subscribe button */}
             {response.subscribed ? (
@@ -669,13 +666,13 @@ const Content = () => {
                   color="red"
                   onClick={() => setPopup({ state: "desubscribe", id })}
                 >
-                  unsubscribe
+                  الغاء الإشتراك
                 </Button>
               )
             ) : response.userType === "self" ? (
               // if self display the link to subscribe page
-              <Link href="/en/subscribe" className={getClass({})}>
-                subscribe
+              <Link href="/ar/subscribe" className={getClass({})}>
+                إشتراك
               </Link>
             ) : (
               // else display button that make request to subscribing url
@@ -689,26 +686,26 @@ const Content = () => {
                   })
                 }
               >
-                subscribe
+                إشتراك
               </Button>
             )}
           </div>
           {/* display the teacher */}
           <p className="text-xl mb-2">
-            teacher:{" "}
+            المعلم:{" "}
             {response.teacher ? (
               <Link
-                href={`/en/teachers/teacher/${response.teacher.id}`}
+                href={`/ar/teachers/teacher/${response.teacher.id}`}
                 className="hover:underline hover:text-green-500"
               >
                 {response.teacher.name}
               </Link>
             ) : response.subscribed ? (
               // if there isn't teacher and is subscribed color by red
-              <span className="text-red-500">nothing</span>
+              <span className="text-red-500">لا يوجد</span>
             ) : (
               // else keep it black
-              "nothing"
+              "لا يوجد"
             )}
           </p>
           {response.userType !== "self" && response.subscribed && (
@@ -723,31 +720,36 @@ const Content = () => {
                   })
                 }
               >
-                {response.teacher ? "Change teacher" : "Select teacher"}
+                {response.teacher ? "تغيير المعلم" : "إختيار معلم"}
               </Button>
               {!response.teacher && (
                 // if subscribed push him
-                <span className="inline-block mr-4">You should do this</span>
+                <span className="inline-block mr-4">يجب عليك هذا</span>
               )}
+            </div>
+          )}
+          {response.userType === "self" && (
+            <div className="mt-4">
+              <LogoutButton />
             </div>
           )}
         </section>
         <section className={classes["section"] + "p-4 my-2 w-auto"}>
-          <p className="text-3xl mb-4">Appointments</p>
+          <p className="text-3xl mb-4">المواعيد</p>
           <div className="w-full overflow-x-auto">
             <table className="overflow-x-scroll w-full">
               <thead>
                 <tr>
-                  <th className={classes["td"]}>Day</th>
-                  <th className={classes["td"]}>Starts at</th>
-                  <th className={classes["td"]}>Duration</th>
-                  <th className={classes["td"]}>Price</th>
+                  <th className={classes["td"]}>اليوم</th>
+                  <th className={classes["td"]}>يبدأ</th>
+                  <th className={classes["td"]}>المدة</th>
+                  <th className={classes["td"]}>السعر</th>
                 </tr>
               </thead>
               <tbody>
                 {dates.map((date, i) => (
                   <tr key={i}>
-                    <td className={classes["td"]}>{capitelize(date.day)}</td>
+                    <td className={classes["td"]}>{arDay(date.day)}</td>
                     <td className={classes["td"]}>
                       {date.starts.slice(0, -3)}
                     </td>
@@ -756,14 +758,16 @@ const Content = () => {
                     </td>
                     <td className={classes["td"]}>
                       {date.price}{" "}
-                      {response.currency}{" "}
-                      monthly
+                      {response.currency === "EGP"
+                        ? "جنيه مصري"
+                        : "دولار أمريكي"}{" "}
+                      شهريًا
                     </td>
                   </tr>
                 ))}
                 <tr>
                   <td className={classes["td"]} colSpan={2}>
-                    total
+                    الإجمالي
                   </td>
                   <td className={classes["td"]}>
                     {hrNumber(
@@ -774,8 +778,8 @@ const Content = () => {
                   </td>
                   <td className={classes["td"]}>
                     {sum(response.dates.map(({ price }) => price))}{" "}
-                    {response.currency}{" "}
-                    monthly
+                    {response.currency === "EGP" ? "جنيه مصري" : "دولار أمريكي"}{" "}
+                    شهريًا
                   </td>
                 </tr>
               </tbody>
@@ -791,7 +795,7 @@ const Content = () => {
                 id="edit-dates-button"
                 textHov="black"
               >
-                You cannot change your appointments after subscribing.
+                لا يمكنك تعديل مواعيدك بعد الإشتراك
               </Button>
             ) : (
               <Button
@@ -803,7 +807,7 @@ const Content = () => {
                 className="w-full mt-4"
                 id="edit-dates-button"
               >
-                edit
+                تعديل
               </Button>
             ))}
         </section>
@@ -813,24 +817,28 @@ const Content = () => {
               <div className="p-4">
                 <div className="flex justify-between">
                   <p className="sm:text-2xl">
-                    {`${bDate.getFormedDate(response.note.date, {form: "arabic", day: true, time: false})}`}
+                    {`${bDate.getFormedDate(response.note.date, {
+                      form: "arabic",
+                      day: true,
+                      time: true,
+                    })}`}
                   </p>
                   <p className="sm:text-2xl">
-                    {response.note.rate}\
+                    {response.note.written ? response.note.rate : "-"}\
                     <span className="sm:text-lg text-sm">10</span>
                   </p>
                 </div>
                 <div className="p-4">
-                  {response.note.discription
-                    ? response.note.discription.split("\n").map((line, i) => (
+                  {response.note.written
+                    ? response.note.description.split("\n").map((line, i) => (
                         <p key={i} className="sm:text-xl my-2">
                           {line.trim()}
                         </p>
                       ))
-                    : "No report written"}
+                    : "لم يتم كتابة تقرير"}
                 </div>
                 <p className="sm:text-2xl text-lg">
-                  Teacher:{" "}
+                  المعلم:{" "}
                   {response.userType === "self" ? (
                     response.note.teacher.name
                   ) : (
@@ -844,13 +852,13 @@ const Content = () => {
                 </p>
               </div>
               <Link
-                href={`/students/student/${id}/notes`}
+                href={`/ar/students/student/${id}/notes`}
                 className={
                   "border-t-2 border-solid border-gray-600 block " +
                   "p-4 text-center hover:bg-gray-200 transition-all duration-300"
                 }
               >
-                Show all
+                إظهار الكل
               </Link>
             </>
           ) : (

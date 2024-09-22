@@ -2,12 +2,10 @@
 import Button from "@/app/components/button";
 import Popup, { RegulerConfirm } from "@/app/components/popup";
 import { secondsToHrs } from "@/app/ar/content";
-import { arDay } from "@/app/utils/arabic";
 import { sum } from "@/app/utils/number";
 import { objCompare } from "@/app/utils/object";
 import { almightyTrim, arCharsList, charsList } from "@/app/utils/string";
-import { Weekday } from "@/app/utils/students";
-import { hrNumber } from "@/app/utils/time";
+import { bDate, hrNumber } from "@/app/utils/time";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
@@ -20,6 +18,8 @@ import {
   fetchResponse,
 } from "@/app/utils/response";
 import Copier from "@/app/components/copier";
+import { TeacherNoteAdmin } from "@/app/utils/note";
+import LogoutButton from "@/app/components/logout";
 
 type Response =
   | {
@@ -32,22 +32,7 @@ type Response =
       is_accepted: true;
       currency: "EGP" | "USD";
       gender: "male" | "female";
-      note:
-        | {
-            written: true;
-            student: { name: string; id: string };
-            rate: number;
-            discription: string;
-            day: Weekday;
-            date: string;
-          }
-        | {
-            written: false;
-            student: { name: string; id: string };
-            day: Weekday;
-            date: string;
-          }
-        | null;
+      note: TeacherNoteAdmin | null;
       students: { name: string; delay: number; id: string }[];
     }
   | {
@@ -437,7 +422,7 @@ const Content: React.FC = () => {
             <span dir="ltr">{response.gmail}</span>
           </h2>
           <div>
-            <Copier copy={response.gmail} />
+            <Copier copy={response.gmail} arabic />
           </div>
           {/* display description */}
           <p className="sm:text-xl text-md ps-2">
@@ -473,6 +458,11 @@ const Content: React.FC = () => {
               ? "بعد الظهيرة"
               : "مساءُ"}
           </p>
+          {response.userType === "self" && (
+            <div className="mt-4">
+              <LogoutButton />
+            </div>
+          )}
         </section>
         {response.is_accepted && (
           <section className={classes["section"] + "p-4 my-2 w-auto"}>
@@ -503,7 +493,7 @@ const Content: React.FC = () => {
                             student.name
                           ) : (
                             <Link
-                              href={`/en/students/student/${student.id}`}
+                              href={`/ar/students/student/${student.id}`}
                               className="hover:underline hover:text-green-500"
                             >
                               {student.name}
@@ -541,7 +531,11 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                        {`${bDate.getFormedDate(response.note.date, {
+                          form: "arabic",
+                          day: true,
+                          time: true,
+                        })}`}
                       </p>
                       <p className="sm:text-2xl">
                         {response.note.rate}\
@@ -549,15 +543,11 @@ const Content: React.FC = () => {
                       </p>
                     </div>
                     <div className="p-4">
-                      {response.note.discription
-                        ? response.note.discription
-                            .split("\n")
-                            .map((line, i) => (
-                              <p key={i} className="sm:text-xl my-2">
-                                {line.trim()}
-                              </p>
-                            ))
-                        : "لم يتم كتابة تقرير"}
+                      {response.note.description.split("\n").map((line, i) => (
+                        <p key={i} className="sm:text-xl my-2">
+                          {line.trim()}
+                        </p>
+                      ))}
                     </div>
                     <p className="sm:text-2xl text-lg">
                       الطالب:{" "}
@@ -574,7 +564,7 @@ const Content: React.FC = () => {
                     </p>
                   </div>
                   <Link
-                    href={`/teachers/teacher/${id}/notes`}
+                    href={`/ar/teachers/teacher/${id}/notes`}
                     className={
                       "border-t-2 border-solid border-gray-600 block " +
                       "p-4 text-center hover:bg-gray-200 transition-all duration-300"
@@ -588,7 +578,11 @@ const Content: React.FC = () => {
                   <div className="p-4">
                     <div className="flex justify-between">
                       <p className="sm:text-2xl">
-                        {`${arDay(response.note.day)}  ${response.note.date}`}
+                        {`${bDate.getFormedDate(response.note.date, {
+                          form: "arabic",
+                          day: true,
+                          time: true,
+                        })}`}
                       </p>
                       <p className="sm:text-2xl">
                         -\
@@ -611,7 +605,7 @@ const Content: React.FC = () => {
                     </p>
                   </div>
                   <Link
-                    href={`/teachers/teacher/${id}/notes`}
+                    href={`/ar/teachers/teacher/${id}/notes`}
                     className={
                       "border-t-2 border-solid border-gray-600 block " +
                       "p-4 text-center hover:bg-gray-200 transition-all duration-300"

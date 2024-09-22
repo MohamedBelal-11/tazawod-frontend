@@ -8,6 +8,23 @@ import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 
+export const convertToIframeLink = (googleDriveLink: string) => {
+  // Regular expression to extract the file ID from the Google Drive link
+  const fileIdMatch = googleDriveLink.match(/[-\w]{25,}/);
+
+  // Check if a valid file ID is found
+  if (!fileIdMatch) {
+    return googleDriveLink;
+  }
+
+  const fileId = fileIdMatch[0];
+
+  // Construct the embeddable iframe link
+  const iframeLink = `https://drive.google.com/file/d/${fileId}/preview`;
+
+  return iframeLink;
+};
+
 type Responset =
   | {
       succes: true;
@@ -38,8 +55,8 @@ const Content: React.FC = () => {
     refetch();
   }, [refetch]);
 
-  if (response === undefined){
-    return <LoadingDiv loading />
+  if (response === undefined) {
+    return <LoadingDiv loading />;
   }
 
   if (response === null) {
@@ -61,34 +78,43 @@ const Content: React.FC = () => {
   return (
     <div className="p-2 sm:p-4">
       <main className="p-4 rounded-xl bg-white">
-        <ReactPlayer
-          className="aspect-video"
-          width="100%"
-          height="unset"
-          url={response.link}
-          allow="autoplay; fullscreen"
-          allowFullScreen
-        />
+        {response.link.startsWith("https://drive.google.com") ? (
+          <iframe
+            src={convertToIframeLink(response.link)}
+            width={"100%"}
+            className="aspect-video"
+            allow="autoplay; fullscreen"
+          ></iframe>
+        ) : (
+          <ReactPlayer
+            className="aspect-video"
+            width="100%"
+            height="unset"
+            url={response.link}
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        )}
         <p className="mt-4 text-2xl">{response.title}</p>
         <p>{bDate.getFormedDate(response.date, { form: "arabic" })}</p>
         <div className="flex justify-between sm:px-2">
           {Boolean(response.previous) && (
             <Link
-              href={"/en/watch/video/" + response.previous}
+              href={"/ar/watch/video/" + response.previous}
               className={getClass({ color: "green" })}
             >
               السابق
             </Link>
           )}
           <Link
-            href={"/en/watch/playlists/playlist/" + response.playlist.id}
+            href={"/ar/watch/playlists/playlist/" + response.playlist.id}
             className={getClass({ color: "green" })}
           >
             {response.playlist.title}
           </Link>
           {Boolean(response.next) && (
             <Link
-              href={"/en/watch/video/" + response.next}
+              href={"/ar/watch/video/" + response.next}
               className={getClass({ color: "green" })}
             >
               التالي

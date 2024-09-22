@@ -1,5 +1,6 @@
-"use client"
+"use client";
 import Button from "@/app/components/button";
+import LogoutButton from "@/app/components/logout";
 import Popup from "@/app/components/popup";
 import { objCompare } from "@/app/utils/object";
 import { DefaultResponse, fetchPost } from "@/app/utils/response";
@@ -138,7 +139,7 @@ const EditData: React.FC<{
             setInputs((inps) => ({ ...inps, name: e.target.value }));
             checkName(e.target.value);
           }}
-          placeholder="The name"
+          placeholder="Name"
           className={classes["inp"]}
           maxLength={30}
           autoComplete="name"
@@ -158,7 +159,7 @@ const EditData: React.FC<{
           value={inputs.description}
           style={{ maxWidth: "none" }}
         ></textarea>
-        <p className="mt-6 text-lg">The gender</p>
+        <p className="mt-6 text-lg">Gender</p>
         <div className={classes["inp"] + "flex flex-wrap justify-evenly"}>
           <div>
             <label htmlFor="male">male</label>
@@ -183,7 +184,7 @@ const EditData: React.FC<{
             />
           </div>
         </div>
-        <p className="mt-6 text-lg">The currency</p>
+        <p className="mt-6 text-lg">Currency</p>
         <div className={classes["inp"] + "flex flex-wrap justify-evenly"}>
           <div>
             <label htmlFor="EGP">EGP</label>
@@ -294,6 +295,9 @@ const AdminContent: React.FC<{ user: Admin; refetch: () => void }> = ({
           <p className="text-2xl my-4">
             {user.is_accepted ? "Approved" : "Not approved"}
           </p>
+          <div>
+            <LogoutButton />
+          </div>
         </section>
       </main>
       <Popup onClose={closePopup} visible={popup}>
