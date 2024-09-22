@@ -82,7 +82,10 @@ export default function ArabicLayout({
           type="image/PNG"
         />
         <link rel="preload" href="/static/imgs/quran.gif" type="image/GIF" />
-        <meta name="google-site-verification" content="6I0j9XwDMYHOnxQrgvABAh5XEHoDs9h3WQuMcMOq9ik" />
+        <meta
+          name="google-site-verification"
+          content="jj3VKhX6DBRss4GC-zqt7rjVv3g26hHchOdWma6oCBg"
+        />
       </head>
       <LayoutContextProvider>
         <ScrollContextProvider>
