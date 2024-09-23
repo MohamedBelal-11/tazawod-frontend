@@ -32,7 +32,7 @@ import axios from "axios";
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { fetchResponse } from "../utils/response";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const classes = [
   "text-sm font-semibold leading-6 text-gray-900 hover:text-green-500",
