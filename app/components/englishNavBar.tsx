@@ -284,7 +284,7 @@ export default function ArabicNavBar() {
               router.push(pathname.replace("/en", "/ar"));
             }}
           >
-            en
+            العربية
           </span>
         </div>
         <div className="flex lg:hidden sm:gap-4 gap-2">
