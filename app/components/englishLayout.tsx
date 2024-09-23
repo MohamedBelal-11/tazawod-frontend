@@ -40,7 +40,6 @@ const Body: React.FC<{
 
   return (
     <body
-      dir="rtl"
       style={layoutProperties.style}
       className={
         layoutProperties.className + (loading ? " overflow-y-hidden" : "")

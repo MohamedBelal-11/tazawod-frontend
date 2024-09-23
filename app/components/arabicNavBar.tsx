@@ -32,6 +32,7 @@ import axios from "axios";
 import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { fetchResponse } from "../utils/response";
+import { useRouter } from "next/router";
 
 const classes = [
   "text-sm font-semibold leading-6 text-gray-900 hover:text-green-500",
@@ -191,6 +192,7 @@ export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
   const pathname = usePathname();
+  const router = useRouter()
   const [inNotifications, setInNotifications] = useState(false);
   let userType = response ? response.usertype : "unloged";
 
@@ -316,7 +318,15 @@ export default function ArabicNavBar() {
               </motion.div>
             </Link>
           ) : null}
-          <Link href={pathname.replace("/ar", "/en")}>en</Link>
+          <span
+            className="cursor-pointer"
+            onClick={() => {
+              localStorage.setItem("lang", "en")
+              router.push(pathname.replace("/ar", "/en"));
+            }}
+          >
+            en
+          </span>
         </div>
         <div className="flex lg:hidden sm:gap-4 gap-2">
           {response ? (
