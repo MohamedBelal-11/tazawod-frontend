@@ -128,7 +128,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
                     <span>
                       {bDate.getFormedDate(note.date, { form: "arabic" })}
                     </span>
-                    <span>
+                    <span dir="ltr">
                       {note.written ? note.rate : "-"}/
                       <span className="text-sm">10</span>
                     </span>
