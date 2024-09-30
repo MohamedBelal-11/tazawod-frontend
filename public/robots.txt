@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /
+Allow: /$
 Allow: /en$
 Allow: /ar$
 Allow: /ar/auth/register/student$
