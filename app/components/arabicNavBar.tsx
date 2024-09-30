@@ -33,6 +33,7 @@ import { motion, Variants } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { fetchResponse } from "../utils/response";
 import { useRouter } from "next/navigation";
+import { DateTime } from "luxon";
 
 const classes = [
   "text-sm font-semibold leading-6 text-gray-900 hover:text-green-500",
@@ -321,7 +322,9 @@ export default function ArabicNavBar() {
           <span
             className="cursor-pointer"
             onClick={() => {
-              localStorage.setItem("lang", "en")
+              document.cookie = `userLang=en; expires=${
+                DateTime.now().plus({years: 1}).toISO()
+              }; path=/; SameSite=Lax; Secure`;
               router.push(pathname.replace("/ar", "/en"));
             }}
           >

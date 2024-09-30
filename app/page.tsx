@@ -1,5 +1,15 @@
-import Content from "./content";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-const Page = () => <Content />;
+export default function Page() {
+  // Retrieve cookies server-side
+  const cookieStore = cookies();
+  const userLang = cookieStore.get('userLang'); // Get the userLang cookie
 
-export default Page;
+  // Perform server-side redirection
+  if (userLang && (userLang.value === 'en')) {
+    redirect('/en'); // Redirect to the English version of the site
+  } else {
+    redirect('/en'); // Default to the Arabic version
+  }
+}

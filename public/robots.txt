@@ -6,5 +6,5 @@ Allow: /ar/auth/register/student$
 Allow: /ar/auth/login$
 Allow: /en/auth/register/student$
 Allow: /en/auth/login$
-Allow: /ar/playlists$
-Allow: /en/playlists$
+Allow: /ar/watch/playlists$
+Allow: /en/watch/playlists$
