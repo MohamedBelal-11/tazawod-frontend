@@ -10,6 +10,6 @@ export default function Page() {
   if (userLang && (userLang.value === 'en')) {
     redirect('/en'); // Redirect to the English version of the site
   } else {
-    redirect('/en'); // Default to the Arabic version
+    redirect('/ar'); // Default to the Arabic version
   }
 }
