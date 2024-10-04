@@ -9,6 +9,7 @@ import { ADE, cCV, CCV, homeclasses, secondsToHrs } from "./content";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { TeacherNoteSelf } from "../utils/note";
+import OptionsDiv from "../components/optionsDiv";
 
 type meeting = {
   student: string;
@@ -22,6 +23,7 @@ export type TeacherHome =
       userType: "teacher";
       is_accepted: false;
       super_admins: { name: string; gmail: string }[];
+      id: string;
     }
   | {
       succes: true;
@@ -39,6 +41,7 @@ export type TeacherHome =
         } | null;
       } | null;
       notes: TeacherNoteSelf[];
+      id: string;
     };
 
 const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
@@ -76,17 +79,20 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
                     })}
                   </span>
                   <span>
-                    {teacher.currentMeet.last_note.rate}/<span className="text-sm">10</span>
+                    {teacher.currentMeet.last_note.rate}/
+                    <span className="text-sm">10</span>
                   </span>
                 </h3>
                 <div className="my-6 text-xl font-reguler">
-                  {teacher.currentMeet.last_note.description.split("\n").map((line, i) => {
-                    return (
-                      <p className="my-2" key={i}>
-                        {line}
-                      </p>
-                    );
-                  })}
+                  {teacher.currentMeet.last_note.description
+                    .split("\n")
+                    .map((line, i) => {
+                      return (
+                        <p className="my-2" key={i}>
+                          {line}
+                        </p>
+                      );
+                    })}
                 </div>
                 <p className="flex justify-end text-3xl font-reguler">
                   المعلم: {teacher.currentMeet.last_note.teacher}
@@ -97,7 +103,7 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
         </>
       ) : undefined}
       {teacher.is_accepted ? (
-        <section>
+        <section className="mb-4">
           <h2 className={globalClasses.sectionHeader}>دروس اليوم</h2>
           <motion.div
             className={homeclasses.cardsContainer}
@@ -191,7 +197,7 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
         </section>
       )}
       {!teacher.is_accepted && teacher.super_admins.length !== 0 ? (
-        <section>
+        <section className="mb-4">
           <h2 className={globalClasses.sectionHeader}>
             بعض الشرفين الكبار الذين يمكنك التواصل معهم
           </h2>
@@ -222,9 +228,9 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
             <div></div>
           </motion.div>
         </section>
-      ) : null}
+      ) : undefined}
       {teacher.is_accepted && teacher.notes.length !== 0 ? (
-        <section>
+        <section className="mb-4">
           <h2>
             <span className={globalClasses.sectionHeader}>آخر التقارير</span>
           </h2>
@@ -260,9 +266,36 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
             })}
           </div>
         </section>
-      ) : (
-        <></>
-      )}
+      ) : undefined}
+      <OptionsDiv
+        options={[
+          {
+            titled: "المقابلات",
+            description: "جميع مقابلاتك الإسبوعية",
+            href: "/ar/meetings",
+          },
+          {
+            titled: "دليل المعلم",
+            description: "الواجبات التي يجب عليك الإلتزام بها",
+            href: "/ar/teachers/guide",
+          },
+          {
+            titled: "الحساب",
+            description: "رؤية وتعديل ملفك الشخصي",
+            href: `/ar/teachers/teacher/${teacher.id}`,
+          },
+          {
+            titled: "الدروس المقطعية",
+            description: "شاهد دروس مقطية في أي وقت",
+            href: "/ar/watch/playlists",
+          },
+          {
+            titled: "التقارير",
+            description: "آخر التقييمات والملاحظات الخاصة بك",
+            href: `/ar/teachers/teacher/${teacher.id}/notes`,
+          },
+        ]}
+      />
     </>
   );
 };

@@ -11,6 +11,7 @@ import AdminHomeContent, { AdminHome } from "./adminHomeContent";
 import TeacherHomeContent, { TeacherHome } from "./teacherHomeContent";
 import { fetchResponse } from "../utils/response";
 import { convertEgyptTimeToLocalTime, sumStartAndDelay } from "../utils/time";
+import OptionsDiv from "../components/optionsDiv";
 
 export const ADE = ({ copy }: { copy: string }) => {
   return (
@@ -171,7 +172,7 @@ export default function Content() {
                 </div>
               </div>
             </section>
-            <article>
+            <article className="mb-4">
               <motion.div
                 className="bg-white rounded-lg my-4 p-4"
                 initial={{ scale: 0.5 }}
@@ -225,6 +226,30 @@ export default function Content() {
                 </motion.div>
               ))}
             </article>
+            <OptionsDiv
+              options={[
+                {
+                  titled: "تسجيل الدخول",
+                  description: "لديك حساب بالفعل؟ قم بتسجيل الدخول",
+                  href: "/ar/auth/login",
+                },
+                {
+                  titled: "إنشاء حساب كمعلم",
+                  description: "إنضم إلينا كمعلم",
+                  href: "/ar/auth/register/teacher",
+                },
+                {
+                  titled: "إنشاء حساب مشرف",
+                  description: "إنضم إلينا كمشرف",
+                  href: "/ar/auth/register/admin",
+                },
+                {
+                  titled: "الدروس المقطعية",
+                  description: "شاهد دروس مقطية في أي وقت",
+                  href: "/ar/watch/playlists",
+                },
+              ]}
+            />
           </>
         ) : response.userType === "student" ? (
           <StudentHomeContent student={response} />
@@ -281,6 +306,43 @@ export default function Content() {
             </motion.div>
           </section>
         )}
+        <OptionsDiv options={[
+          {
+            titled: "المقابلات",
+            description: "جميع المقابلات الحية",
+            href: "/ar/meetings"
+          },
+          {
+            titled: "دليل المشرف",
+            description: "الواجبات التي يجب عليك الإلتزام بها",
+            href: "/ar/admins/guide"
+          },
+          {
+            titled: "الحساب",
+            description: "رؤية وتعديل ملفك الشخصي",
+            href: "/ar/admin-acount"
+          },
+          {
+            titled: "المعلمين",
+            description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
+            href: "/ar/teachers",
+          },
+          {
+            titled: "الطلاب",
+            description: "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
+            href: "/ar/students",
+          },
+          {
+            titled: "الدروس المقطعية",
+            description: "شاهد دروس مقطية في أي وقت",
+            href: "/ar/watch/playlists",
+          },
+          {
+            titled: "المشرفين",
+            description: "قائمة المشرفين الموافقين عليهم و وغير الموافقين عليهم",
+            href: "/ar/admins",
+          },
+        ]} />
       </main>
     </>
   );

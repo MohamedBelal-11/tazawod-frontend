@@ -3,6 +3,7 @@ import globalClasses from "../utils/globalClasses";
 import { adminMeeting, cCV, CCV, homeclasses } from "./content";
 import { convertEgyptTimeToLocalTime, sumStartAndDelay } from "../utils/time";
 import Link from "next/link";
+import OptionsDiv from "../components/optionsDiv";
 
 export type AdminHome =
   | {
@@ -13,7 +14,7 @@ export type AdminHome =
     }
   | {
       succes: true;
-      userType: "teacher";
+      userType: "admin";
       is_accepted: false;
       super_admins: { name: string; gmail: string }[];
     };
@@ -21,7 +22,7 @@ export type AdminHome =
 const AdminHomeContent: React.FC<{ admin: AdminHome }> = ({ admin }) => {
   return (
     <>
-      {admin.userType === "admin" && admin.is_accepted ? (
+      {admin.is_accepted ? (
         <section>
           <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
           <motion.div
@@ -86,6 +87,49 @@ const AdminHomeContent: React.FC<{ admin: AdminHome }> = ({ admin }) => {
           </div>
         </section>
       )}
+      <OptionsDiv
+        options={[
+          ...(admin.is_accepted
+            ? [
+                {
+                  titled: "المقابلات",
+                  description: "جميع المقابلات الحية",
+                  href: "/ar/meetings",
+                },
+              ]
+            : []),
+          {
+            titled: "دليل المشرف",
+            description: "الواجبات التي يجب عليك الإلتزام بها",
+            href: "/ar/admins/guide",
+          },
+          {
+            titled: "الحساب",
+            description: "رؤية وتعديل ملفك الشخصي",
+            href: "/ar/admin-acount",
+          },
+          ...(admin.is_accepted
+            ? [
+                {
+                  titled: "المعلمين",
+                  description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
+                  href: "/ar/teachers",
+                },
+                {
+                  titled: "الطلاب",
+                  description:
+                    "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
+                  href: "/ar/students",
+                },
+              ]
+            : []),
+          {
+            titled: "الدروس المقطعية",
+            description: "شاهد دروس مقطية في أي وقت",
+            href: "/ar/watch/playlists",
+          },
+        ]}
+      />
     </>
   );
 };

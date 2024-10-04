@@ -14,6 +14,7 @@ import { MeetDate } from "../utils/students";
 import { motion } from "framer-motion";
 import { arDay } from "../utils/arabic";
 import Link from "next/link";
+import OptionsDiv from "../components/optionsDiv";
 
 export type StudentHome = {
   succes: true;
@@ -22,6 +23,7 @@ export type StudentHome = {
   subscribed: boolean;
   currentMeet: { url: string; teacher: string | null } | null;
   notes: StudentNoteSelf[];
+  id: string;
 };
 
 const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
@@ -51,7 +53,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
           </div>
         </section>
       ) : undefined}
-      <section>
+      <section className="mb-4">
         <h2>
           <span className={globalClasses.sectionHeader}>دروسك</span>
         </h2>
@@ -98,7 +100,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
         </motion.div>
       </section>
       {!student.subscribed && (
-        <section className="p-8 rounded-3xl bg-white">
+        <section className="p-8 rounded-3xl bg-white mb-4">
           <h2 className="text-3xl font-bold text-center">
             أنت لم تشترك حتى الآن
           </h2>
@@ -116,7 +118,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
         </section>
       )}
       {student.notes.length !== 0 ? (
-        <section>
+        <section className="mb-4">
           <h2>
             <span className={globalClasses.sectionHeader}>آخر التقارير</span>
           </h2>
@@ -153,6 +155,34 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
           </div>
         </section>
       ) : undefined}
+      <OptionsDiv
+        options={[
+          {
+            titled: "دليل الطالب",
+            description: "الواجبات التي يجب عليك الإلتزام بها",
+            href: "/ar/students/guide",
+          },{
+            titled: "الحساب",
+            description: "رؤية وتعديل ملفك الشخصي و مواعيدك",
+            href: `/ar/students/student/${student.id}`,
+          },
+          {
+            titled: "التقارير",
+            description: "آخر التقييمات والملاحظات الخاصة بك",
+            href: `/ar/students/student/${student.id}/notes`,
+          },
+          {
+            titled: "الإشتراك",
+            description: "إشترك لتبدأ مع أول موعد",
+            href: "/ar/subscribe",
+          },
+          {
+            titled: "الدروس المقطعية",
+            description: "شاهد دروس مقطية في أي وقت",
+            href: "/ar/watch/playlists",
+          },
+        ]}
+      />
     </>
   );
 };
