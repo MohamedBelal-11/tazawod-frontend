@@ -258,91 +258,97 @@ export default function Content() {
         ) : response.userType === "admin" ? (
           <AdminHomeContent admin={response} />
         ) : (
-          <section>
-            <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
-            <motion.div
-              className={homeclasses.cardsContainer}
-              variants={cCV}
-              initial="hidden"
-              animate="visible"
-            >
-              {response.live_meetings.map((meeting, i) => (
-                <motion.div
-                  key={i}
-                  className={
-                    "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
-                    "transition-all duration-300 w-max *:w-max"
-                  }
-                  variants={CCV}
-                >
-                  <p className="text-3xl font-bold">
-                    الطالب: {meeting.student}
-                  </p>
-                  <p className="text-3xl font-bold">
-                    المعلم: {meeting.teacher || "لا يوجد"}
-                  </p>
-                  <p className="text-2xl">
-                    يبدأ الساعة{" "}
-                    {convertEgyptTimeToLocalTime(meeting.starts.slice(0, -3))}
-                  </p>
-                  <p>
-                    ينتهي الساعة{" "}
-                    {convertEgyptTimeToLocalTime(
-                      sumStartAndDelay(meeting.starts, meeting.delay)
-                    )}
-                  </p>
-                  <a
-                    href={meeting.url}
-                    target="_blank"
+          <>
+            <section>
+              <h2 className={globalClasses.sectionHeader}>الدروس المباشرة</h2>
+              <motion.div
+                className={homeclasses.cardsContainer}
+                variants={cCV}
+                initial="hidden"
+                animate="visible"
+              >
+                {response.live_meetings.map((meeting, i) => (
+                  <motion.div
+                    key={i}
                     className={
-                      "px-6 py-4 bg-orange-100 rounded-2xl border-2 border-orange-400 " +
-                      "border-solid hover:bg-orange-400 hover:text-white transition-all"
+                      "px-8 rounded-lg bg-white *:my-4 *:text-nowrap py-4 block " +
+                      "transition-all duration-300 w-max *:w-max"
                     }
+                    variants={CCV}
                   >
-                    دخول المقابلة
-                  </a>
-                </motion.div>
-              ))}
-            </motion.div>
-          </section>
+                    <p className="text-3xl font-bold">
+                      الطالب: {meeting.student}
+                    </p>
+                    <p className="text-3xl font-bold">
+                      المعلم: {meeting.teacher || "لا يوجد"}
+                    </p>
+                    <p className="text-2xl">
+                      يبدأ الساعة{" "}
+                      {convertEgyptTimeToLocalTime(meeting.starts.slice(0, -3))}
+                    </p>
+                    <p>
+                      ينتهي الساعة{" "}
+                      {convertEgyptTimeToLocalTime(
+                        sumStartAndDelay(meeting.starts, meeting.delay)
+                      )}
+                    </p>
+                    <a
+                      href={meeting.url}
+                      target="_blank"
+                      className={
+                        "px-6 py-4 bg-orange-100 rounded-2xl border-2 border-orange-400 " +
+                        "border-solid hover:bg-orange-400 hover:text-white transition-all"
+                      }
+                    >
+                      دخول المقابلة
+                    </a>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </section>
+            <OptionsDiv
+              options={[
+                {
+                  titled: "المقابلات",
+                  description: "جميع المقابلات الحية",
+                  href: "/ar/meetings",
+                },
+                {
+                  titled: "دليل المشرف",
+                  description: "الواجبات التي يجب عليك الإلتزام بها",
+                  href: "/ar/admins/guide",
+                },
+                {
+                  titled: "الحساب",
+                  description: "رؤية وتعديل ملفك الشخصي",
+                  href: "/ar/admin-acount",
+                },
+                {
+                  titled: "المعلمين",
+                  description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
+                  href: "/ar/teachers",
+                },
+                {
+                  titled: "الطلاب",
+                  description:
+                    "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
+                  href: "/ar/students",
+                },
+                {
+                  titled: "الدروس المقطعية",
+                  description: "شاهد دروس مقطية في أي وقت",
+                  href: "/ar/watch/playlists",
+                },
+                {
+                  titled: "المشرفين",
+                  description:
+                    "قائمة المشرفين الموافقين عليهم و وغير الموافقين عليهم",
+                  href: "/ar/admins",
+                },
+              ]}
+            />
+          </>
         )}
-        <OptionsDiv options={[
-          {
-            titled: "المقابلات",
-            description: "جميع المقابلات الحية",
-            href: "/ar/meetings"
-          },
-          {
-            titled: "دليل المشرف",
-            description: "الواجبات التي يجب عليك الإلتزام بها",
-            href: "/ar/admins/guide"
-          },
-          {
-            titled: "الحساب",
-            description: "رؤية وتعديل ملفك الشخصي",
-            href: "/ar/admin-acount"
-          },
-          {
-            titled: "المعلمين",
-            description: "قائمة المعلمين الموافقين عليهم و قائمة دروسهم",
-            href: "/ar/teachers",
-          },
-          {
-            titled: "الطلاب",
-            description: "عرض جميع الطلاب المشتركين وغير المشتركين وتفاريرك الخاصة بهم",
-            href: "/ar/students",
-          },
-          {
-            titled: "الدروس المقطعية",
-            description: "شاهد دروس مقطية في أي وقت",
-            href: "/ar/watch/playlists",
-          },
-          {
-            titled: "المشرفين",
-            description: "قائمة المشرفين الموافقين عليهم و وغير الموافقين عليهم",
-            href: "/ar/admins",
-          },
-        ]} />
       </main>
     </>
   );
