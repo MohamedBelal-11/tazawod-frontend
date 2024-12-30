@@ -287,7 +287,12 @@ export default function ArabicNavBar() {
             <img className="h-12 min-w-12" src="/static/imgs/quraan.png" />
           </Link>
           {response ? (
-            <Link href="/ar/notifications">
+            <span
+            className="cursor-pointer"
+            onClick={() => {
+              router.push("/en/notifications");
+              setResponse((r) => (r ? { ...r, notification_count: 0 } : r));
+            }}>
               <motion.div
                 variants={nDV}
                 whileHover="hov"
@@ -317,7 +322,7 @@ export default function ArabicNavBar() {
                   </p>
                 )}
               </motion.div>
-            </Link>
+            </span>
           ) : null}
           <span
             className="cursor-pointer"

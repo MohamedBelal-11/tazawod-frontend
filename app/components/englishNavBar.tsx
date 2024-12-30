@@ -82,7 +82,8 @@ const adminOptionList: option[] = [
   },
   {
     name: "Students",
-    description: "View all subscribed and unsubscribed students and their reports.",
+    description:
+      "View all subscribed and unsubscribed students and their reports.",
     href: "/en/students",
   },
   {
@@ -186,8 +187,8 @@ function classNames(...classes: any) {
 export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
   let userType = response ? response.usertype : "unloged";
 
   useEffect(() => {
@@ -246,7 +247,13 @@ export default function ArabicNavBar() {
             <img className="h-12 min-w-12" src="/static/imgs/quraan.png" />
           </Link>
           {response ? (
-            <Link href="/en/notifications">
+            <span
+              className="cursor-pointer"
+              onClick={() => {
+                router.push("/en/notifications");
+                setResponse((r) => (r ? { ...r, notification_count: 0 } : r));
+              }}
+            >
               <motion.div
                 variants={nDV}
                 whileHover="hov"
@@ -276,14 +283,14 @@ export default function ArabicNavBar() {
                   </p>
                 )}
               </motion.div>
-            </Link>
+            </span>
           ) : null}
           <span
             className="cursor-pointer"
             onClick={() => {
-              document.cookie = `userLang=ar; expires=${
-                DateTime.now().plus({years: 1}).toISO()
-              }; path=/; SameSite=Lax; Secure`;
+              document.cookie = `userLang=ar; expires=${DateTime.now()
+                .plus({ years: 1 })
+                .toISO()}; path=/; SameSite=Lax; Secure`;
               router.push(pathname.replace("/en", "/ar"));
             }}
           >
@@ -409,7 +416,7 @@ export default function ArabicNavBar() {
           ) : (
             <>
               <Link href="/en/auth/login" className={classes[0]}>
-               <span aria-hidden="true">&rarr;</span> Login
+                <span aria-hidden="true">&rarr;</span> Login
               </Link>
               <Link
                 href="/en/auth/register/student"

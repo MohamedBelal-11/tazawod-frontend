@@ -44,7 +44,6 @@ type Meet =
       teacher: null;
       student: User;
       id: number;
-      meet_link: string;
       started: string;
       ends: string;
     }
@@ -53,7 +52,6 @@ type Meet =
       teacher: User;
       student: User;
       id: number;
-      meet_link: string;
       started: string;
       ends: string;
     };
@@ -156,7 +154,7 @@ const MeetingDiv: React.FC<{
         {meeting.status !== "didnt_start" ? (
           <div className="flex justify-evenly">
             <a
-              href={meeting.meet_link}
+              href={"/ar/meetings/meeting/" + meeting.id}
               className={getClass({ color: "sky" }) + ""}
             >
               دخول المقابلة

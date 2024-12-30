@@ -8,6 +8,7 @@ import {
   User,
   useCallStateHooks,
   ParticipantView,
+  Call,
 } from "@stream-io/video-react-sdk";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -40,34 +41,47 @@ type Responset =
     }
   | null;
 
+let streamVideoClient: StreamVideoClient;
+
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
   const { id }: { id: string } = useParams();
+  const [call, setCall] = useState<Call>();
 
   useEffect(() => {
     fetchResponse({ setResponse, url: "/api/meetings/meeting/" + id });
   }, [id]);
 
-  if (response === undefined) {
-    return <LoadingDiv loading />;
-  }
+  useEffect(() => {
+    if (response && response.succes) {
+      // Initialize StreamVideoClient only once
+      if (!streamVideoClient) {
+        streamVideoClient = new StreamVideoClient({
+          apiKey,
+          token: response.token,
+          user: { name: response.name, id: response.id },
+        });
 
-  if (response === null || response.succes === false) {
+        // Set the call instance
+        const newCall = streamVideoClient.call("default", response.call_id);
+        setCall(newCall);
+
+        // Join the call once
+        newCall.join({ create: false });
+      }
+    }
+  }, [response]);
+
+  if (response === null || (response && !response.succes)) {
     return "Error";
   }
 
-  const user: User = {
-    name: response.name,
-    id: response.id,
-  };
-  const client = new StreamVideoClient({ apiKey, token: response.token, user });
-
-  const call = client.call("default", response.call_id);
-
-  call.join({ create: false });
+  if (response === undefined || !streamVideoClient || !call) {
+    return <LoadingDiv loading />;
+  }
 
   return (
-    <StreamVideo client={client}>
+    <StreamVideo client={streamVideoClient}>
       <StreamCall call={call}>
         {response.is_admin ? <AdminC /> : <MyVideoUI id={id} />}
       </StreamCall>

@@ -25,7 +25,7 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
             </p>
             <div className="flex flex-row gap-4 justify-center">
               <a
-                href={teacher.currentMeet.meet.url}
+                href={"/en/meetings/meeting/" + teacher.currentMeet.meet.id}
                 target="_blank"
                 className={
                   "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
@@ -34,7 +34,7 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
               >
                 Enter
               </a>
-              <ADE copy={teacher.currentMeet.meet.url} />
+              <ADE copy={"/en/meetings/meeting/" + teacher.currentMeet.meet.id} />
             </div>
           </section>
           {teacher.currentMeet.last_note && (

@@ -42,7 +42,7 @@ const AdminHomeContent: React.FC<{ admin: AdminHome }> = ({ admin }) => {
                   )}
                 </p>
                 <a
-                  href={meeting.url}
+                  href={"/en/meetings/meeting/" + meeting.id}
                   target="_blank"
                   className={
                     "px-6 py-4 bg-orange-100 rounded-2xl border-2 border-orange-400 " +

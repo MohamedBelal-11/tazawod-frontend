@@ -21,7 +21,7 @@ export type StudentHome = {
   userType: "student";
   quraan_days: MeetDate[];
   subscribed: boolean;
-  currentMeet: { url: string; teacher: string | null } | null;
+  currentMeet: { id: number; teacher: string | null } | null;
   notes: StudentNoteSelf[];
   id: string;
 };
@@ -40,7 +40,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
           </p>
           <div className="flex flex-row gap-4 justify-center">
             <a
-              href={student.currentMeet.url}
+              href={"/ar/meetings/meeting/" + student.currentMeet.id}
               target="_blank"
               className={
                 "bg-sky-200 border-2 border-solid border-sky-500 px-4 py-3 " +
@@ -49,7 +49,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
             >
               دخول
             </a>
-            <ADE copy={student.currentMeet.url} />
+            <ADE copy={"/ar/meetings/meeting/" + student.currentMeet.id} />
           </div>
         </section>
       ) : undefined}
@@ -153,7 +153,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
               );
             })}
           </div>
-        </section>
+        </section> 
       ) : undefined}
       <OptionsDiv
         options={[
