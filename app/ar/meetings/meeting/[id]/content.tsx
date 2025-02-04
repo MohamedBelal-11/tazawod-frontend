@@ -6,10 +6,12 @@ import {
   StreamCall,
   StreamVideo,
   StreamVideoClient,
-  User,
   useCallStateHooks,
   ParticipantView,
   Call,
+  StreamTheme,
+  CallControls,
+  SpeakerLayout,
 } from "@stream-io/video-react-sdk";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -84,21 +86,19 @@ const Content: React.FC = () => {
   return (
     <StreamVideo client={streamVideoClient}>
       <StreamCall call={call}>
-        {response.is_admin ? <AdminC /> : <MyVideoUI id={id} />}
+        <StreamTheme>
+          {response.is_admin ? <AdminC /> : <MyVideoUI id={id} />}
+          <CallControls />
+        </StreamTheme>
       </StreamCall>
     </StreamVideo>
   );
 };
 
 const AdminC: React.FC = () => {
-  const { useParticipants } = useCallStateHooks();
-  const participants = useParticipants();
-
   return (
     <>
-      {participants.map((p) => (
-        <ParticipantView participant={p} key={p.sessionId} />
-      ))}
+      <SpeakerLayout />
       <AllowToSeenButton />
     </>
   );
@@ -129,13 +129,9 @@ const MyVideoUI: React.FC<{ id: string }> = ({ id }) => {
   }
 
   return (
-    <>
-      {participants
-        .filter((pe) => response.participants.includes(pe.userId))
-        .map((p) => (
-          <ParticipantView participant={p} key={p.sessionId} />
-        ))}
-    </>
+    <SpeakerLayout
+      filterParticipants={(pe) => response.participants.includes(pe.userId)}
+    />
   );
 };
 export default Content;

@@ -185,16 +185,11 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-const markAllAsRead = () => {
-  fetchResponse({ setResponse: () => undefined, url: "/users/read-all/" });
-};
-
 export default function ArabicNavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
   const pathname = usePathname();
   const router = useRouter()
-  const [inNotifications, setInNotifications] = useState(false);
   let userType = response ? response.usertype : "unloged";
 
   useEffect(() => {
@@ -228,40 +223,6 @@ export default function ArabicNavBar() {
     }
   }, [response]);
 
-  useEffect(() => {
-    if (pathname.endsWith("notifications")) {
-      setInNotifications(true);
-    } else {
-      if (inNotifications) {
-        markAllAsRead();
-        const fetchData = async () => {
-          // Retrieve the token from the local storage.
-          const token = localStorage.getItem("token");
-
-          try {
-            // Make an HTTP GET request to the server.
-            // The request includes an Authorization header with the token.
-            const respons = await axios.get(backendUrl + "/api/nav/", {
-              headers: {
-                // Set the Authorization header to include the token.
-                Authorization: `Token ${token}`,
-              },
-            });
-
-            // If the request is successful, update the response state with the data received from the server.
-            setResponse(respons.data);
-          } catch (error) {
-            // If there is an error, log the error to the console.
-            console.error(error);
-          }
-        };
-        fetchData();
-        setInNotifications(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
-
   const list =
     userType === "student"
       ? studentOptionList
@@ -290,8 +251,8 @@ export default function ArabicNavBar() {
             <span
             className="cursor-pointer"
             onClick={() => {
-              router.push("/en/notifications");
               setResponse((r) => (r ? { ...r, notification_count: 0 } : r));
+              router.push("/ar/notifications");
             }}>
               <motion.div
                 variants={nDV}

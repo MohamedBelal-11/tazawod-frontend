@@ -250,8 +250,8 @@ export default function ArabicNavBar() {
             <span
               className="cursor-pointer"
               onClick={() => {
-                router.push("/en/notifications");
                 setResponse((r) => (r ? { ...r, notification_count: 0 } : r));
+                router.push("/en/notifications");
               }}
             >
               <motion.div
