@@ -11,7 +11,6 @@ import {
   Call,
   StreamTheme,
   CallControls,
-  SpeakerLayout,
 } from "@stream-io/video-react-sdk";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -45,6 +44,8 @@ type Responset =
   | null;
 
 let streamVideoClient: StreamVideoClient;
+
+const participantViewClass = undefined; //"m-2.5 p-2.5 bg-white shadow-md rounded-lg";
 
 const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
@@ -96,9 +97,18 @@ const Content: React.FC = () => {
 };
 
 const AdminC: React.FC = () => {
+  const { useParticipants } = useCallStateHooks();
+  const participants = useParticipants();
+
   return (
     <>
-      <SpeakerLayout />
+      {participants.map((p) => (
+        <ParticipantView
+          participant={p}
+          key={p.sessionId}
+          className={participantViewClass}
+        />
+      ))}
       <AllowToSeenButton />
     </>
   );
@@ -129,9 +139,17 @@ const MyVideoUI: React.FC<{ id: string }> = ({ id }) => {
   }
 
   return (
-    <SpeakerLayout
-      filterParticipants={(pe) => response.participants.includes(pe.userId)}
-    />
+    <>
+      {participants
+        .filter((pe) => response.participants.includes(pe.userId))
+        .map((p) => (
+          <ParticipantView
+            participant={p}
+            key={p.sessionId}
+            className={participantViewClass}
+          />
+        ))}
+    </>
   );
 };
 export default Content;
