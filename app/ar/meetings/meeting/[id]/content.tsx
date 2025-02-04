@@ -14,6 +14,7 @@ import {
 } from "@stream-io/video-react-sdk";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import "@stream-io/video-react-sdk/dist/css/styles.css";
 
 const apiKey = "kvmdz4hfewpf";
 
