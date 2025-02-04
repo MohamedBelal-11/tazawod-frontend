@@ -55,9 +55,7 @@ const Content: React.FC = () => {
               >
                 الإشتراك عن طريق التواصل مع مشرف
               </Link>
-              <Button className="w-56 text-xl" color="green">
-                الإشتراك عن طريق البطاقة المصرفية
-              </Button>
+              <CreditSubscipeButton />
               {Boolean(response && !response.freeTierUsed) && (
                 <Button
                   className="w-56 text-xl"
@@ -114,6 +112,34 @@ const Content: React.FC = () => {
         </main>
       )}
     </div>
+  );
+};
+
+type Responset1 =
+  | { succes: true; payment_url: string }
+  | { succes: false; error?: number }
+  | null;
+
+const CreditSubscipeButton: React.FC = () => {
+  const [response, setResponse] = useState<Responset1>();
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if(response && response.succes) {
+      window.location.href = response.payment_url;
+    }
+  }, [response])
+
+  return (
+    <Button onClick={loading || (response && response.succes) ? undefined : () => {
+      fetchResponse({
+        setResponse,
+        url: "/api/subscribe-iframe/",
+        setLoading,
+      });
+    }} className="w-56 text-xl" color="green">
+      الإشتراك عن طريق البطاقة المصرفية
+    </Button>
   );
 };
 
