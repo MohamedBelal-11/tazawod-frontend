@@ -66,7 +66,7 @@ const TeacherHomeContent: React.FC<{ teacher: TeacherHome }> = ({
               >
                 دخول
               </a>
-              <ADE copy={"/ar/meetings/meeting/" + teacher.currentMeet.meet.id} />
+              <ADE domain copy={"/ar/meetings/meeting/" + teacher.currentMeet.meet.id} />
             </div>
           </section>
           {teacher.currentMeet.last_note && (

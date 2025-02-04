@@ -16,7 +16,10 @@ import { fetchResponse } from "../utils/response";
 import { convertEgyptTimeToLocalTime, sumStartAndDelay } from "../utils/time";
 import { adminMeeting, cCV, homeclasses } from "../ar/content";
 
-export const ADE = ({ copy }: { copy: string }) => {
+export const ADE: React.FC<{ copy: string; domain?: boolean }> = ({
+  copy,
+  domain = false,
+}) => {
   return (
     <button
       className={
@@ -26,7 +29,7 @@ export const ADE = ({ copy }: { copy: string }) => {
       onClick={(e) => {
         const span = e.currentTarget.querySelector("span");
         navigator.clipboard
-          .writeText(copy)
+          .writeText(domain ? location.origin : "" + copy)
           .then(() => {
             if (span) {
               span.innerText = "copied";
@@ -158,7 +161,7 @@ export default function Content() {
                 transition={{ type: "spring", mass: "0.5" }}
               >
                 <p className="text-3xl text-center">
-                Tazawad Academy for teaching the Holy Quran and its sciences
+                  Tazawad Academy for teaching the Holy Quran and its sciences
                 </p>
                 <div className="flex md:gap-4 justify-center flex-col lg:flex-row">
                   <div className="flex justify-center items-center">
@@ -169,11 +172,14 @@ export default function Content() {
                   </div>
                   <div className="flex-col flex justify-center min-h-80 px-6">
                     <p className="text-2xl my-6 text-center">
-                    Under the supervision of His Eminence Sheikh Ahmed
-                    Al-Bayoumi Al-Azhari
+                      Under the supervision of His Eminence Sheikh Ahmed
+                      Al-Bayoumi Al-Azhari
                     </p>
                     <p className="text-2xl my-6 text-center">
-                  Licensed in the ten minor readings and holds a BA in the Fundamentals of Religion and Da{"'"}wah, Department of Interpretation and Qur{"’"}anic Sciences, Al-Azhar University
+                      Licensed in the ten minor readings and holds a BA in the
+                      Fundamentals of Religion and Da{"'"}wah, Department of
+                      Interpretation and Qur{"’"}anic Sciences, Al-Azhar
+                      University
                     </p>
                   </div>
                   <div className="flex justify-center items-center">
@@ -188,7 +194,7 @@ export default function Content() {
                 <motion.div
                   key={i}
                   className="bg-white rounded-lg my-4 p-4"
-                initial={{ x: "-45%", scale: 0.7 }}
+                  initial={{ x: "-45%", scale: 0.7 }}
                   whileInView={{ x: 0, scale: 1 }}
                   viewport={{ amount: 0.5 }}
                   transition={{ type: "spring", mass: "0.5" }}

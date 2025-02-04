@@ -13,7 +13,10 @@ import { fetchResponse } from "../utils/response";
 import { convertEgyptTimeToLocalTime, sumStartAndDelay } from "../utils/time";
 import OptionsDiv from "../components/optionsDiv";
 
-export const ADE = ({ copy }: { copy: string }) => {
+export const ADE: React.FC<{ copy: string; domain?: boolean }> = ({
+  copy,
+  domain = false,
+}) => {
   return (
     <button
       className={
@@ -23,7 +26,7 @@ export const ADE = ({ copy }: { copy: string }) => {
       onClick={(e) => {
         const span = e.currentTarget.querySelector("span");
         navigator.clipboard
-          .writeText(copy)
+          .writeText(domain ? location.origin : "" + copy)
           .then(() => {
             if (span) {
               span.innerText = "تم النسخ";

@@ -49,7 +49,7 @@ const StudentHomeContent: React.FC<{ student: StudentHome }> = ({
             >
               دخول
             </a>
-            <ADE copy={"/ar/meetings/meeting/" + student.currentMeet.id} />
+            <ADE domain copy={"/ar/meetings/meeting/" + student.currentMeet.id} />
           </div>
         </section>
       ) : undefined}
