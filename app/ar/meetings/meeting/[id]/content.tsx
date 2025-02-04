@@ -87,7 +87,7 @@ const Content: React.FC = () => {
   return (
     <StreamVideo client={streamVideoClient}>
       <StreamCall call={call}>
-        <StreamTheme>
+        <StreamTheme style={{position: "relative"}}>
           {response.is_admin ? <AdminC /> : <MyVideoUI id={id} />}
           <CallControls />
         </StreamTheme>
