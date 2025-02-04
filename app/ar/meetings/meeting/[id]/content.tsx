@@ -1,4 +1,5 @@
 "use client";
+import AllowToSeenButton from "@/app/components/allowtoSeen";
 import LoadingDiv from "@/app/components/loadingDiv";
 import { fetchResponse } from "@/app/utils/response";
 import {
@@ -98,6 +99,7 @@ const AdminC: React.FC = () => {
       {participants.map((p) => (
         <ParticipantView participant={p} key={p.sessionId} />
       ))}
+      <AllowToSeenButton />
     </>
   );
 };
@@ -111,6 +113,13 @@ const MyVideoUI: React.FC<{ id: string }> = ({ id }) => {
     fetchResponse({ setResponse, url: "/api/participants/" + id });
   }, [id]);
 
+  useEffect(() => {
+    const refresh = setInterval(() => {
+      fetchResponse({ setResponse, url: "/api/participants/" + id });
+    }, 5000);
+
+    return () => clearInterval(refresh);
+  }, [id]);
   if (response === undefined) {
     return <LoadingDiv loading />;
   }

@@ -19,6 +19,7 @@ import { almightyTrim, numList } from "@/app/utils/string";
 import Button, { getClass } from "@/app/components/button";
 import Link from "next/link";
 import { DefaultResponse, fetchResponse } from "@/app/utils/response";
+import AllowToSeenButton from "@/app/components/allowtoSeen";
 
 type Status = "didnt_start" | "didnt_checked" | "checked";
 
@@ -507,6 +508,7 @@ const SuccesContent: React.FC<{
         </main>
       </div>
       <ScrollTopButton />
+      <AllowToSeenButton />
     </>
   );
 };
