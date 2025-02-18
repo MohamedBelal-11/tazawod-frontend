@@ -20,15 +20,10 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    // fetchResponse({
-    //   setResponse,
-    //   url: "/api/random-admin/",
-    // });
-    setResponse({
-      succes: true,
-      name: "محمد",
-      email: "mo7amedbll@gmail.com",
-    })
+    fetchResponse({
+      setResponse,
+      url: "/api/random-admin/",
+    });
   }, []);
 
   if (response === undefined) {
