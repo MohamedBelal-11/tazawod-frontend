@@ -1,5 +1,6 @@
 "use client";
 import Button, { getClass } from "@/app/components/button";
+import Copier from "@/app/components/copier";
 import { fetchResponse } from "@/app/utils/response";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -109,6 +110,13 @@ const Content: React.FC = () => {
               </p>
             </div>
           )}
+          <div className="flex w-full justify-between gap-3">
+            <p className="text-xl">
+              يمكنك أيضًا الإشتراك عن طريق التواصل مع مشرف الرئيسي:{" "}
+              <a href="tel:+20106512152">+20106512152</a>
+            </p>
+            <Copier copy="+20106512152" arabic />
+          </div>
         </main>
       )}
     </div>
@@ -125,19 +133,27 @@ const CreditSubscipeButton: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if(response && response.succes) {
+    if (response && response.succes) {
       window.location.href = response.payment_url;
     }
-  }, [response])
+  }, [response]);
 
   return (
-    <Button onClick={loading || (response && response.succes) ? undefined : () => {
-      fetchResponse({
-        setResponse,
-        url: "/api/subscribe-iframe/",
-        setLoading,
-      });
-    }} className="w-56 text-xl" color="green">
+    <Button
+      onClick={
+        loading || (response && response.succes)
+          ? undefined
+          : () => {
+              fetchResponse({
+                setResponse,
+                url: "/api/subscribe-iframe/",
+                setLoading,
+              });
+            }
+      }
+      className="w-56 text-xl"
+      color="green"
+    >
       الإشتراك عن طريق البطاقة المصرفية
     </Button>
   );

@@ -1,4 +1,5 @@
 "use client";
+import Copier from "@/app/components/copier";
 import LoadingDiv from "@/app/components/loadingDiv";
 import { fetchResponse } from "@/app/utils/response";
 import { useEffect, useState } from "react";
@@ -19,10 +20,15 @@ const Content: React.FC = () => {
   const [response, setResponse] = useState<Responset>();
 
   useEffect(() => {
-    fetchResponse({
-      setResponse,
-      url: "/api/random-admin/",
-    });
+    // fetchResponse({
+    //   setResponse,
+    //   url: "/api/random-admin/",
+    // });
+    setResponse({
+      succes: true,
+      name: "محمد",
+      email: "mo7amedbll@gmail.com",
+    })
   }, []);
 
   if (response === undefined) {
@@ -65,9 +71,9 @@ const Content: React.FC = () => {
             البريد الإلكتروني:{" "}
             <a
               href={
-                "https://mail.google.com/mail/?view=cm&fs=1&to=" +
+                "mailto:" +
                 response.email +
-                "&su=أود+الإشتراك+في+أكاديمية+تزود&body="
+                "?subject=أود الإشتراك في أكاديمية تزود"
               }
               target="_blank"
               dir="ltr"
@@ -76,6 +82,8 @@ const Content: React.FC = () => {
               {response.email}
             </a>
           </p>
+          
+          <Copier copy={response.email} arabic />
         </div>
       </div>
     </>
