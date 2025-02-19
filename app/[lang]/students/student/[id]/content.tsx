@@ -19,7 +19,7 @@ import { useParams, useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import EditDates from "./editDates";
 import Button, { getClass } from "@/app/components/button";
-import "@/app/ar/auth/register/student/page.css";
+import "@/app/[lang]/auth/register/student/page.css";
 import P, { RegulerConfirm } from "@/app/components/popup";
 import { useScrollContext } from "@/app/contexts/scrollerContext";
 import LoadingDiv from "@/app/components/loadingDiv";
