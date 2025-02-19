@@ -12,6 +12,8 @@ import TeacherHomeContent, { TeacherHome } from "./teacherHomeContent";
 import { fetchResponse } from "../utils/response";
 import { convertEgyptTimeToLocalTime, sumStartAndDelay } from "../utils/time";
 import OptionsDiv from "../components/optionsDiv";
+import Copier from "../components/copier";
+import { usePathname } from "next/navigation";
 
 export const ADE: React.FC<{ copy: string; domain?: boolean }> = ({
   copy,
@@ -142,10 +144,10 @@ export const CCV: Variants = {
 
 export default function Content() {
   const [response, setResponse] = useState<responset>();
-
+  const pathname = usePathname();
   useEffect(() => {
     fetchResponse({ setResponse, url: "/api/home/" });
-  }, []);
+  }, [pathname]);
 
   return (
     <>
@@ -172,6 +174,13 @@ export default function Content() {
                   >
                     إنشاء حساب
                   </Link>
+                </div>
+                <div className="flex w-full justify-between gap-3">
+                  <p className="text-xl">
+                    يمكنك أيضًا الإشتراك عن طريق التواصل مع مشرف الرئيسي:{" "}
+                    <a href="tel:+20106512152">+20106512152</a>
+                  </p>
+                  <Copier copy="+20106512152" arabic />
                 </div>
               </div>
             </section>

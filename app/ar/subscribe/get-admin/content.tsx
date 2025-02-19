@@ -77,7 +77,6 @@ const Content: React.FC = () => {
               {response.email}
             </a>
           </p>
-          
           <Copier copy={response.email} arabic />
         </div>
       </div>
