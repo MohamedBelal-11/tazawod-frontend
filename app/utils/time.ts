@@ -160,7 +160,7 @@ export const sortDaysFromToday = (day: Weekday) => {
 import { DateTime } from "luxon";
 import { Weekday } from "./students";
 import { arabicMonths, arabicWeekDays } from "./arabic";
-import { secondsToHrs } from "../ar/content";
+import { secondsToHrs } from "../[lang]/content";
 
 // Convert local time to Egypt time
 function convertLocalTimeToEgyptTime(localTimeString: string): string {
