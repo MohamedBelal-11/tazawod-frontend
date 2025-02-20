@@ -62,11 +62,11 @@ export default function Content() {
           router.replace("/");
         } else {
           console.error("OTP verification failed", response.data.message);
-          setMessage("حدث خطأ ما يرجى التأكد من الرمز");
+          setMessage("حدث خطأ ما يرجى التأكد من آخر رمز أرسل إليك");
         }
       } catch (error) {
         console.error("Error verifying OTP", error);
-        setMessage("حدث خطأ ما يرجى التأكد من الرمز" + JSON.stringify(error));
+        setMessage("حدث خطأ ما يرجى التأكد من آخر رمز أرسل إليك");
       }
     };
     if (otp.length === 6) {

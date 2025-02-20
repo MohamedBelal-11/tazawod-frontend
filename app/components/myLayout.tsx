@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import arabicFooter from "./arabicFooter";
+import Footer from "./footer";
 import NavBar from "./navBar";
 import LoadingDiv from "./loadingDiv";
 import {
@@ -64,7 +64,7 @@ const Body: React.FC<{
       )}
       <LoadingDiv loading={loading} />
       {["ar", "en"].includes(lang) ? children : <NotFound />}
-      {arms && arabicFooter}
+      {arms && <Footer arabic={lang == "ar"} />}
     </body>
   );
 };

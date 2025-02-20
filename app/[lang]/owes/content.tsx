@@ -26,7 +26,7 @@ type Responset =
 const paidAdmin = (id: string, refetch: () => void) => {
   fetchResponse({
     setResponse: () => undefined,
-    url: `/admin-paid/${id}/`,
+    url: `/users/admin-paid/${id}/`,
     onFinish: refetch,
   });
 };

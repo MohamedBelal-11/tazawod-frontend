@@ -331,6 +331,11 @@ export default function Content() {
                   href: "/ar/admins/guide",
                 },
                 {
+                  titled: "إشتراكات المشرفين",
+                  description: "عرض الإشتراكات التي لم يتم دفعها",
+                  href: "/ar/owes",
+                },
+                {
                   titled: "الحساب",
                   description: "رؤية وتعديل ملفك الشخصي",
                   href: "/ar/admin-acount",

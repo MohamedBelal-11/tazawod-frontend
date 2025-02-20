@@ -218,33 +218,36 @@ const studentOptionList: { ar: option[]; en: option[] } = {
   ],
 };
 
-const teacherOptionList: { ar: option[]; en: option[] } = {ar: [
-  {
-    name: "الدروس المقطعية",
-    description: "شاهد دروس مقطية في أي وقت",
-    href: "/ar/watch/playlists",
-  },
-  {
-    name: "التقارير",
-    description: "آخر التقييمات والملاحظات الخاصة بك",
-    href: ["/ar/teachers/teacher", "notes"],
-    useID: true,
-  },
-], en: [
-  {
-    name: "Video lessons",
-    description: "Watch video lessons anytime.",
-    href: "/en/watch/playlists",
-  },
-  {
-    name: "Reports",
-    description: "Your latest rates and notes.",
-    href: ["/en/teachers/teacher", "notes"],
-    useID: true,
-  },
-]};
+const teacherOptionList: { ar: option[]; en: option[] } = {
+  ar: [
+    {
+      name: "الدروس المقطعية",
+      description: "شاهد دروس مقطية في أي وقت",
+      href: "/ar/watch/playlists",
+    },
+    {
+      name: "التقارير",
+      description: "آخر التقييمات والملاحظات الخاصة بك",
+      href: ["/ar/teachers/teacher", "notes"],
+      useID: true,
+    },
+  ],
+  en: [
+    {
+      name: "Video lessons",
+      description: "Watch video lessons anytime.",
+      href: "/en/watch/playlists",
+    },
+    {
+      name: "Reports",
+      description: "Your latest rates and notes.",
+      href: ["/en/teachers/teacher", "notes"],
+      useID: true,
+    },
+  ],
+};
 
-const callsToAction: {
+type callToAction = {
   name: string;
   href: string;
   useID?: false;
@@ -254,10 +257,18 @@ const callsToAction: {
       titleId?: string;
     } & RefAttributes<SVGSVGElement>
   >;
-}[] = [
-  { name: "شاهد الإعلان الترويجي", href: "#", icon: PlayCircleIcon },
-  { name: "تواصل معنا", href: "#", icon: PhoneIcon },
-];
+};
+
+const callsToAction: { ar: callToAction[]; en: callToAction[] } = {
+  ar: [
+    { name: "شاهد الإعلان الترويجي", href: "#", icon: PlayCircleIcon },
+    { name: "تواصل معنا", href: "#", icon: PhoneIcon },
+  ],
+  en: [
+    { name: "Watch the trailer", href: "#", icon: PlayCircleIcon },
+    { name: "contact us", href: "#", icon: PhoneIcon },
+  ],
+};
 
 type responset = {
   username: string;
@@ -270,7 +281,7 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function NavBar({lang}: {lang: "ar" | "en"}) {
+export default function NavBar({ lang }: { lang: "ar" | "en" }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [response, setResponse] = useState<responset>();
   const pathname = usePathname();
@@ -439,7 +450,7 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
                   ))}
                 </div>
                 <div className="grid grid-cols-2 divide-x divide-gray-900/5 bg-gray-50">
-                  {callsToAction.map((item) => (
+                  {callsToAction[lang].map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
@@ -458,42 +469,50 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
           </Popover>
 
           {userType !== "student" && userType !== "unloged" && (
-            <Link href="/ar/meetings" className={classes[0]}>
-              المقابلات
+            <Link href={`/${lang}/meetings`} className={classes[0]}>
+              {lang === "ar" ? "المقابلات" : "meetings"}
             </Link>
           )}
-          {userType !== "superadmin" && userType != "unloged" && (
+          {userType != "unloged" && (
             <Link
               href={
                 userType === "student"
-                  ? "/ar/students/guide"
-                  : userType === "teacher"
-                  ? "/ar/teachers/guide"
-                  : userType === "admin"
-                  ? "/ar/admins/guide"
-                  : "/ar/owes"
+                  ? `/${lang}/students/guide`
+                  : userType === `teacher`
+                  ? `/${lang}/teachers/guide`
+                  : userType === `admin`
+                  ? `/${lang}/admins/guide`
+                  : `/${lang}/owes`
               }
               className={classes[0]}
             >
-              {userType === "student"
-                ? "دليل الطالب"
+              {lang === "ar"
+                ? userType === "student"
+                  ? "دليل الطالب"
+                  : userType === "teacher"
+                  ? "دليل المعلم"
+                  : userType === "admin"
+                  ? "دليل المشرف"
+                  : "إشتراكات المشرفين"
+                : userType === "student"
+                ? "Student Guide"
                 : userType === "teacher"
-                ? "دليل المعلم"
+                ? "Teacher Guide"
                 : userType === "admin"
-                ? "دليل المشرف"
-                : "إشتراكات المشرفين"}
+                ? "Admin Guide"
+                : "Admin Subscriptions"}
             </Link>
           )}
           {userType !== "unloged" ? (
             <Link
               href={
                 userType === "admin" || userType === "superadmin"
-                  ? "/ar/admin-acount"
-                  : `/ar/${userType}s/${userType}/${response?.id}`
+                  ? `/${lang}/admin-acount`
+                  : `/${lang}/${userType}s/${userType}/${response?.id}`
               }
               className={classes[0]}
             >
-              الحساب
+              {lang === "ar" ? "الحساب" : "Account"}
             </Link>
           ) : null}
         </PopoverGroup>
@@ -502,14 +521,26 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
             <p className="font-bold">{response.username}</p>
           ) : (
             <>
-              <Link href="/ar/auth/login" className={classes[0]}>
-                تسجيل دخول <span aria-hidden="true">&larr;</span>
+              <Link href={`/${lang}/auth/login`} className={classes[0]}>
+                {lang === "ar" ? (
+                  <>
+                    تسجيل دخول <span aria-hidden="true">&larr;</span>
+                  </>
+                ) : (
+                  <>
+                    <span aria-hidden="true">&rarr;</span> Login
+                  </>
+                )}
               </Link>
               <Link
-                href="/ar/auth/register/student"
-                className={`text-sm font-semibold leading-6 text-gray-900 hover:text-white bg-green-400 py-2 px-3 rounded-3xl transition-all hover:scale-110`}
+                href={`/${lang}/auth/register/student`}
+                className={
+                  "text-sm font-semibold leading-6 text-gray-900 " +
+                  "hover:text-white bg-green-400 py-2 px-3 " +
+                  "rounded-3xl transition-all hover:scale-110"
+                }
               >
-                إنشاء حساب
+                {lang === "ar" ? "إنشاء حساب" : "Sign up"}
               </Link>
             </>
           )}
@@ -528,7 +559,7 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
           }
         >
           <div className="flex items-center justify-between">
-            <Link href="/ar" className="-m-1.5 p-1.5">
+            <Link href={"/" + lang} className="-m-1.5 p-1.5">
               <img className="h-12 w-auto" src="/static/imgs/quran.gif" />
             </Link>
             <button
@@ -548,7 +579,7 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
                       <DisclosureButton
                         className={`flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base ${classes[1]} transition-all`}
                       >
-                        الخيارات
+                        {lang ? "الخيارات" : "Options"}
                         <ChevronDownIcon
                           className={classNames(
                             open ? "rotate-180" : "",
@@ -559,7 +590,7 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
                         />
                       </DisclosureButton>
                       <DisclosurePanel className="mt-2 space-y-2">
-                        {[...list[lang], ...callsToAction].map((item) => (
+                        {[...list[lang], ...callsToAction[lang]].map((item) => (
                           <Link
                             key={item.name}
                             href={
@@ -579,46 +610,54 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
                 </Disclosure>
                 {userType !== "student" && userType !== "unloged" && (
                   <Link
-                    href="/ar/meetings"
+                    href={`/${lang}/meetings`}
                     onClick={() => setMobileMenuOpen(false)}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
-                    المقابلات
+                    {lang === "ar" ? "المقابلات" : "Meetings"}
                   </Link>
                 )}
                 {userType !== "unloged" && (
                   <Link
                     href={
                       userType === "student"
-                        ? "/ar/students/guide"
+                        ? `/${lang}/students/guide`
                         : userType === "teacher"
-                        ? "/ar/teachers/guide"
+                        ? `/${lang}/teachers/guide`
                         : userType === "admin"
-                        ? "/ar/admins/guide"
-                        : "/ar/owes"
+                        ? `/${lang}/admins/guide`
+                        : `/${lang}/owes`
                     }
                     onClick={() => setMobileMenuOpen(false)}
                     className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                   >
-                    {userType === "student"
-                      ? "دليل الطالب"
+                    {lang === "ar"
+                      ? userType === "student"
+                        ? "دليل الطالب"
+                        : userType === "teacher"
+                        ? "دليل المعلم"
+                        : userType === "admin"
+                        ? "دليل المشرف"
+                        : "إشتراكات المشرفين"
+                      : userType === "student"
+                      ? "Student Guide"
                       : userType === "teacher"
-                      ? "دليل المعلم"
+                      ? "Teacher Guide"
                       : userType === "admin"
-                      ? "دليل المشرف"
-                      : "إشتراكات المشرفين"}
+                      ? "Admin Guide"
+                      : "Admin Subscriptions"}
                   </Link>
                 )}
                 <Link
                   href={
                     userType.includes("admin")
-                      ? "/ar/admin-acount"
-                      : `/ar/${userType}s/${userType}/${response?.id}`
+                      ? `/${lang}/admin-acount`
+                      : `/${lang}/${userType}s/${userType}/${response?.id}`
                   }
                   onClick={() => setMobileMenuOpen(false)}
                   className={`-mx-3 block rounded-lg px-3 py-2 text-base ${classes[1]}`}
                 >
-                  الحساب
+                  {lang === "ar" ? "الحساب" : "Account"}
                 </Link>
               </div>
               <div className="py-6">
@@ -627,16 +666,16 @@ export default function NavBar({lang}: {lang: "ar" | "en"}) {
                 ) : (
                   <>
                     <Link
-                      href="/ar/auth/login"
+                      href={`/${lang}/auth/login`}
                       className={`-mx-3 block rounded-lg px-3 py-2.5 text-base ${classes[1]}`}
                     >
-                      تسجيل الدخول
+                      {lang === "ar" ? "تسجيل الدخول" : "Login"}
                     </Link>
                     <Link
-                      href="/ar/auth/register/student"
+                      href={`/${lang}/auth/register/student`}
                       className={`-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 bg-green-500`}
                     >
-                      إنشاء حساب
+                      {lang === "ar" ? "إنشاء حساب" : "Sign up"}
                     </Link>
                   </>
                 )}
