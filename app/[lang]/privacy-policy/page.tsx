@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import React from "react";
 
 export const metadata: Metadata = {
-  title: "دليل الطالب - أكاديمية تزود",
+  title: "سياسة الخصوصية - أكاديمية تزود",
 };
 
 const Page: React.FC = () => {
