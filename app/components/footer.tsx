@@ -16,7 +16,9 @@ const Footer: React.FC<{ arabic: boolean }> = ({ arabic }) => {
       </div>
       <div className="text-xl mb-4">
         <p>
-          {arabic ? "تصميم وبرمجة المهندس" : "Designed and programmed by the engineer"}{" "}
+          {arabic
+            ? "تصميم وبرمجة المهندس"
+            : "Designed and programmed by the engineer"}{" "}
           <a
             href="https://www.linkedin.com/in/mohamedbelal11/"
             className="text-green-500 hover:underline"
@@ -27,11 +29,18 @@ const Footer: React.FC<{ arabic: boolean }> = ({ arabic }) => {
         </p>
       </div>
       <div>
-        <p>{arabic ? "© 2024 أكاديمية تزود. جميع الحقوق محفوظة." : "© 2024 Tazood Academy. All rights reserved."}</p>
+        <p>
+          {arabic
+            ? "© 2024 أكاديمية تزود. جميع الحقوق محفوظة."
+            : "© 2024 Tazood Academy. All rights reserved."}
+        </p>
         <ul className="">
           <li>
-            <a href="" className="text-green-500 hover:underline">
-              {arabic? "سياسة الخصوصية" : "Privacy policy"}
+            <a
+              href={`/${arabic ? "ar" : "en"}/privacy-policy`}
+              className="text-green-500 hover:underline"
+            >
+              {arabic ? "سياسة الخصوصية" : "Privacy policy"}
             </a>
           </li>
           <li>
