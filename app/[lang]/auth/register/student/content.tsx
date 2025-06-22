@@ -20,17 +20,13 @@ import {
 } from "react";
 import { backendUrl } from "@/app/utils/auth";
 import PasswordInput from "@/app/components/passwordInput";
-import {
-  convertLocalWeekdayToEgypt,
-  days,
-  isBetween,
-  numHours,
-} from "@/app/utils/time";
+import { convertLocalWeekdayToEgypt, days, isBetween } from "@/app/utils/time";
 import { AnimatePresence, motion } from "framer-motion";
 import { Weekday } from "@/app/utils/students";
 import { get } from "@/app/utils/docQuery";
 import "./page.css";
 import { useLayoutContext } from "@/app/contexts/arabicLayoutContext";
+import { fblogin } from "../../login/content";
 
 export type MetaInfo = { day: Weekday; starts: string; delay: string };
 
@@ -459,7 +455,10 @@ export default function Content() {
     if (!alive1) {
       alive = false;
       setMessage((m) => {
-        return [...m, "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^&*_-."];
+        return [
+          ...m,
+          "يجب أن تحتوي كلمة المرور على بعض هذه الرموز !@#$%^&*_-.",
+        ];
       });
     }
 
@@ -552,168 +551,177 @@ export default function Content() {
   return (
     <>
       <div className="md:p-12 p-4">
-        <form
-          onSubmit={submit}
-          className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8"
-          noValidate
-        >
-          <h1 className="text-4xl mb-4">إنشاء حساب</h1>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-            placeholder="الاسم"
-            className={classes.inp}
-            maxLength={30}
-            required
-            autoComplete="name"
-          />
-          <input
-            type="text"
-            value={gmail}
-            onChange={(e) => {
-              setGmail(e.target.value);
-            }}
-            dir="ltr"
-            placeholder="البريد الإلكتروني"
-            required
-            className={classes.inp}
-            autoComplete="email"
-          />
-          <PasswordInput
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-            className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full " +
-              "rounded-xl border-solid outline-0 shadow-xl pl-12"
-            }
-            placeholder="كلمة المرور"
-            divclassname="max-w-96 w-full"
-            required
-            autoComplete="new-password"
-            onPaste={(e) => {
-              e.preventDefault();
-            }}
-            titled="arabic"
-          />
-          <PasswordInput
-            value={password2}
-            onChange={(e) => {
-              setPassword2(e.target.value);
-            }}
-            className={
-              "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
-              "w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
-            }
-            placeholder="تأكيد كلمة المرور"
-            divclassname="max-w-96 w-full"
-            required
-            onPaste={(e) => {
-              e.preventDefault();
-            }}
-            autoComplete="new-password"
-          />
-          <h2 className="text-xl">حدد جنسك</h2>
-          <div className="flex justify-evenly">
-            <div
-              className={
-                classes.genderCard +
-                (gender == "male"
-                  ? "border-sky-500 bg-sky-100"
-                  : "border-gray-400")
-              }
-              onClick={() => {
-                setGender("male");
-              }}
-            >
-              <img src="/static/imgs/man.png" className={classes.genderImg} />
-              <p className={classes.genderP}>ذكر</p>
-            </div>
-            <div
-              className={
-                classes.genderCard +
-                (gender == "female"
-                  ? "border-sky-500 bg-sky-100"
-                  : "border-gray-400")
-              }
-              onClick={() => {
-                setGender("female");
-              }}
-            >
-              <img src="/static/imgs/woman.png" className={classes.genderImg} />
-              <p className={classes.genderP}>أنثى</p>
-            </div>
-          </div>
-          <h2 className="text-xl">
-            مواعيد درس تحفيظ القرءان (مطلوب واحد على الأقل)
-          </h2>
-          <div className={classes.lesson}>
-            {quraan_days.map((date, i) => {
-              return (
-                <p key={quraan_days.indexOf(date)}>
-                  يوم {arDay(date.day)} الساعة {date.starts.slice(0, -3)} لمدة{" "}
-                  {date.delay.slice(0, -3)}
-                  <div
-                    onClick={() => {
-                      setQuraan_days(
-                        quraan_days.slice(0, i).concat(quraan_days.slice(i + 1))
-                      );
-                    }}
-                    className={
-                      "bg-red-500 py-1 px-2 rounded-md mr-2 inline-block " +
-                      "text-center cursor-pointer"
-                    }
-                  >
-                    X
-                  </div>
-                </p>
-              );
-            })}
-          </div>
-          {!(quraan_days.length > 6) ? (
-            <div
-              className="p-3 rounded-xl text-white bg-green-500 text-center cursor-pointer"
-              onClick={() => {
-                setCreateDate({ method: setQuraan_days, value: quraan_days });
-              }}
-            >
-              إضافة
-            </div>
-          ) : (
-            <></>
-          )}
-
-          {message.length !== 0 ? (
-            <p className="p-6 rounded-xl border-4 border-solid border-red-500 bg-red-100 flex flex-col gap-2">
-              {message.map((fault, i) => {
-                return <p key={i}>{fault}</p>;
-              })}
-            </p>
-          ) : (
-            <></>
-          )}
-          {loading ? (
-            <div className="p-4 border-solid border-2 border-green-500 rounded-xl bg-green-500 flex justify-center">
-              <motion.div
-                animate={{ rotate: 360 }}
-                className="w-6 h-6 border-gray-300 border-solid border-4 border-t-sky-500 rounded-full"
-                transition={{ duration: 2, repeat: Infinity }}
-              ></motion.div>
-            </div>
-          ) : (
+        <div className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8">
+          <button
+            className="bg-blue-600 text-white rounded-xl p-3"
+            onClick={() => fblogin()}
+          >
+            تسجيل دخول بالفيسبوك
+          </button>
+          <form onSubmit={submit} className="flex flex-col gap-8" noValidate>
+            <h1 className="text-4xl mb-4">إنشاء حساب</h1>
             <input
-              type="submit"
-              className={
-                "p-4 bg-green-200 border-solid border-2 border-green-500 rounded-xl " +
-                "hover:bg-green-500 hover:text-white transition-all cursor-pointer"
-              }
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
+              placeholder="الاسم"
+              className={classes.inp}
+              maxLength={30}
+              required
+              autoComplete="name"
             />
-          )}
-        </form>
+            <input
+              type="text"
+              value={gmail}
+              onChange={(e) => {
+                setGmail(e.target.value);
+              }}
+              dir="ltr"
+              placeholder="البريد الإلكتروني"
+              required
+              className={classes.inp}
+              autoComplete="email"
+            />
+            <PasswordInput
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              className={
+                "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 w-full " +
+                "rounded-xl border-solid outline-0 shadow-xl pl-12"
+              }
+              placeholder="كلمة المرور"
+              divclassname="max-w-96 w-full"
+              required
+              autoComplete="new-password"
+              onPaste={(e) => {
+                e.preventDefault();
+              }}
+              titled="arabic"
+            />
+            <PasswordInput
+              value={password2}
+              onChange={(e) => {
+                setPassword2(e.target.value);
+              }}
+              className={
+                "p-3 text-xl border-2 border-gray-300 focus:border-sky-500 " +
+                "w-full rounded-xl border-solid outline-0 shadow-xl pl-12"
+              }
+              placeholder="تأكيد كلمة المرور"
+              divclassname="max-w-96 w-full"
+              required
+              onPaste={(e) => {
+                e.preventDefault();
+              }}
+              autoComplete="new-password"
+            />
+            <h2 className="text-xl">حدد جنسك</h2>
+            <div className="flex justify-evenly">
+              <div
+                className={
+                  classes.genderCard +
+                  (gender == "male"
+                    ? "border-sky-500 bg-sky-100"
+                    : "border-gray-400")
+                }
+                onClick={() => {
+                  setGender("male");
+                }}
+              >
+                <img src="/static/imgs/man.png" className={classes.genderImg} />
+                <p className={classes.genderP}>ذكر</p>
+              </div>
+              <div
+                className={
+                  classes.genderCard +
+                  (gender == "female"
+                    ? "border-sky-500 bg-sky-100"
+                    : "border-gray-400")
+                }
+                onClick={() => {
+                  setGender("female");
+                }}
+              >
+                <img
+                  src="/static/imgs/woman.png"
+                  className={classes.genderImg}
+                />
+                <p className={classes.genderP}>أنثى</p>
+              </div>
+            </div>
+            <h2 className="text-xl">
+              مواعيد درس تحفيظ القرءان (مطلوب واحد على الأقل)
+            </h2>
+            <div className={classes.lesson}>
+              {quraan_days.map((date, i) => {
+                return (
+                  <p key={quraan_days.indexOf(date)}>
+                    يوم {arDay(date.day)} الساعة {date.starts.slice(0, -3)} لمدة{" "}
+                    {date.delay.slice(0, -3)}
+                    <div
+                      onClick={() => {
+                        setQuraan_days(
+                          quraan_days
+                            .slice(0, i)
+                            .concat(quraan_days.slice(i + 1))
+                        );
+                      }}
+                      className={
+                        "bg-red-500 py-1 px-2 rounded-md mr-2 inline-block " +
+                        "text-center cursor-pointer"
+                      }
+                    >
+                      X
+                    </div>
+                  </p>
+                );
+              })}
+            </div>
+            {!(quraan_days.length > 6) ? (
+              <div
+                className="p-3 rounded-xl text-white bg-green-500 text-center cursor-pointer"
+                onClick={() => {
+                  setCreateDate({ method: setQuraan_days, value: quraan_days });
+                }}
+              >
+                إضافة
+              </div>
+            ) : (
+              <></>
+            )}
+
+            {message.length !== 0 ? (
+              <p className="p-6 rounded-xl border-4 border-solid border-red-500 bg-red-100 flex flex-col gap-2">
+                {message.map((fault, i) => {
+                  return <p key={i}>{fault}</p>;
+                })}
+              </p>
+            ) : (
+              <></>
+            )}
+            {loading ? (
+              <div className="p-4 border-solid border-2 border-green-500 rounded-xl bg-green-500 flex justify-center">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  className="w-6 h-6 border-gray-300 border-solid border-4 border-t-sky-500 rounded-full"
+                  transition={{ duration: 2, repeat: Infinity }}
+                ></motion.div>
+              </div>
+            ) : (
+              <input
+                type="submit"
+                className={
+                  "p-4 bg-green-200 border-solid border-2 border-green-500 rounded-xl " +
+                  "hover:bg-green-500 hover:text-white transition-all cursor-pointer"
+                }
+              />
+            )}
+          </form>
+        </div>
       </div>
       <AnimatePresence>
         {CreateDate({
@@ -726,3 +734,5 @@ export default function Content() {
     </>
   );
 }
+
+export { CreateDate };

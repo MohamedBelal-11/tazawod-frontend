@@ -13,7 +13,7 @@ export type DefaultResponse =
     }
   | null;
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   validateStatus: function () {
     // Always return true to resolve the promise for any status code
     return true;

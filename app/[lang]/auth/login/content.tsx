@@ -2,11 +2,21 @@
 import PasswordInput from "@/app/components/passwordInput";
 import { backendUrl } from "@/app/utils/auth";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "framer-motion";
 
+export const fblogin = () => {
+  const clientId = "670264896015229";
+  const redirectUri = `https://${location.host}/en/auth/facebook-callback`;
+  const scope = "email";
+
+  const url = `https://www.facebook.com/v17.0/dialog/oauth?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=token`;
+  window.location.href = url;
+};
+
 const Content = () => {
+  const { lang }: { lang: string } = useParams();
   const [gmail, setGmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -61,11 +71,11 @@ const Content = () => {
   };
 
   return (
-    <>
-      <div className="md:p-12 p-4">
+    <div className="md:p-12 p-4">
+      <div className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8">
         <form
           onSubmit={handleSubmit}
-          className="flex p-8 rounded-2xl bg-white shadow-2xl flex-col gap-8"
+          className="flex flex-col gap-8"
         >
           <h1 className="text-3xl font-bold">تسجيل الدخول</h1>
           <input
@@ -117,8 +127,9 @@ const Content = () => {
             </button>
           )}
         </form>
+        <button className="bg-blue-600 text-white rounded-xl p-3" onClick={() => fblogin()}>تسجيل دخول بالفيسبوك</button>
       </div>
-    </>
+    </div>
   );
 };
 
